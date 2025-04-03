@@ -32,6 +32,11 @@ class MainActivity : ComponentActivity() {
                         iconId = R.drawable.analysis
                     ),
                     NavItem(
+                        route = Screen.Statistics.name,
+                        label = "Statistics",
+                        iconId = R.drawable.statistics
+                    ),
+                    NavItem(
                         route = Screen.Settings.name,
                         label = "Settings",
                         iconId = R.drawable.settings

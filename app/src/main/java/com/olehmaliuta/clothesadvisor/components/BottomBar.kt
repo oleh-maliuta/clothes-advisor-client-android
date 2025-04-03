@@ -2,6 +2,7 @@ package com.olehmaliuta.clothesadvisor.components
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
@@ -42,7 +43,7 @@ fun BottomBar(navController: NavController, navItems: List<NavItem>) {
                         painter = painterResource(id = navItem.iconId),
                         contentDescription = null,
                         modifier = Modifier.size(25.dp),
-                        tint = Color.Black
+                        tint = MaterialTheme.colorScheme.onSurface
                     )
                 },
                 label = {

@@ -46,6 +46,9 @@ fun ScreenNavigator(navItems: List<NavItem>) {
             composable(route = Screen.Analysis.name) {
                 AnalysisScreen(navController)
             }
+            composable(route = Screen.Statistics.name) {
+                StatisticsScreen(navController)
+            }
             composable(route = Screen.Settings.name) {
                 SettingsScreen(navController)
             }

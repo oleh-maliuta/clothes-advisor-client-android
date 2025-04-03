@@ -8,5 +8,6 @@ enum class Screen {
     EditCloth,
     EditOutfit,
     Analysis,
+    Statistics,
     Settings
 }
