@@ -9,9 +9,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -42,13 +42,14 @@ fun BottomBar(navController: NavController, navItems: List<NavItem>) {
                     Icon(
                         painter = painterResource(id = navItem.iconId),
                         contentDescription = null,
-                        modifier = Modifier.size(25.dp),
+                        modifier = Modifier.size(22.dp),
                         tint = MaterialTheme.colorScheme.onSurface
                     )
                 },
                 label = {
                     Text(
-                        text = navItem.label
+                        text = navItem.label,
+                        fontSize = 11.sp
                     )
                 }
             )
