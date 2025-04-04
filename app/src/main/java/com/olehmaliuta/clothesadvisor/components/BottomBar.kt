@@ -12,31 +12,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.olehmaliuta.clothesadvisor.navigation.NavItem
+import com.olehmaliuta.clothesadvisor.navigation.Router
 
 @Composable
-fun BottomBar(navController: NavController, navItems: List<NavItem>) {
+fun BottomBar(router: Router, navItems: List<NavItem>) {
     NavigationBar {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val navBackStackEntry by router.getController().currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination
 
         navItems.forEach { navItem ->
             NavigationBarItem(
                 selected = currentDestination?.hierarchy?.any {
-                    it.route == navItem.route
+                    it.route == navItem.route.name
                 } == true,
                 onClick = {
-                    navController.navigate(navItem.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
+                    router.navigateTo(navItem.route)
                 },
                 icon = {
                     Icon(

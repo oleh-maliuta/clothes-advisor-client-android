@@ -8,17 +8,21 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.olehmaliuta.clothesadvisor.MainActivity
 import com.olehmaliuta.clothesadvisor.navigation.NavItem
+import com.olehmaliuta.clothesadvisor.navigation.Router
 import com.olehmaliuta.clothesadvisor.navigation.Screen
 import com.olehmaliuta.clothesadvisor.screens.*
 
 @Composable
-fun ScreenNavigator(navItems: List<NavItem>) {
+fun ScreenManager(activity: MainActivity, navItems: List<NavItem>) {
     val navController = rememberNavController()
+    val router = Router(navController)
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        bottomBar = { BottomBar(navController, navItems) }
+        topBar = { TopBar(router) },
+        bottomBar = { BottomBar(router, navItems) }
     ) { paddingValues ->
         NavHost(
             navController = navController,
@@ -26,7 +30,7 @@ fun ScreenNavigator(navItems: List<NavItem>) {
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(route = Screen.Registration.name) {
-                RegistrationScreen(navController)
+                RegistrationScreen()
             }
             composable(route = Screen.LogIn.name) {
                 LogInScreen(navController)

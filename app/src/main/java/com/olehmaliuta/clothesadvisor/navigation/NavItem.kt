@@ -1,7 +1,7 @@
 package com.olehmaliuta.clothesadvisor.navigation
 
 data class NavItem(
-    val route: String,
+    val route: Screen,
     val label: String,
     val iconId: Int
 )
