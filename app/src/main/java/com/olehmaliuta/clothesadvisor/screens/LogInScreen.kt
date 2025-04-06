@@ -94,7 +94,7 @@ fun LogInScreen(navController: NavHostController) {
                     .height(52.dp),
                 enabled = isFormValid
             ) {
-                Text("Register", fontSize = 16.sp)
+                Text("Log in", fontSize = 16.sp)
             }
         }
     }

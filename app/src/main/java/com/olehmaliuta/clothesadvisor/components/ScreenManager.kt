@@ -21,7 +21,7 @@ fun ScreenManager(activity: MainActivity, navItems: List<NavItem>) {
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { TopBar(router) },
+        topBar = { TopBar(activity, router) },
         bottomBar = { BottomBar(router, navItems) }
     ) { paddingValues ->
         NavHost(

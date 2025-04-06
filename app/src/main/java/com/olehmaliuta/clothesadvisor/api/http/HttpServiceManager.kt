@@ -12,7 +12,7 @@ import javax.net.ssl.X509TrustManager
 
 
 object HttpServiceManager {
-    const val BASE_URL = "https://10.0.2.2:7000/api/"
+    const val BASE_URL = "http://10.0.2.2:8000/"
     private val retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
