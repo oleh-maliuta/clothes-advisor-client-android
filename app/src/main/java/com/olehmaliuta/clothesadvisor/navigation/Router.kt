@@ -4,14 +4,11 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 
 class Router {
-    private val controller: NavController
+    var controller: NavController
+        private set
 
     constructor(controller: NavController) {
         this.controller = controller
-    }
-
-    fun getController(): NavController {
-        return controller
     }
 
     fun navigateTo(route: Screen) {

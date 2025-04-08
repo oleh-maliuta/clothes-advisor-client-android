@@ -1,6 +1,5 @@
 package com.olehmaliuta.clothesadvisor.components
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -17,11 +16,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,52 +24,25 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.compose.currentBackStackEntryAsState
-import com.olehmaliuta.clothesadvisor.MainActivity
-import com.olehmaliuta.clothesadvisor.api.http.HttpServiceManager
-import com.olehmaliuta.clothesadvisor.api.http.data.responses.MessageResponse
-import com.olehmaliuta.clothesadvisor.api.http.services.PingService
+import com.olehmaliuta.clothesadvisor.api.http.responses.UserProfileResponse
+import com.olehmaliuta.clothesadvisor.api.http.security.AuthState
+import com.olehmaliuta.clothesadvisor.api.http.view.UserServiceViewModel
 import com.olehmaliuta.clothesadvisor.navigation.Router
 import com.olehmaliuta.clothesadvisor.navigation.Screen
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 @Composable
-fun TopBar(activity: MainActivity, router: Router) {
-    val pingService by remember {
-        mutableStateOf(HttpServiceManager.buildService(PingService::class.java))
-    }
-    val currentBackStackEntry by router.getController().currentBackStackEntryAsState()
-    var authorized by remember { mutableStateOf<Boolean>(false) }
-
-    LaunchedEffect(currentBackStackEntry) {
-        pingService.ping().enqueue(object : Callback<MessageResponse> {
-            override fun onResponse(
-                call: Call<MessageResponse>,
-                response: Response<MessageResponse>)
-            {
-                try {
-                    if (response.code() == 200) {
-                        Log.i("HTTP Ping Message", response.body()?.message.toString())
-                    } else {
-                        MessageResponse(message = "HTTP Fail")
-                    }
-                } catch (ex: java.lang.Exception) {
-                    ex.printStackTrace()
-                }
-            }
-
-            override fun onFailure(call: Call<MessageResponse>, t: Throwable) {
-                t.message?.let { Log.e("Api failed", it) }
-            }
-        })
-    }
-
-    if (authorized) {
-        AuthorizedTopMenu()
-    } else {
-        GuestTopMenu(router)
+fun TopBar(
+    router: Router,
+    userServiceViewModel: UserServiceViewModel
+) {
+    when (val authState = userServiceViewModel.authState) {
+        is AuthState.Authenticated -> {
+            AuthorizedTopMenu(authState.user ?: UserProfileResponse())
+        }
+        AuthState.Unauthenticated -> {
+            GuestTopMenu(router)
+        }
+        else -> {}
     }
 }
 
@@ -148,7 +115,7 @@ fun GuestTopMenu(router: Router) {
 }
 
 @Composable
-fun AuthorizedTopMenu() {
+fun AuthorizedTopMenu(userInfo: UserProfileResponse) {
     Row(
         modifier = Modifier
             .statusBarsPadding()
@@ -160,7 +127,7 @@ fun AuthorizedTopMenu() {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = "my_email_address@gmail.com",
+            text = userInfo.email.toString(),
             style = TextStyle(
                 fontSize = 14.sp,
                 lineHeight = 16.sp),

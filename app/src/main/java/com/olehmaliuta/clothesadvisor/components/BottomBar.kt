@@ -20,7 +20,7 @@ import com.olehmaliuta.clothesadvisor.navigation.Router
 @Composable
 fun BottomBar(router: Router, navItems: List<NavItem>) {
     NavigationBar {
-        val navBackStackEntry by router.getController().currentBackStackEntryAsState()
+        val navBackStackEntry by router.controller.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination
 
         navItems.forEach { navItem ->

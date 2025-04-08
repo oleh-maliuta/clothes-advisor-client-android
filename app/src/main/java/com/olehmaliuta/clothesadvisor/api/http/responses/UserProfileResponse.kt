@@ -1,4 +1,4 @@
-package com.olehmaliuta.clothesadvisor.api.http.data.responses
+package com.olehmaliuta.clothesadvisor.api.http.responses
 
 import com.google.gson.annotations.SerializedName
 

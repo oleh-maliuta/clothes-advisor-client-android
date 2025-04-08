@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.olehmaliuta.clothesadvisor.api.http.view.PingServiceViewModel
 import com.olehmaliuta.clothesadvisor.components.ScreenManager
 import com.olehmaliuta.clothesadvisor.navigation.NavItem
 import com.olehmaliuta.clothesadvisor.navigation.Screen

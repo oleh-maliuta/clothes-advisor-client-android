@@ -7,17 +7,17 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.olehmaliuta.clothesadvisor.App
 import com.olehmaliuta.clothesadvisor.database.AppDb
 
-class ClothViewModel(val database: AppDb) : ViewModel() {
+class ClothDaoViewModel(val database: AppDb) : ViewModel() {
     val allClothElements = database.clothDao.getAllClothElements()
 
-    companion object{
+    companion object {
         val factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory{
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(
                 modelClass: Class<T>,
                 extras: CreationExtras): T {
                 val database = (checkNotNull(extras[APPLICATION_KEY]) as App).database
-                return ClothViewModel(database) as T
+                return ClothDaoViewModel(database) as T
             }
         }
     }

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -23,10 +24,16 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.olehmaliuta.clothesadvisor.api.http.view.UserServiceViewModel
 import com.olehmaliuta.clothesadvisor.components.CenteredScrollContainer
+import com.olehmaliuta.clothesadvisor.navigation.Router
+import com.olehmaliuta.clothesadvisor.navigation.Screen
 
 @Composable
-fun RegistrationScreen() {
+fun RegistrationScreen(
+    router: Router,
+    userServiceViewModel: UserServiceViewModel
+) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
@@ -39,6 +46,27 @@ fun RegistrationScreen() {
                     password.isNotBlank() &&
                     passwordsMatch
         }
+    }
+
+    val dialogState = remember { mutableStateOf<String?>(null) }
+
+    if (dialogState.value != null) {
+        AlertDialog(
+            onDismissRequest = {
+                dialogState.value = null
+                router.navigateTo(Screen.LogIn)
+            },
+            title = { Text("Information") },
+            text = { Text(dialogState.value.toString()) },
+            confirmButton = {
+                Button(onClick = {
+                    dialogState.value = null
+                    router.navigateTo(Screen.LogIn)
+                }) {
+                    Text("OK")
+                }
+            }
+        )
     }
 
     CenteredScrollContainer(
@@ -94,7 +122,11 @@ fun RegistrationScreen() {
             )
 
             Button(
-                onClick = { /* ... */ },
+                onClick = { userServiceViewModel.register(
+                    email = email,
+                    password = password,
+                    dialogState = dialogState
+                ) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp),

@@ -1,10 +1,10 @@
 package com.olehmaliuta.clothesadvisor.api.http.services
 
-import com.olehmaliuta.clothesadvisor.api.http.data.responses.MessageResponse
-import retrofit2.Call
+import com.olehmaliuta.clothesadvisor.api.http.responses.PingResponse
+import retrofit2.Response
 import retrofit2.http.GET
 
 interface PingService {
     @GET("ping")
-    fun ping(): Call<MessageResponse>
+    suspend fun ping(): Response<PingResponse>
 }
