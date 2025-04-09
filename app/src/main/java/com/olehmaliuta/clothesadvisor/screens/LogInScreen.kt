@@ -1,6 +1,5 @@
 package com.olehmaliuta.clothesadvisor.screens
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -25,18 +25,48 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
+import com.olehmaliuta.clothesadvisor.api.http.view.UserServiceViewModel
 import com.olehmaliuta.clothesadvisor.components.CenteredScrollContainer
+import com.olehmaliuta.clothesadvisor.navigation.Router
+import com.olehmaliuta.clothesadvisor.navigation.Screen
 
 @Composable
-fun LogInScreen(navController: NavHostController) {
+fun LogInScreen(
+    router: Router,
+    userServiceViewModel: UserServiceViewModel
+) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
     val isFormValid by remember {
         derivedStateOf {
-            email.isNotBlank() &&
-                    password.isNotBlank()
+            email.isNotBlank() && password.isNotBlank()
         }
+    }
+
+    val dialogState = remember { mutableStateOf<String?>(null) }
+    val redirectRequired = remember { mutableStateOf(false) }
+
+    if (redirectRequired.value) {
+        redirectRequired.value = false
+        router.navigate(Screen.ClothesList.name)
+    }
+
+    if (dialogState.value != null) {
+        AlertDialog(
+            onDismissRequest = {
+                dialogState.value = null
+            },
+            title = { Text("Error") },
+            text = { Text(dialogState.value.toString()) },
+            confirmButton = {
+                Button(onClick = {
+                    dialogState.value = null
+                }) {
+                    Text("OK")
+                }
+            }
+        )
     }
 
     CenteredScrollContainer(
@@ -89,7 +119,14 @@ fun LogInScreen(navController: NavHostController) {
             )
 
             Button(
-                onClick = { /* ... */ },
+                onClick = {
+                    userServiceViewModel.logIn(
+                        email = email,
+                        password = password,
+                        locale = "en",
+                        dialogState = dialogState,
+                        redirectRequired = redirectRequired
+                    )},
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp),

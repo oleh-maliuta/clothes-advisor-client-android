@@ -6,7 +6,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -24,28 +23,40 @@ import com.olehmaliuta.clothesadvisor.screens.*
 @Composable
 fun ScreenManager(activity: MainActivity, navItems: List<NavItem>) {
     val navController = rememberNavController()
-    val router = Router(navController)
+    val router = remember { Router(navController) }
     val snackBarHostState = remember { SnackbarHostState() }
     val pingServiceViewModel: PingServiceViewModel = viewModel()
     val userServiceViewModel: UserServiceViewModel = viewModel {
         UserServiceViewModel(activity)
     }
 
-    LaunchedEffect(navController.currentBackStackEntry) {
-        userServiceViewModel.profile()
+    navController.addOnDestinationChangedListener { _, _, _ ->
+        userServiceViewModel.profile(
+            locale = "en"
+        )
     }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { TopBar(
+        topBar = {
+            TopBar(
                 router = router,
-                userServiceViewModel = userServiceViewModel) },
-        bottomBar = { BottomBar(router, navItems) },
-        snackbarHost = { SnackbarHost(snackBarHostState) }
+                userServiceViewModel = userServiceViewModel
+            )
+        },
+        bottomBar = {
+            BottomBar(
+                router = router,
+                navItems = navItems
+            )
+        },
+        snackbarHost = {
+            SnackbarHost(snackBarHostState)
+        }
     ) { paddingValues ->
         NavHost(
             navController = navController,
-            startDestination = Screen.Registration.name,
+            startDestination = Screen.LogIn.name,
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(route = Screen.Registration.name) {
@@ -55,28 +66,31 @@ fun ScreenManager(activity: MainActivity, navItems: List<NavItem>) {
                 )
             }
             composable(route = Screen.LogIn.name) {
-                LogInScreen(navController)
+                LogInScreen(
+                    router = router,
+                    userServiceViewModel = userServiceViewModel
+                )
             }
             composable(route = Screen.ClothesList.name) {
-                ClothesListScreen(navController)
+                ClothesListScreen()
             }
             composable(route = Screen.OutfitList.name) {
-                OutfitListScreen(navController)
+                OutfitListScreen()
             }
             composable(route = Screen.EditCloth.name) {
-                EditClothScreen(navController)
+                EditClothScreen()
             }
             composable(route = Screen.EditOutfit.name) {
-                EditOutfitScreen(navController)
+                EditOutfitScreen()
             }
             composable(route = Screen.Analysis.name) {
-                AnalysisScreen(navController)
+                AnalysisScreen()
             }
             composable(route = Screen.Statistics.name) {
-                StatisticsScreen(navController)
+                StatisticsScreen()
             }
             composable(route = Screen.Settings.name) {
-                SettingsScreen(navController)
+                SettingsScreen()
             }
         }
     }

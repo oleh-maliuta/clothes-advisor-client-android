@@ -13,24 +13,23 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.olehmaliuta.clothesadvisor.navigation.NavItem
 import com.olehmaliuta.clothesadvisor.navigation.Router
 
 @Composable
-fun BottomBar(router: Router, navItems: List<NavItem>) {
+fun BottomBar(
+    router: Router,
+    navItems: List<NavItem>
+) {
     NavigationBar {
-        val navBackStackEntry by router.controller.currentBackStackEntryAsState()
-        val currentDestination = navBackStackEntry?.destination
+        val navBackStackEntry by router.currentBackStackEntryAsState()
 
         navItems.forEach { navItem ->
             NavigationBarItem(
-                selected = currentDestination?.hierarchy?.any {
+                selected = navBackStackEntry?.destination?.hierarchy?.any {
                     it.route == navItem.route.name
                 } == true,
-                onClick = {
-                    router.navigateTo(navItem.route)
-                },
+                onClick = { router.navigate(navItem.route.name) },
                 icon = {
                     Icon(
                         painter = painterResource(id = navItem.iconId),

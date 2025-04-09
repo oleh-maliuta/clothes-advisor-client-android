@@ -37,6 +37,7 @@ fun RegistrationScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
+
     val passwordsMatch by remember {
         derivedStateOf { password == confirmPassword }
     }
@@ -49,19 +50,26 @@ fun RegistrationScreen(
     }
 
     val dialogState = remember { mutableStateOf<String?>(null) }
+    var success = remember { mutableStateOf(false) }
 
     if (dialogState.value != null) {
         AlertDialog(
             onDismissRequest = {
                 dialogState.value = null
-                router.navigateTo(Screen.LogIn)
+                if (success.value) {
+                    success.value = false
+                    router.navigate(Screen.LogIn.name)
+                }
             },
-            title = { Text("Information") },
+            title = { Text(if (success.value) "Information" else "Error") },
             text = { Text(dialogState.value.toString()) },
             confirmButton = {
                 Button(onClick = {
                     dialogState.value = null
-                    router.navigateTo(Screen.LogIn)
+                    if (success.value) {
+                        success.value = false
+                        router.navigate(Screen.LogIn.name)
+                    }
                 }) {
                     Text("OK")
                 }
@@ -122,11 +130,14 @@ fun RegistrationScreen(
             )
 
             Button(
-                onClick = { userServiceViewModel.register(
-                    email = email,
-                    password = password,
-                    dialogState = dialogState
-                ) },
+                onClick = {
+                    userServiceViewModel.register(
+                        email = email,
+                        password = password,
+                        locale = "en",
+                        dialogState = dialogState,
+                        successState = success
+                )},
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp),

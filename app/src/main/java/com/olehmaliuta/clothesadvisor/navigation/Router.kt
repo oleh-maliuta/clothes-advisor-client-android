@@ -1,23 +1,31 @@
 package com.olehmaliuta.clothesadvisor.navigation
 
-import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavHostController
+import androidx.navigation.NavOptions
+import androidx.navigation.Navigator
+import androidx.navigation.compose.currentBackStackEntryAsState
 
-class Router {
-    var controller: NavController
-        private set
+class Router(private val controller: NavHostController) {
+    fun navigate(
+        route: String,
+        navOptions: NavOptions? = null,
+        navigatorExtras: Navigator.Extras? = null
+    ) {
+        val currentRoute = controller
+            .currentBackStackEntry
+            ?.destination
+            ?.route
 
-    constructor(controller: NavController) {
-        this.controller = controller
+        if (currentRoute?.split('?')?.first() != route.split('?').first()) {
+            controller.navigate(route, navOptions, navigatorExtras)
+        }
     }
 
-    fun navigateTo(route: Screen) {
-        controller.navigate(route.name) {
-            popUpTo(controller.graph.findStartDestination().id) {
-                saveState = true
-            }
-            launchSingleTop = true
-            restoreState = true
-        }
+    @Composable
+    fun currentBackStackEntryAsState(): State<NavBackStackEntry?> {
+        return controller.currentBackStackEntryAsState()
     }
 }

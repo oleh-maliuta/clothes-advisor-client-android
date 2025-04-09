@@ -42,80 +42,14 @@ fun TopBar(
         AuthState.Unauthenticated -> {
             GuestTopMenu(router)
         }
-        else -> {}
-    }
-}
-
-@Composable
-fun GuestTopMenu(router: Router) {
-    Row(
-        modifier = Modifier
-            .statusBarsPadding()
-            .fillMaxWidth()
-            .height(50.dp)
-            .padding(horizontal = 8.dp)
-            .background(Color.Transparent),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.End
-        ) {
-            TextButton(
-                onClick = { router.navigateTo(Screen.LogIn) },
-                shape = RoundedCornerShape(8.dp),
-                contentPadding = PaddingValues(0.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
-                ),
-                modifier = Modifier
-                    .width(75.dp)
-                    .height(32.dp)
-            ) {
-                Text(
-                    text = "Log in",
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .padding(0.dp),
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        lineHeight = 16.sp
-                    )
-                )
-            }
-
-            Spacer(modifier = Modifier.width(8.dp))
-
-            TextButton(
-                onClick = { router.navigateTo(Screen.Registration) },
-                shape = RoundedCornerShape(8.dp),
-                contentPadding = PaddingValues(0.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
-                ),
-                modifier = Modifier
-                    .width(75.dp)
-                    .height(32.dp)
-            ) {
-                Text(
-                    text = "Sign up",
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .padding(0.dp),
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        lineHeight = 16.sp)
-                )
-            }
+        else -> {
+            LoadingTopMenu()
         }
     }
 }
 
 @Composable
-fun AuthorizedTopMenu(userInfo: UserProfileResponse) {
+private fun AuthorizedTopMenu(userInfo: UserProfileResponse) {
     Row(
         modifier = Modifier
             .statusBarsPadding()
@@ -161,5 +95,99 @@ fun AuthorizedTopMenu(userInfo: UserProfileResponse) {
                 )
             )
         }
+    }
+}
+
+@Composable
+private fun GuestTopMenu(router: Router) {
+    Row(
+        modifier = Modifier
+            .statusBarsPadding()
+            .fillMaxWidth()
+            .height(50.dp)
+            .padding(horizontal = 8.dp)
+            .background(Color.Transparent),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End
+        ) {
+            TextButton(
+                onClick = { router.navigate(Screen.LogIn.name) },
+                shape = RoundedCornerShape(8.dp),
+                contentPadding = PaddingValues(0.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                ),
+                modifier = Modifier
+                    .width(75.dp)
+                    .height(32.dp)
+            ) {
+                Text(
+                    text = "Log in",
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .padding(0.dp),
+                    style = TextStyle(
+                        fontSize = 14.sp,
+                        lineHeight = 16.sp
+                    )
+                )
+            }
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            TextButton(
+                onClick = { router.navigate(Screen.Registration.name) },
+                shape = RoundedCornerShape(8.dp),
+                contentPadding = PaddingValues(0.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                ),
+                modifier = Modifier
+                    .width(75.dp)
+                    .height(32.dp)
+            ) {
+                Text(
+                    text = "Sign up",
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .padding(0.dp),
+                    style = TextStyle(
+                        fontSize = 14.sp,
+                        lineHeight = 16.sp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun LoadingTopMenu() {
+    Row(
+        modifier = Modifier
+            .statusBarsPadding()
+            .fillMaxWidth()
+            .height(50.dp)
+            .padding(horizontal = 8.dp)
+            .background(Color.Transparent),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = "Loading...",
+            style = TextStyle(
+                fontSize = 14.sp,
+                lineHeight = 16.sp),
+            color = MaterialTheme.colorScheme.onPrimaryContainer,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier
+                .weight(1f)
+                .padding(end = 3.dp))
     }
 }

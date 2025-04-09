@@ -15,7 +15,7 @@ class PingServiceViewModel : ViewModel() {
             try {
                 val response = service.ping()
                 if (response.isSuccessful) {
-                    Log.i("HTTP Ping Message", response.body()?.ping.toString())
+                    Log.i("HTTP Ping Message", response.body()?.data?.ping.toString())
                 } else {
                     Log.e("Api failed", "HTTP Response Code = ${response.code()}")
                 }

@@ -1,5 +1,6 @@
 package com.olehmaliuta.clothesadvisor.api.http.services
 
+import com.olehmaliuta.clothesadvisor.api.http.responses.BaseResponse
 import com.olehmaliuta.clothesadvisor.api.http.responses.TokenResponse
 import com.olehmaliuta.clothesadvisor.api.http.responses.UserProfileResponse
 import retrofit2.Response
@@ -8,6 +9,7 @@ import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface UserService {
     @FormUrlEncoded
@@ -15,18 +17,20 @@ interface UserService {
     suspend fun register(
         @Field("email") email: String,
         @Field("password") password: String,
-        @Field("locale") locale: String
-    ): Response<Unit>
+        @Query("locale") locale: String?
+    ): Response<BaseResponse<Unit>>
 
     @FormUrlEncoded
-    @POST("token")
+    @POST("login_with_email")
     suspend fun logIn(
-        @Field("username") email: String,
+        @Field("email") email: String,
         @Field("password") password: String,
-    ): Response<TokenResponse>
+        @Query("locale") locale: String?
+    ): Response<BaseResponse<TokenResponse>>
 
     @GET("profile")
     suspend fun profile(
-        @Header("Authorization") token: String
-    ): Response<UserProfileResponse>
+        @Header("Authorization") token: String,
+        @Query("locale") locale: String?
+    ): Response<BaseResponse<UserProfileResponse>>
 }
