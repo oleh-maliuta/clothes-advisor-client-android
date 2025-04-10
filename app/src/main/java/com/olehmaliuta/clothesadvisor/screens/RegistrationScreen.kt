@@ -7,12 +7,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,12 +19,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.olehmaliuta.clothesadvisor.api.http.security.ApiState
 import com.olehmaliuta.clothesadvisor.api.http.view.UserServiceViewModel
 import com.olehmaliuta.clothesadvisor.components.CenteredScrollContainer
+import com.olehmaliuta.clothesadvisor.components.OkDialog
 import com.olehmaliuta.clothesadvisor.navigation.Router
 import com.olehmaliuta.clothesadvisor.navigation.Screen
 
@@ -37,6 +40,8 @@ fun RegistrationScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
+    var dialogMessage by remember { mutableStateOf<String?>(null) }
+    var success by remember { mutableStateOf<Boolean>(false) }
 
     val passwordsMatch by remember {
         derivedStateOf { password == confirmPassword }
@@ -49,33 +54,30 @@ fun RegistrationScreen(
         }
     }
 
-    val dialogState = remember { mutableStateOf<String?>(null) }
-    var success = remember { mutableStateOf(false) }
-
-    if (dialogState.value != null) {
-        AlertDialog(
-            onDismissRequest = {
-                dialogState.value = null
-                if (success.value) {
-                    success.value = false
-                    router.navigate(Screen.LogIn.name)
-                }
-            },
-            title = { Text(if (success.value) "Information" else "Error") },
-            text = { Text(dialogState.value.toString()) },
-            confirmButton = {
-                Button(onClick = {
-                    dialogState.value = null
-                    if (success.value) {
-                        success.value = false
-                        router.navigate(Screen.LogIn.name)
-                    }
-                }) {
-                    Text("OK")
-                }
+    LaunchedEffect(userServiceViewModel.registrationState) {
+        when (val apiState = userServiceViewModel.registrationState) {
+            is ApiState.Success -> {
+                dialogMessage = apiState.data
+                success = true
             }
-        )
+            is ApiState.Error -> {
+                dialogMessage = apiState.message
+            }
+            else -> {}
+        }
     }
+
+    OkDialog(
+        title = if (success) "Success" else "Error",
+        content = dialogMessage,
+        onConfirm = {
+            dialogMessage = null
+            if (success) {
+                success = false
+                router.navigate(Screen.LogIn.name)
+            }
+        }
+    )
 
     CenteredScrollContainer(
         modifier = Modifier
@@ -90,7 +92,9 @@ fun RegistrationScreen(
         ) {
             Text(
                 text = "Create Account",
-                style = MaterialTheme.typography.headlineMedium,
+                style = TextStyle(
+                    fontSize = 30.sp,
+                    fontWeight = FontWeight.Bold),
                 modifier = Modifier.padding(bottom = 8.dp)
             )
 
@@ -134,16 +138,22 @@ fun RegistrationScreen(
                     userServiceViewModel.register(
                         email = email,
                         password = password,
-                        locale = "en",
-                        dialogState = dialogState,
-                        successState = success
+                        locale = "en"
                 )},
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp),
                 enabled = isFormValid
             ) {
-                Text("Register", fontSize = 16.sp)
+                Text(
+                    text = if (
+                        userServiceViewModel.registrationState == ApiState.Loading)
+                        "..." else "Register",
+                    style = TextStyle(
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 1.sp)
+                )
             }
         }
     }

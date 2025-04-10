@@ -29,7 +29,9 @@ fun BottomBar(
                 selected = navBackStackEntry?.destination?.hierarchy?.any {
                     it.route == navItem.route.name
                 } == true,
-                onClick = { router.navigate(navItem.route.name) },
+                onClick = {
+                    router.navigate(route = navItem.route.name)
+                },
                 icon = {
                     Icon(
                         painter = painterResource(id = navItem.iconId),

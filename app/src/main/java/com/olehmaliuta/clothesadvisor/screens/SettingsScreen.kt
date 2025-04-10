@@ -7,9 +7,9 @@ import com.olehmaliuta.clothesadvisor.api.http.view.UserServiceViewModel
 
 @Composable
 fun SettingsScreen(
-    userServiceViewModel: UserServiceViewModel
+    authState: AuthState
 ) {
-    when (userServiceViewModel.authState) {
+    when (authState) {
         is AuthState.Authenticated -> {
             ContentForUser()
         }

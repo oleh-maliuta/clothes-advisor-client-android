@@ -18,7 +18,7 @@ interface UserService {
         @Field("email") email: String,
         @Field("password") password: String,
         @Query("locale") locale: String?
-    ): Response<BaseResponse<Unit>>
+    ): Response<BaseResponse<Any>>
 
     @FormUrlEncoded
     @POST("login_with_email")

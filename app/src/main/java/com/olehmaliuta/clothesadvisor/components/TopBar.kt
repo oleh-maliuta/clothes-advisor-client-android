@@ -30,7 +30,6 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.edit
 import com.olehmaliuta.clothesadvisor.api.http.responses.UserProfileResponse
 import com.olehmaliuta.clothesadvisor.api.http.security.AuthState
-import com.olehmaliuta.clothesadvisor.api.http.view.UserServiceViewModel
 import com.olehmaliuta.clothesadvisor.navigation.Router
 import com.olehmaliuta.clothesadvisor.navigation.Screen
 
@@ -38,7 +37,7 @@ import com.olehmaliuta.clothesadvisor.navigation.Screen
 fun TopBar(
     context: Context,
     router: Router,
-    userServiceViewModel: UserServiceViewModel
+    authState: AuthState
 ) {
     val sharedPref = remember {
         context.getSharedPreferences(
@@ -46,7 +45,7 @@ fun TopBar(
             Context.MODE_PRIVATE)
     }
 
-    when (val authState = userServiceViewModel.authState) {
+    when (authState) {
         is AuthState.Authenticated -> {
             AuthorizedTopMenu(
                 sharedPref,

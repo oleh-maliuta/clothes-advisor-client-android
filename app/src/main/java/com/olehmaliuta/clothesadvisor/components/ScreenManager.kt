@@ -7,6 +7,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
@@ -20,72 +21,89 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.olehmaliuta.clothesadvisor.MainActivity
 import com.olehmaliuta.clothesadvisor.api.http.security.AuthState
-import com.olehmaliuta.clothesadvisor.api.http.view.PingServiceViewModel
+import com.olehmaliuta.clothesadvisor.api.http.security.AuthViewModel
 import com.olehmaliuta.clothesadvisor.api.http.view.UserServiceViewModel
 import com.olehmaliuta.clothesadvisor.database.view.ClothDaoViewModel
 import com.olehmaliuta.clothesadvisor.navigation.Router
 import com.olehmaliuta.clothesadvisor.navigation.Screen
+import com.olehmaliuta.clothesadvisor.navigation.StateHandler
 import com.olehmaliuta.clothesadvisor.screens.*
 
 @Composable
 fun ScreenManager(activity: MainActivity) {
-    val navController = rememberNavController()
-    val router = remember { Router(navController) }
-    val snackBarHostState = remember { SnackbarHostState() }
-
     // REST API
-    val pingServiceViewModel: PingServiceViewModel = viewModel()
-    val userServiceViewModel: UserServiceViewModel = viewModel {
-        UserServiceViewModel(activity)
+    val authViewModel: AuthViewModel = viewModel {
+        AuthViewModel(activity)
+    }
+    val userServiceViewModel = viewModel {
+        UserServiceViewModel(
+            activity,
+            authViewModel.authState
+        )
     }
 
     // ROOM DATABASE
     val clothDaoViewModel: ClothDaoViewModel =
         viewModel(factory = ClothDaoViewModel.factory)
 
-    val screens = remember {
-        mapOf<Screen, @Composable () -> Unit>(
-            Screen.Registration to { RegistrationScreen(
-                router = router,
-                userServiceViewModel = userServiceViewModel
-            ) },
-            Screen.LogIn to { LogInScreen(
-                router = router,
-                userServiceViewModel = userServiceViewModel
-            ) },
-            Screen.ClothesList to { ClothesListScreen() },
-            Screen.OutfitList to { OutfitListScreen() },
-            Screen.EditCloth to { EditClothScreen() },
-            Screen.EditOutfit to { EditOutfitScreen() },
-            Screen.Analysis to { AnalysisScreen() },
-            Screen.Statistics to { StatisticsScreen() },
-            Screen.Settings to { SettingsScreen(
-                userServiceViewModel = userServiceViewModel
-            ) }
+    // NAVIGATION
+    val snackBarHostState = remember { SnackbarHostState() }
+    val navController = rememberNavController()
+    val router = remember {
+        Router(
+            navController,
+            listOf<StateHandler>(
+                userServiceViewModel
+            )
         )
     }
 
-    navController.addOnDestinationChangedListener { _, _, _ ->
-        userServiceViewModel.profile(
-            locale = "en"
-        )
+    // SIMPLE VARIABLES
+    val authState = authViewModel.authState.value
+    val screens = mapOf<Screen, @Composable () -> Unit>(
+        Screen.Registration to { RegistrationScreen(
+            router = router,
+            userServiceViewModel = userServiceViewModel
+        ) },
+        Screen.LogIn to { LogInScreen(
+            router = router,
+            userServiceViewModel = userServiceViewModel
+        ) },
+        Screen.ClothesList to { ClothesListScreen() },
+        Screen.OutfitList to { OutfitListScreen() },
+        Screen.EditCloth to { EditClothScreen() },
+        Screen.EditOutfit to { EditOutfitScreen() },
+        Screen.Analysis to { AnalysisScreen() },
+        Screen.Statistics to { StatisticsScreen() },
+        Screen.Settings to { SettingsScreen(
+            authState = authState
+        ) }
+    )
+
+
+    LaunchedEffect(Unit) {
+        navController.addOnDestinationChangedListener { _, _, _ ->
+            authViewModel.profile(
+                locale = "en"
+            )
+        }
     }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            if (userServiceViewModel.authState == AuthState.Loading) {
+            if (authState == AuthState.Loading) {
                 return@Scaffold
             }
 
             TopBar(
                 context = activity,
                 router = router,
-                userServiceViewModel = userServiceViewModel
+                authState = authState
             )
         },
         bottomBar = {
-            if (userServiceViewModel.authState == AuthState.Loading) {
+            if (authState == AuthState.Loading) {
                 return@Scaffold
             }
 
@@ -105,7 +123,7 @@ fun ScreenManager(activity: MainActivity) {
         ) {
             screens.forEach { (route, screen) ->
                 composable(route.name) {
-                    when (val authState = userServiceViewModel.authState) {
+                    when (authState) {
                         AuthState.Loading -> LoadingDisplay()
                         is AuthState.Error -> ErrorDisplay(authState.message)
                         else -> screen()
