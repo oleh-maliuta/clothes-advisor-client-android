@@ -1,5 +1,7 @@
 package com.olehmaliuta.clothesadvisor.components
 
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,6 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.edit
 import com.olehmaliuta.clothesadvisor.api.http.responses.UserProfileResponse
 import com.olehmaliuta.clothesadvisor.api.http.security.AuthState
 import com.olehmaliuta.clothesadvisor.api.http.view.UserServiceViewModel
@@ -32,24 +36,37 @@ import com.olehmaliuta.clothesadvisor.navigation.Screen
 
 @Composable
 fun TopBar(
+    context: Context,
     router: Router,
     userServiceViewModel: UserServiceViewModel
 ) {
+    val sharedPref = remember {
+        context.getSharedPreferences(
+            "user",
+            Context.MODE_PRIVATE)
+    }
+
     when (val authState = userServiceViewModel.authState) {
         is AuthState.Authenticated -> {
-            AuthorizedTopMenu(authState.user ?: UserProfileResponse())
+            AuthorizedTopMenu(
+                sharedPref,
+                router,
+                authState.user ?: UserProfileResponse()
+            )
         }
         AuthState.Unauthenticated -> {
             GuestTopMenu(router)
         }
-        else -> {
-            LoadingTopMenu()
-        }
+        else -> {}
     }
 }
 
 @Composable
-private fun AuthorizedTopMenu(userInfo: UserProfileResponse) {
+private fun AuthorizedTopMenu(
+    sharedPref: SharedPreferences,
+    router: Router,
+    userInfo: UserProfileResponse
+) {
     Row(
         modifier = Modifier
             .statusBarsPadding()
@@ -73,7 +90,13 @@ private fun AuthorizedTopMenu(userInfo: UserProfileResponse) {
                 .padding(end = 3.dp))
 
         TextButton(
-            onClick = { /* ... */ },
+            onClick = {
+                sharedPref.edit {
+                    remove("token")
+                    remove("token_type")
+                }
+                router.navigate(Screen.LogIn.name)
+            },
             shape = RoundedCornerShape(8.dp),
             contentPadding = PaddingValues(0.dp),
             colors = ButtonDefaults.buttonColors(
@@ -163,31 +186,5 @@ private fun GuestTopMenu(router: Router) {
                 )
             }
         }
-    }
-}
-
-@Composable
-private fun LoadingTopMenu() {
-    Row(
-        modifier = Modifier
-            .statusBarsPadding()
-            .fillMaxWidth()
-            .height(50.dp)
-            .padding(horizontal = 8.dp)
-            .background(Color.Transparent),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            text = "Loading...",
-            style = TextStyle(
-                fontSize = 14.sp,
-                lineHeight = 16.sp),
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier
-                .weight(1f)
-                .padding(end = 3.dp))
     }
 }

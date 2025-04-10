@@ -17,7 +17,7 @@ import androidx.core.content.edit
 class UserServiceViewModel(context: Context) : ViewModel() {
     private val service = HttpServiceManager.buildService(UserService::class.java)
     private val sharedPref = context.getSharedPreferences(
-        "general",
+        "user",
         Context.MODE_PRIVATE)
     var authState by mutableStateOf<AuthState>(AuthState.Loading)
         private set
