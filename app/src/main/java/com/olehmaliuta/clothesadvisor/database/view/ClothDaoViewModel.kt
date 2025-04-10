@@ -8,8 +8,6 @@ import com.olehmaliuta.clothesadvisor.App
 import com.olehmaliuta.clothesadvisor.database.AppDb
 
 class ClothDaoViewModel(val database: AppDb) : ViewModel() {
-    val allClothElements = database.clothDao.getAllClothElements()
-
     companion object {
         val factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory{
             @Suppress("UNCHECKED_CAST")
@@ -21,4 +19,8 @@ class ClothDaoViewModel(val database: AppDb) : ViewModel() {
             }
         }
     }
+
+    private val dao = database.clothDao()
+
+    val allClothElements = dao.getAllClothElements()
 }

@@ -64,9 +64,7 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.coil.compose)
 
-    val roomVersion = "2.6.1"
-
-    implementation("androidx.room:room-ktx:$roomVersion")
-    implementation("androidx.room:room-runtime:$roomVersion")
-    kapt("androidx.room:room-compiler:$roomVersion")
+    implementation("androidx.room:room-ktx:2.7.0")
+    implementation("androidx.room:room-runtime:2.7.0")
+    kapt("androidx.room:room-compiler:2.7.0")
 }

@@ -22,6 +22,7 @@ import com.olehmaliuta.clothesadvisor.MainActivity
 import com.olehmaliuta.clothesadvisor.api.http.security.AuthState
 import com.olehmaliuta.clothesadvisor.api.http.view.PingServiceViewModel
 import com.olehmaliuta.clothesadvisor.api.http.view.UserServiceViewModel
+import com.olehmaliuta.clothesadvisor.database.view.ClothDaoViewModel
 import com.olehmaliuta.clothesadvisor.navigation.Router
 import com.olehmaliuta.clothesadvisor.navigation.Screen
 import com.olehmaliuta.clothesadvisor.screens.*
@@ -31,10 +32,16 @@ fun ScreenManager(activity: MainActivity) {
     val navController = rememberNavController()
     val router = remember { Router(navController) }
     val snackBarHostState = remember { SnackbarHostState() }
+
+    // REST API
     val pingServiceViewModel: PingServiceViewModel = viewModel()
     val userServiceViewModel: UserServiceViewModel = viewModel {
         UserServiceViewModel(activity)
     }
+
+    // ROOM DATABASE
+    val clothDaoViewModel: ClothDaoViewModel =
+        viewModel(factory = ClothDaoViewModel.factory)
 
     val screens = remember {
         mapOf<Screen, @Composable () -> Unit>(
