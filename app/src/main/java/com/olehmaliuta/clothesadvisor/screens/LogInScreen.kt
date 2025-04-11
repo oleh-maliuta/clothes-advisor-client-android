@@ -60,7 +60,10 @@ fun LogInScreen(
     LaunchedEffect(userServiceViewModel.logInState) {
         when (val apiState = userServiceViewModel.logInState) {
             is ApiState.Success -> {
-                router.navigate(Screen.ClothesList.name)
+                router.navigate(
+                    route = Screen.ClothesList.name,
+                    apiStatesToRestore = listOf(userServiceViewModel)
+                )
             }
             is ApiState.Error -> {
                 okDialogTitle = "Error"
@@ -168,7 +171,6 @@ fun LogInScreen(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
-                shape = MaterialTheme.shapes.medium,
                 trailingIcon = {
                     TextButton(
                         onClick = { isForgotPasswordDialogOpened = true },

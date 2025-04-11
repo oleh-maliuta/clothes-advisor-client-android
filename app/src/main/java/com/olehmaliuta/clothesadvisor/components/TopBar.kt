@@ -1,7 +1,5 @@
 package com.olehmaliuta.clothesadvisor.components
 
-import android.content.Context
-import android.content.SharedPreferences
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -18,7 +16,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,30 +24,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.edit
-import com.olehmaliuta.clothesadvisor.api.http.responses.UserProfileResponse
 import com.olehmaliuta.clothesadvisor.api.http.security.AuthState
+import com.olehmaliuta.clothesadvisor.api.http.security.AuthViewModel
 import com.olehmaliuta.clothesadvisor.navigation.Router
 import com.olehmaliuta.clothesadvisor.navigation.Screen
 
 @Composable
 fun TopBar(
-    context: Context,
     router: Router,
-    authState: AuthState
+    authViewModel: AuthViewModel
 ) {
-    val sharedPref = remember {
-        context.getSharedPreferences(
-            "user",
-            Context.MODE_PRIVATE)
-    }
-
-    when (authState) {
+    when (authViewModel.authState.value) {
         is AuthState.Authenticated -> {
             AuthorizedTopMenu(
-                sharedPref,
-                router,
-                authState.user ?: UserProfileResponse()
+                authViewModel,
+                router
             )
         }
         AuthState.Unauthenticated -> {
@@ -62,10 +50,13 @@ fun TopBar(
 
 @Composable
 private fun AuthorizedTopMenu(
-    sharedPref: SharedPreferences,
-    router: Router,
-    userInfo: UserProfileResponse
+    authViewModel: AuthViewModel,
+    router: Router
 ) {
+    val userInfo =
+        (authViewModel.authState.value
+                as AuthState.Authenticated).user
+
     Row(
         modifier = Modifier
             .statusBarsPadding()
@@ -77,7 +68,7 @@ private fun AuthorizedTopMenu(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = userInfo.email.toString(),
+            text = userInfo?.email.toString(),
             style = TextStyle(
                 fontSize = 14.sp,
                 lineHeight = 16.sp),
@@ -90,10 +81,7 @@ private fun AuthorizedTopMenu(
 
         TextButton(
             onClick = {
-                sharedPref.edit {
-                    remove("token")
-                    remove("token_type")
-                }
+                authViewModel.logOut()
                 router.navigate(Screen.LogIn.name)
             },
             shape = RoundedCornerShape(8.dp),

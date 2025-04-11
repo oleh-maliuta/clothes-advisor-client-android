@@ -10,13 +10,13 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 
 class Router(
     private val controller: NavHostController,
-    private val defaultStateHandlers: Array<StateHandler>
+    private val defaultStateHandlers: List<StateHandler>
 ) {
     fun navigate(
         route: String,
         navOptions: NavOptions? = null,
         navigatorExtras: Navigator.Extras? = null,
-        apiStatesToRestore: Array<StateHandler>? = null
+        apiStatesToRestore: List<StateHandler>? = null
     ) {
         val currentRoute = controller
             .currentBackStackEntry
@@ -35,7 +35,7 @@ class Router(
     }
 
     private fun restoreState(
-        apiStatesToRestore: Array<StateHandler>?
+        apiStatesToRestore: List<StateHandler>?
     ) {
         val states = apiStatesToRestore ?: defaultStateHandlers
         states.forEach { state ->

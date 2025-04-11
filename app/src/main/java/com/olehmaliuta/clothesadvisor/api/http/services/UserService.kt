@@ -9,6 +9,7 @@ import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Query
 
 interface UserService {
@@ -38,6 +39,15 @@ interface UserService {
     @POST("forgot-password")
     suspend fun forgotPassword(
         @Field("email") email: String,
+        @Query("locale") locale: String?
+    ): Response<BaseResponse<Nothing>>
+
+    @FormUrlEncoded
+    @PUT("change-email")
+    suspend fun changeEmail(
+        @Header("Authorization") token: String,
+        @Field("new_email") newEmail: String,
+        @Field("password") password: String,
         @Query("locale") locale: String?
     ): Response<BaseResponse<Nothing>>
 }

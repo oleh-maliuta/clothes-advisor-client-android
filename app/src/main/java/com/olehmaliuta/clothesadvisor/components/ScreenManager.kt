@@ -49,8 +49,7 @@ fun ScreenManager(activity: MainActivity) {
     // REST API
     val userServiceViewModel = viewModel {
         UserServiceViewModel(
-            activity,
-            authViewModel.authState
+            activity
         )
     }
 
@@ -59,7 +58,7 @@ fun ScreenManager(activity: MainActivity) {
     val router = remember {
         Router(
             navController,
-            arrayOf(
+            listOf(
                 userServiceViewModel
             )
         )
@@ -90,7 +89,9 @@ fun ScreenManager(activity: MainActivity) {
         Screen.Analysis to { AnalysisScreen() },
         Screen.Statistics to { StatisticsScreen() },
         Screen.Settings to { SettingsScreen(
-            authState = authState
+            router = router,
+            authViewModel = authViewModel,
+            userServiceViewModel = userServiceViewModel
         ) }
     )
 
@@ -111,9 +112,8 @@ fun ScreenManager(activity: MainActivity) {
             }
 
             TopBar(
-                context = activity,
                 router = router,
-                authState = authState
+                authViewModel = authViewModel
             )
         },
         bottomBar = {

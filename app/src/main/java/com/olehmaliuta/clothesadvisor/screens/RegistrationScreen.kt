@@ -75,7 +75,10 @@ fun RegistrationScreen(
             dialogMessage = null
             if (success) {
                 success = false
-                router.navigate(Screen.LogIn.name)
+                router.navigate(
+                    route = Screen.LogIn.name,
+                    apiStatesToRestore = listOf(userServiceViewModel)
+                )
             }
         }
     )
