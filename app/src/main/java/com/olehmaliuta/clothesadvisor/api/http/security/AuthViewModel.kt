@@ -17,7 +17,7 @@ class AuthViewModel(
     var authState = mutableStateOf<AuthState>(AuthState.Loading)
 
     fun checkAuth(
-        locale: String
+        locale: String = "en"
     ) {
         viewModelScope.launch {
             authState.value = AuthState.Loading

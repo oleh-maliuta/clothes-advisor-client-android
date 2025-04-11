@@ -28,11 +28,19 @@ class UserServiceViewModel(
         private set
     var logInState by mutableStateOf<ApiState<String?>>(ApiState.Idle)
         private set
+    var forgotPasswordState by mutableStateOf<ApiState<String?>>(ApiState.Idle)
+        private set
+
+    override fun restoreState() {
+        registrationState = ApiState.Idle
+        logInState = ApiState.Idle
+        forgotPasswordState = ApiState.Idle
+    }
 
     fun register(
         email: String,
         password: String,
-        locale: String
+        locale: String = "en"
     ) {
         viewModelScope.launch {
             registrationState = ApiState.Loading
@@ -57,7 +65,7 @@ class UserServiceViewModel(
     fun logIn(
         email: String,
         password: String,
-        locale: String
+        locale: String = "en"
     ) {
         viewModelScope.launch {
             logInState = ApiState.Loading
@@ -85,8 +93,28 @@ class UserServiceViewModel(
         }
     }
 
-    override fun restoreState() {
-        registrationState = ApiState.Idle
-        logInState = ApiState.Idle
+    fun forgotPassword(
+        email: String,
+        locale: String = "en"
+    ) {
+        viewModelScope.launch {
+            forgotPasswordState = ApiState.Loading
+
+            try {
+                val response = service.forgotPassword(email, locale)
+
+                if (response.isSuccessful) {
+                    forgotPasswordState = ApiState.Success(response.body()?.detail)
+                    return@launch
+                } else {
+                    val errorBody = Gson().fromJson(
+                        response.errorBody()?.string(),
+                        BaseResponse::class.java)
+                    forgotPasswordState = ApiState.Error(errorBody.detail)
+                }
+            } catch (e: Exception) {
+                forgotPasswordState = ApiState.Error("Network error: ${e.message}")
+            }
+        }
     }
 }

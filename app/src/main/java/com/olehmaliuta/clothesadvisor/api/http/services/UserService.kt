@@ -18,7 +18,7 @@ interface UserService {
         @Field("email") email: String,
         @Field("password") password: String,
         @Query("locale") locale: String?
-    ): Response<BaseResponse<Any>>
+    ): Response<BaseResponse<Nothing>>
 
     @FormUrlEncoded
     @POST("login_with_email")
@@ -33,4 +33,11 @@ interface UserService {
         @Header("Authorization") token: String,
         @Query("locale") locale: String?
     ): Response<BaseResponse<UserProfileResponse>>
+
+    @FormUrlEncoded
+    @POST("forgot-password")
+    suspend fun forgotPassword(
+        @Field("email") email: String,
+        @Query("locale") locale: String?
+    ): Response<BaseResponse<Nothing>>
 }

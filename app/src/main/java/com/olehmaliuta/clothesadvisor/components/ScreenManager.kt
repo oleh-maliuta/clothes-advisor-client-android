@@ -35,7 +35,6 @@ import com.olehmaliuta.clothesadvisor.api.http.view.UserServiceViewModel
 import com.olehmaliuta.clothesadvisor.database.view.ClothDaoViewModel
 import com.olehmaliuta.clothesadvisor.navigation.Router
 import com.olehmaliuta.clothesadvisor.navigation.Screen
-import com.olehmaliuta.clothesadvisor.navigation.StateHandler
 import com.olehmaliuta.clothesadvisor.screens.*
 
 @Composable
@@ -60,7 +59,7 @@ fun ScreenManager(activity: MainActivity) {
     val router = remember {
         Router(
             navController,
-            listOf<StateHandler>(
+            arrayOf(
                 userServiceViewModel
             )
         )
@@ -97,9 +96,7 @@ fun ScreenManager(activity: MainActivity) {
 
     LaunchedEffect(Unit) {
         navController.addOnDestinationChangedListener { _, _, _ ->
-            authViewModel.checkAuth(
-                locale = "en"
-            )
+            authViewModel.checkAuth()
         }
     }
 
@@ -194,7 +191,7 @@ private fun ErrorDisplay(
             Spacer(modifier = Modifier.height(10.dp))
 
             TextButton(
-                onClick = { authViewModel.checkAuth(locale = "en") },
+                onClick = { authViewModel.checkAuth() },
                 shape = RoundedCornerShape(8.dp),
                 contentPadding = PaddingValues(0.dp),
                 colors = ButtonDefaults.buttonColors(

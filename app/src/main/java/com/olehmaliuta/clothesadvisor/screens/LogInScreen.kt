@@ -2,6 +2,7 @@ package com.olehmaliuta.clothesadvisor.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -25,10 +26,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.olehmaliuta.clothesadvisor.api.http.security.ApiState
 import com.olehmaliuta.clothesadvisor.api.http.view.UserServiceViewModel
+import com.olehmaliuta.clothesadvisor.components.AcceptCancelDialog
 import com.olehmaliuta.clothesadvisor.components.CenteredScrollContainer
 import com.olehmaliuta.clothesadvisor.components.OkDialog
 import com.olehmaliuta.clothesadvisor.navigation.Router
@@ -41,7 +44,10 @@ fun LogInScreen(
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var dialogMessage by remember { mutableStateOf<String?>(null) }
+    var emailToRestorePassword by remember { mutableStateOf("") }
+    var okDialogTitle by remember { mutableStateOf("") }
+    var okDialogMessage by remember { mutableStateOf<String?>(null) }
+    var isForgotPasswordDialogOpened by remember { mutableStateOf(false) }
 
     val isFormValid by remember {
         derivedStateOf {
@@ -55,22 +61,76 @@ fun LogInScreen(
         when (val apiState = userServiceViewModel.logInState) {
             is ApiState.Success -> {
                 router.navigate(Screen.ClothesList.name)
-                userServiceViewModel.logInState
             }
             is ApiState.Error -> {
-                dialogMessage = apiState.message
+                okDialogTitle = "Error"
+                okDialogMessage = apiState.message
+            }
+            else -> {}
+        }
+    }
+
+    LaunchedEffect(userServiceViewModel.forgotPasswordState) {
+        when (val apiState = userServiceViewModel.forgotPasswordState) {
+            is ApiState.Success -> {
+                isForgotPasswordDialogOpened = false
+                okDialogTitle = "Email is sent"
+                okDialogMessage = apiState.data
+            }
+            is ApiState.Error -> {
+                isForgotPasswordDialogOpened = false
+                okDialogTitle = "Error"
+                okDialogMessage = apiState.message
             }
             else -> {}
         }
     }
 
     OkDialog(
-        title = "Error",
-        content = dialogMessage,
+        title = okDialogTitle,
+        content = okDialogMessage,
         onConfirm = {
-            dialogMessage = null
+            okDialogMessage = null
         }
     )
+
+    AcceptCancelDialog(
+        isOpened = isForgotPasswordDialogOpened,
+        title = "Forgot password?",
+        onDismissRequest = {
+            isForgotPasswordDialogOpened = false
+        },
+        onAccept = {
+            userServiceViewModel.forgotPassword(
+                email = emailToRestorePassword
+            )
+        },
+        acceptText = "Send mail",
+        acceptEnabled =
+            userServiceViewModel.forgotPasswordState !is ApiState.Loading &&
+            emailToRestorePassword.isNotBlank()
+    ) {
+        Column {
+            Text(
+                text =
+                    "Enter email address of your account to" +
+                            " send an email to give you a" +
+                            " permission to reset the password.",
+                textAlign = TextAlign.Justify
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            OutlinedTextField(
+                value = emailToRestorePassword,
+                onValueChange = { emailToRestorePassword = it },
+                label = { Text("Email") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+            )
+        }
+    }
 
     CenteredScrollContainer(
         modifier = Modifier
@@ -111,7 +171,7 @@ fun LogInScreen(
                 shape = MaterialTheme.shapes.medium,
                 trailingIcon = {
                     TextButton(
-                        onClick = { /* ... */ },
+                        onClick = { isForgotPasswordDialogOpened = true },
                         modifier = Modifier.padding(end = 4.dp)
                     ) {
                         Text(
@@ -127,8 +187,7 @@ fun LogInScreen(
                 onClick = {
                     userServiceViewModel.logIn(
                         email = email,
-                        password = password,
-                        locale = "en"
+                        password = password
                     )},
                 modifier = Modifier
                     .fillMaxWidth()

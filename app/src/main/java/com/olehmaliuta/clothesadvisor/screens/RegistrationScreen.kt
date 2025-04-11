@@ -138,8 +138,7 @@ fun RegistrationScreen(
                 onClick = {
                     userServiceViewModel.register(
                         email = email,
-                        password = password,
-                        locale = "en"
+                        password = password
                 )},
                 modifier = Modifier
                     .fillMaxWidth()
