@@ -1,11 +1,20 @@
 package com.olehmaliuta.clothesadvisor.components
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -31,10 +40,14 @@ import com.olehmaliuta.clothesadvisor.screens.*
 
 @Composable
 fun ScreenManager(activity: MainActivity) {
-    // REST API
+    // AUTHENTICATION
     val authViewModel: AuthViewModel = viewModel {
-        AuthViewModel(activity)
+        AuthViewModel(
+            activity
+        )
     }
+
+    // REST API
     val userServiceViewModel = viewModel {
         UserServiceViewModel(
             activity,
@@ -42,12 +55,7 @@ fun ScreenManager(activity: MainActivity) {
         )
     }
 
-    // ROOM DATABASE
-    val clothDaoViewModel: ClothDaoViewModel =
-        viewModel(factory = ClothDaoViewModel.factory)
-
     // NAVIGATION
-    val snackBarHostState = remember { SnackbarHostState() }
     val navController = rememberNavController()
     val router = remember {
         Router(
@@ -57,6 +65,13 @@ fun ScreenManager(activity: MainActivity) {
             )
         )
     }
+
+    // ROOM DATABASE
+    val clothDaoViewModel: ClothDaoViewModel =
+        viewModel(factory = ClothDaoViewModel.factory)
+
+    // SNACK BAR
+    val snackBarHostState = remember { SnackbarHostState() }
 
     // SIMPLE VARIABLES
     val authState = authViewModel.authState.value
@@ -80,10 +95,9 @@ fun ScreenManager(activity: MainActivity) {
         ) }
     )
 
-
     LaunchedEffect(Unit) {
         navController.addOnDestinationChangedListener { _, _, _ ->
-            authViewModel.profile(
+            authViewModel.checkAuth(
                 locale = "en"
             )
         }
@@ -92,7 +106,10 @@ fun ScreenManager(activity: MainActivity) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            if (authState == AuthState.Loading) {
+            if (
+                authState is AuthState.Loading ||
+                authState is AuthState.Error
+                ) {
                 return@Scaffold
             }
 
@@ -103,7 +120,10 @@ fun ScreenManager(activity: MainActivity) {
             )
         },
         bottomBar = {
-            if (authState == AuthState.Loading) {
+            if (
+                authState is AuthState.Loading ||
+                authState is AuthState.Error
+                ) {
                 return@Scaffold
             }
 
@@ -125,7 +145,10 @@ fun ScreenManager(activity: MainActivity) {
                 composable(route.name) {
                     when (authState) {
                         AuthState.Loading -> LoadingDisplay()
-                        is AuthState.Error -> ErrorDisplay(authState.message)
+                        is AuthState.Error -> ErrorDisplay(
+                            authViewModel = authViewModel,
+                            message = authState.message
+                        )
                         else -> screen()
                     }
                 }
@@ -151,17 +174,74 @@ private fun LoadingDisplay() {
 }
 
 @Composable
-private fun ErrorDisplay(message: String) {
+private fun ErrorDisplay(
+    authViewModel: AuthViewModel,
+    message: String
+) {
     CenteredScrollContainer(
         modifier = Modifier
             .padding(horizontal = 10.dp)
     ) {
-        Text(
-            text = message,
-            textAlign = TextAlign.Justify,
-            style = TextStyle(
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold),
-        )
+        Column {
+            Text(
+                text = message,
+                textAlign = TextAlign.Justify,
+                style = TextStyle(
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold),
+            )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            TextButton(
+                onClick = { authViewModel.checkAuth(locale = "en") },
+                shape = RoundedCornerShape(8.dp),
+                contentPadding = PaddingValues(0.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(32.dp)
+            ) {
+                Text(
+                    text = "Try again",
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .padding(0.dp),
+                    style = TextStyle(
+                        fontSize = 14.sp,
+                        lineHeight = 16.sp
+                    )
+                )
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            TextButton(
+                onClick = { authViewModel.logOut() },
+                shape = RoundedCornerShape(8.dp),
+                contentPadding = PaddingValues(0.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(32.dp)
+            ) {
+                Text(
+                    text = "Log out",
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .padding(0.dp),
+                    style = TextStyle(
+                        fontSize = 14.sp,
+                        lineHeight = 16.sp
+                    )
+                )
+            }
+        }
     }
 }

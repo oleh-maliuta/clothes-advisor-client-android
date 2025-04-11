@@ -45,7 +45,9 @@ fun LogInScreen(
 
     val isFormValid by remember {
         derivedStateOf {
-            email.isNotBlank() && password.isNotBlank()
+            email.isNotBlank() &&
+                    password.isNotBlank() &&
+                    userServiceViewModel.logInState !is ApiState.Loading
         }
     }
 
@@ -113,7 +115,7 @@ fun LogInScreen(
                         modifier = Modifier.padding(end = 4.dp)
                     ) {
                         Text(
-                            "Forgot password?",
+                            "Forgot?",
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.primary
                         )

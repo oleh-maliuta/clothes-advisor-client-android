@@ -9,12 +9,14 @@ import com.olehmaliuta.clothesadvisor.api.http.HttpServiceManager
 import com.olehmaliuta.clothesadvisor.api.http.services.UserService
 import kotlinx.coroutines.launch
 
-class AuthViewModel(context: Context) : ViewModel() {
+class AuthViewModel(
+    context: Context
+) : ViewModel() {
     private val service = HttpServiceManager.buildService(UserService::class.java)
     private val sharedPref = context.getSharedPreferences("user", Context.MODE_PRIVATE)
     var authState = mutableStateOf<AuthState>(AuthState.Loading)
 
-    fun profile(
+    fun checkAuth(
         locale: String
     ) {
         viewModelScope.launch {
@@ -45,5 +47,13 @@ class AuthViewModel(context: Context) : ViewModel() {
                 authState.value = AuthState.Error("Network error: ${e.message}")
             }
         }
+    }
+
+    fun logOut() {
+        sharedPref.edit {
+            remove("token")
+            remove("token_type")
+        }
+        authState.value = AuthState.Unauthenticated
     }
 }

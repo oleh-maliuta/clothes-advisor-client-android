@@ -50,7 +50,8 @@ fun RegistrationScreen(
         derivedStateOf {
             email.isNotBlank() &&
                     password.isNotBlank() &&
-                    passwordsMatch
+                    passwordsMatch &&
+                    userServiceViewModel.registrationState !is ApiState.Loading
         }
     }
 
