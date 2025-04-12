@@ -5,8 +5,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "clothes")
-data class Cloth(
+@Entity(tableName = "clothing_items")
+data class ClothingItem(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
 

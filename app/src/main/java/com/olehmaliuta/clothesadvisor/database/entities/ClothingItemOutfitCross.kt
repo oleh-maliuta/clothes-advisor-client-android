@@ -6,13 +6,13 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 
 @Entity(
-    tableName = "cloth_outfit_cross",
-    primaryKeys = ["cloth_id", "outfit_id"],
+    tableName = "clothing_item_outfit_cross",
+    primaryKeys = ["clothing_item_id", "outfit_id"],
     foreignKeys = [
         ForeignKey(
-            entity = Cloth::class,
+            entity = ClothingItem::class,
             parentColumns = ["id"],
-            childColumns = ["cloth_id"],
+            childColumns = ["clothing_item_id"],
             onDelete = ForeignKey.CASCADE
         ),
         ForeignKey(
@@ -24,9 +24,9 @@ import androidx.room.Index
     ],
     indices = [Index("outfit_id")]
 )
-data class ClothOutfitCross (
-    @ColumnInfo(name = "cloth_id")
-    val clothId: Int,
+data class ClothingItemOutfitCross (
+    @ColumnInfo(name = "clothing_item_id")
+    val clothingItemId: Int,
     @ColumnInfo(name = "outfit_id")
     val outfitId: Int,
 )

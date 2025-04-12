@@ -5,15 +5,15 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.olehmaliuta.clothesadvisor.database.access.ClothDao
+import com.olehmaliuta.clothesadvisor.database.access.ClothingItemDao
 import com.olehmaliuta.clothesadvisor.database.converters.DateConverter
 import com.olehmaliuta.clothesadvisor.database.entities.*
 
 @Database(
     entities = [
-        Cloth::class,
+        ClothingItem::class,
         Outfit::class,
-        ClothOutfitCross::class
+        ClothingItemOutfitCross::class
     ],
     version = 1
 )
@@ -21,7 +21,7 @@ import com.olehmaliuta.clothesadvisor.database.entities.*
     DateConverter::class
 ])
 abstract class AppDb : RoomDatabase() {
-    abstract fun clothDao(): ClothDao
+    abstract fun clothingItemDao(): ClothingItemDao
 
     companion object {
         @Volatile

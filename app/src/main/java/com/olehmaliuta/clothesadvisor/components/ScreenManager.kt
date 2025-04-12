@@ -32,7 +32,7 @@ import com.olehmaliuta.clothesadvisor.MainActivity
 import com.olehmaliuta.clothesadvisor.api.http.security.AuthState
 import com.olehmaliuta.clothesadvisor.api.http.security.AuthViewModel
 import com.olehmaliuta.clothesadvisor.api.http.view.UserApiViewModel
-import com.olehmaliuta.clothesadvisor.database.view.ClothDaoViewModel
+import com.olehmaliuta.clothesadvisor.database.view.ClothingItemDaoViewModel
 import com.olehmaliuta.clothesadvisor.navigation.Router
 import com.olehmaliuta.clothesadvisor.navigation.Screen
 import com.olehmaliuta.clothesadvisor.screens.*
@@ -65,8 +65,8 @@ fun ScreenManager(activity: MainActivity) {
     }
 
     // ROOM DATABASE
-    val clothDaoViewModel: ClothDaoViewModel =
-        viewModel(factory = ClothDaoViewModel.factory)
+    val clothingItemDaoViewModel: ClothingItemDaoViewModel =
+        viewModel(factory = ClothingItemDaoViewModel.factory)
 
     // SNACK BAR
     val snackBarHostState = remember { SnackbarHostState() }

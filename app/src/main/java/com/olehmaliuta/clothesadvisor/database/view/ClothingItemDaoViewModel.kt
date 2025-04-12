@@ -7,7 +7,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.olehmaliuta.clothesadvisor.App
 import com.olehmaliuta.clothesadvisor.database.AppDb
 
-class ClothDaoViewModel(val database: AppDb) : ViewModel() {
+class ClothingItemDaoViewModel(val database: AppDb) : ViewModel() {
     companion object {
         val factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory{
             @Suppress("UNCHECKED_CAST")
@@ -15,12 +15,12 @@ class ClothDaoViewModel(val database: AppDb) : ViewModel() {
                 modelClass: Class<T>,
                 extras: CreationExtras): T {
                 val database = (checkNotNull(extras[APPLICATION_KEY]) as App).database
-                return ClothDaoViewModel(database) as T
+                return ClothingItemDaoViewModel(database) as T
             }
         }
     }
 
-    private val dao = database.clothDao()
+    private val dao = database.clothingItemDao()
 
-    val allClothElements = dao.getAllClothElements()
+    val allClothingItems = dao.getAllClothingItems()
 }
