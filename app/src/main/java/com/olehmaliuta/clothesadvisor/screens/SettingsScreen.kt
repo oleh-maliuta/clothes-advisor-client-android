@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -28,7 +30,7 @@ import androidx.compose.ui.unit.sp
 import com.olehmaliuta.clothesadvisor.api.http.security.ApiState
 import com.olehmaliuta.clothesadvisor.api.http.security.AuthState
 import com.olehmaliuta.clothesadvisor.api.http.security.AuthViewModel
-import com.olehmaliuta.clothesadvisor.api.http.view.UserServiceViewModel
+import com.olehmaliuta.clothesadvisor.api.http.view.UserApiViewModel
 import com.olehmaliuta.clothesadvisor.components.CenteredScrollContainer
 import com.olehmaliuta.clothesadvisor.components.OkDialog
 import com.olehmaliuta.clothesadvisor.navigation.Router
@@ -38,14 +40,14 @@ import com.olehmaliuta.clothesadvisor.navigation.Screen
 fun SettingsScreen(
     router: Router,
     authViewModel: AuthViewModel,
-    userServiceViewModel: UserServiceViewModel
+    userApiViewModel: UserApiViewModel
 ) {
     when (authViewModel.authState.value) {
         is AuthState.Authenticated -> {
             ContentForUser(
                 router = router,
                 authViewModel = authViewModel,
-                userServiceViewModel = userServiceViewModel
+                userApiViewModel = userApiViewModel
             )
         }
         AuthState.Unauthenticated -> {
@@ -59,7 +61,7 @@ fun SettingsScreen(
 private fun ContentForUser(
     router: Router,
     authViewModel: AuthViewModel,
-    userServiceViewModel: UserServiceViewModel
+    userApiViewModel: UserApiViewModel
 ) {
     var okDialogTitle = remember { mutableStateOf("") }
     var okDialogMessage = remember { mutableStateOf<String?>(null) }
@@ -70,11 +72,11 @@ private fun ContentForUser(
         onConfirm = {
             okDialogMessage.value = null
 
-            if (userServiceViewModel.changeEmailState is ApiState.Success) {
+            if (userApiViewModel.changeEmailState is ApiState.Success) {
                 authViewModel.logOut()
                 router.navigate(
                     route = Screen.LogIn.name,
-                    apiStatesToRestore = listOf(userServiceViewModel)
+                    apiStatesToRestore = listOf(userApiViewModel)
                 )
             }
         }
@@ -84,6 +86,7 @@ private fun ContentForUser(
         modifier = Modifier
             .padding(top = 10.dp)
             .padding(horizontal = 8.dp)
+            .verticalScroll(rememberScrollState())
     ) {
         Text(
             text = "Settings",
@@ -100,10 +103,20 @@ private fun ContentForUser(
         Spacer(modifier = Modifier.height(30.dp))
 
         ChangeEmailForm(
-            userServiceViewModel = userServiceViewModel,
+            userApiViewModel = userApiViewModel,
             okDialogTitle = okDialogTitle,
             okDialogMessage = okDialogMessage
         )
+
+        Spacer(modifier = Modifier.height(30.dp))
+
+        ChangePasswordForm(
+            userApiViewModel = userApiViewModel,
+            okDialogTitle = okDialogTitle,
+            okDialogMessage = okDialogMessage
+        )
+
+        Spacer(modifier = Modifier.height(15.dp))
     }
 }
 
@@ -128,7 +141,7 @@ private fun ContentForGuest() {
 
 @Composable
 private fun ChangeEmailForm(
-    userServiceViewModel: UserServiceViewModel,
+    userApiViewModel: UserApiViewModel,
     okDialogTitle: MutableState<String>,
     okDialogMessage: MutableState<String?>
 ) {
@@ -139,12 +152,13 @@ private fun ChangeEmailForm(
         derivedStateOf {
             newEmail.isNotBlank() &&
                     password.isNotBlank() &&
-                    userServiceViewModel.changeEmailState !is ApiState.Loading
+                    userApiViewModel.changeEmailState !is ApiState.Loading &&
+                    userApiViewModel.changePasswordState !is ApiState.Loading
         }
     }
 
-    LaunchedEffect(userServiceViewModel.changeEmailState) {
-        when (val apiState = userServiceViewModel.changeEmailState) {
+    LaunchedEffect(userApiViewModel.changeEmailState) {
+        when (val apiState = userApiViewModel.changeEmailState) {
             is ApiState.Success -> {
                 okDialogTitle.value = "Success"
                 okDialogMessage.value = apiState.data
@@ -198,9 +212,116 @@ private fun ChangeEmailForm(
 
         Button(
             onClick = {
-                userServiceViewModel.changeEmail(
+                userApiViewModel.changeEmail(
                     newEmail,
                     password
+                )
+            },
+            modifier = Modifier
+                .height(40.dp),
+            enabled = isFormValid
+        ) {
+            Text(
+                text = "Apply",
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 1.sp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun ChangePasswordForm(
+    userApiViewModel: UserApiViewModel,
+    okDialogTitle: MutableState<String>,
+    okDialogMessage: MutableState<String?>
+) {
+    var oldPassword by remember { mutableStateOf("") }
+    var newPassword by remember { mutableStateOf("") }
+    var confirmNewPassword by remember { mutableStateOf("") }
+
+    val passwordsMatch by remember {
+        derivedStateOf { newPassword == confirmNewPassword }
+    }
+    val isFormValid by remember {
+        derivedStateOf {
+            oldPassword.isNotBlank() &&
+                    newPassword.isNotBlank() &&
+                    passwordsMatch &&
+                    userApiViewModel.changeEmailState !is ApiState.Loading &&
+                    userApiViewModel.changePasswordState !is ApiState.Loading
+        }
+    }
+
+    LaunchedEffect(userApiViewModel.changePasswordState) {
+        when (val apiState = userApiViewModel.changePasswordState) {
+            is ApiState.Success -> {
+                okDialogTitle.value = "Success"
+                okDialogMessage.value = apiState.data
+            }
+            is ApiState.Error -> {
+                okDialogTitle.value = "Error"
+                okDialogMessage.value = apiState.message
+            }
+            else -> {}
+        }
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth(),
+    ) {
+        Text(
+            text = "Change password",
+            style = TextStyle(
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 1.sp,
+                lineHeight = 35.sp)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = oldPassword,
+            onValueChange = { oldPassword = it },
+            label = { Text("Old Password") },
+            visualTransformation = PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = newPassword,
+            onValueChange = { newPassword = it },
+            label = { Text("New Password") },
+            visualTransformation = PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = confirmNewPassword,
+            onValueChange = { confirmNewPassword = it },
+            label = { Text("Confirm New Password") },
+            visualTransformation = PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Button(
+            onClick = {
+                userApiViewModel.changePassword(
+                    oldPassword,
+                    newPassword
                 )
             },
             modifier = Modifier

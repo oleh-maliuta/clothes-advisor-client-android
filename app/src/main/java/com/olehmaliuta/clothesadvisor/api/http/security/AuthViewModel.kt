@@ -6,19 +6,17 @@ import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.olehmaliuta.clothesadvisor.api.http.HttpServiceManager
-import com.olehmaliuta.clothesadvisor.api.http.services.UserService
+import com.olehmaliuta.clothesadvisor.api.http.services.UserApiService
 import kotlinx.coroutines.launch
 
 class AuthViewModel(
     context: Context
 ) : ViewModel() {
-    private val service = HttpServiceManager.buildService(UserService::class.java)
+    private val service = HttpServiceManager.buildService(UserApiService::class.java)
     private val sharedPref = context.getSharedPreferences("user", Context.MODE_PRIVATE)
     var authState = mutableStateOf<AuthState>(AuthState.Loading)
 
-    fun checkAuth(
-        locale: String = "en"
-    ) {
+    fun checkAuth() {
         viewModelScope.launch {
             authState.value = AuthState.Loading
             try {
@@ -31,8 +29,7 @@ class AuthViewModel(
                 }
 
                 val response = service.profile(
-                    "${tokenType ?: "bearer"} $token",
-                    locale)
+                    "${tokenType ?: "bearer"} $token")
 
                 if (response.isSuccessful) {
                     authState.value = AuthState.Authenticated(response.body()?.data)

@@ -26,7 +26,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.olehmaliuta.clothesadvisor.api.http.security.ApiState
-import com.olehmaliuta.clothesadvisor.api.http.view.UserServiceViewModel
+import com.olehmaliuta.clothesadvisor.api.http.view.UserApiViewModel
 import com.olehmaliuta.clothesadvisor.components.CenteredScrollContainer
 import com.olehmaliuta.clothesadvisor.components.OkDialog
 import com.olehmaliuta.clothesadvisor.navigation.Router
@@ -35,7 +35,7 @@ import com.olehmaliuta.clothesadvisor.navigation.Screen
 @Composable
 fun RegistrationScreen(
     router: Router,
-    userServiceViewModel: UserServiceViewModel
+    userApiViewModel: UserApiViewModel
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -51,12 +51,12 @@ fun RegistrationScreen(
             email.isNotBlank() &&
                     password.isNotBlank() &&
                     passwordsMatch &&
-                    userServiceViewModel.registrationState !is ApiState.Loading
+                    userApiViewModel.registrationState !is ApiState.Loading
         }
     }
 
-    LaunchedEffect(userServiceViewModel.registrationState) {
-        when (val apiState = userServiceViewModel.registrationState) {
+    LaunchedEffect(userApiViewModel.registrationState) {
+        when (val apiState = userApiViewModel.registrationState) {
             is ApiState.Success -> {
                 dialogMessage = apiState.data
                 success = true
@@ -77,7 +77,7 @@ fun RegistrationScreen(
                 success = false
                 router.navigate(
                     route = Screen.LogIn.name,
-                    apiStatesToRestore = listOf(userServiceViewModel)
+                    apiStatesToRestore = listOf(userApiViewModel)
                 )
             }
         }
@@ -139,7 +139,7 @@ fun RegistrationScreen(
 
             Button(
                 onClick = {
-                    userServiceViewModel.register(
+                    userApiViewModel.register(
                         email = email,
                         password = password
                 )},
@@ -150,7 +150,7 @@ fun RegistrationScreen(
             ) {
                 Text(
                     text = if (
-                        userServiceViewModel.registrationState == ApiState.Loading)
+                        userApiViewModel.registrationState == ApiState.Loading)
                         "..." else "Register",
                     style = TextStyle(
                         fontSize = 18.sp,

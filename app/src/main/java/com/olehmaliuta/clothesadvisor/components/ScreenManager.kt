@@ -31,7 +31,7 @@ import androidx.navigation.compose.rememberNavController
 import com.olehmaliuta.clothesadvisor.MainActivity
 import com.olehmaliuta.clothesadvisor.api.http.security.AuthState
 import com.olehmaliuta.clothesadvisor.api.http.security.AuthViewModel
-import com.olehmaliuta.clothesadvisor.api.http.view.UserServiceViewModel
+import com.olehmaliuta.clothesadvisor.api.http.view.UserApiViewModel
 import com.olehmaliuta.clothesadvisor.database.view.ClothDaoViewModel
 import com.olehmaliuta.clothesadvisor.navigation.Router
 import com.olehmaliuta.clothesadvisor.navigation.Screen
@@ -47,8 +47,8 @@ fun ScreenManager(activity: MainActivity) {
     }
 
     // REST API
-    val userServiceViewModel = viewModel {
-        UserServiceViewModel(
+    val userApiViewModel = viewModel {
+        UserApiViewModel(
             activity
         )
     }
@@ -59,7 +59,7 @@ fun ScreenManager(activity: MainActivity) {
         Router(
             navController,
             listOf(
-                userServiceViewModel
+                userApiViewModel
             )
         )
     }
@@ -71,16 +71,17 @@ fun ScreenManager(activity: MainActivity) {
     // SNACK BAR
     val snackBarHostState = remember { SnackbarHostState() }
 
+
     // SIMPLE VARIABLES
     val authState = authViewModel.authState.value
     val screens = mapOf<Screen, @Composable () -> Unit>(
         Screen.Registration to { RegistrationScreen(
             router = router,
-            userServiceViewModel = userServiceViewModel
+            userApiViewModel = userApiViewModel
         ) },
         Screen.LogIn to { LogInScreen(
             router = router,
-            userServiceViewModel = userServiceViewModel
+            userApiViewModel = userApiViewModel
         ) },
         Screen.ClothesList to { ClothesListScreen() },
         Screen.OutfitList to { OutfitListScreen() },
@@ -91,7 +92,7 @@ fun ScreenManager(activity: MainActivity) {
         Screen.Settings to { SettingsScreen(
             router = router,
             authViewModel = authViewModel,
-            userServiceViewModel = userServiceViewModel
+            userApiViewModel = userApiViewModel
         ) }
     )
 

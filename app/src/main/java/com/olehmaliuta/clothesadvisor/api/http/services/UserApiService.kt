@@ -12,7 +12,7 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Query
 
-interface UserService {
+interface UserApiService {
     @FormUrlEncoded
     @POST("register")
     suspend fun register(
@@ -26,13 +26,11 @@ interface UserService {
     suspend fun logIn(
         @Field("email") email: String,
         @Field("password") password: String,
-        @Query("locale") locale: String?
     ): Response<BaseResponse<TokenResponse>>
 
     @GET("profile")
     suspend fun profile(
         @Header("Authorization") token: String,
-        @Query("locale") locale: String?
     ): Response<BaseResponse<UserProfileResponse>>
 
     @FormUrlEncoded
@@ -49,5 +47,13 @@ interface UserService {
         @Field("new_email") newEmail: String,
         @Field("password") password: String,
         @Query("locale") locale: String?
+    ): Response<BaseResponse<Nothing>>
+
+    @FormUrlEncoded
+    @PUT("change-password")
+    suspend fun changePassword(
+        @Header("Authorization") token: String,
+        @Field("old_password") oldPassword: String,
+        @Field("new_password") newPassword: String,
     ): Response<BaseResponse<Nothing>>
 }

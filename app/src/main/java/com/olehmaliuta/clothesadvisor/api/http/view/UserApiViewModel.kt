@@ -11,14 +11,14 @@ import com.google.gson.Gson
 import com.olehmaliuta.clothesadvisor.api.http.HttpServiceManager
 import com.olehmaliuta.clothesadvisor.api.http.responses.BaseResponse
 import com.olehmaliuta.clothesadvisor.api.http.security.ApiState
-import com.olehmaliuta.clothesadvisor.api.http.services.UserService
+import com.olehmaliuta.clothesadvisor.api.http.services.UserApiService
 import com.olehmaliuta.clothesadvisor.navigation.StateHandler
 import kotlinx.coroutines.launch
 
-class UserServiceViewModel(
+class UserApiViewModel(
     context: Context
 ) : ViewModel(), StateHandler {
-    private val service = HttpServiceManager.buildService(UserService::class.java)
+    private val service = HttpServiceManager.buildService(UserApiService::class.java)
     private val sharedPref = context.getSharedPreferences("user", Context.MODE_PRIVATE)
 
     var registrationState by mutableStateOf<ApiState<String?>>(ApiState.Idle)
@@ -29,12 +29,15 @@ class UserServiceViewModel(
         private set
     var changeEmailState by mutableStateOf<ApiState<String?>>(ApiState.Idle)
         private set
+    var changePasswordState by mutableStateOf<ApiState<String?>>(ApiState.Idle)
+        private set
 
     override fun restoreState() {
         registrationState = ApiState.Idle
         logInState = ApiState.Idle
         forgotPasswordState = ApiState.Idle
         changeEmailState = ApiState.Idle
+        changePasswordState = ApiState.Idle
     }
 
     fun register(
@@ -64,14 +67,13 @@ class UserServiceViewModel(
 
     fun logIn(
         email: String,
-        password: String,
-        locale: String = "en"
+        password: String
     ) {
         viewModelScope.launch {
             logInState = ApiState.Loading
 
             try {
-                val response = service.logIn(email, password, locale)
+                val response = service.logIn(email, password)
                 val body = response.body()
 
                 if (response.isSuccessful) {
@@ -148,6 +150,38 @@ class UserServiceViewModel(
                 }
             } catch (e: Exception) {
                 changeEmailState = ApiState.Error("Network error: ${e.message}")
+            }
+        }
+    }
+
+    fun changePassword(
+        oldPassword: String,
+        newPassword: String
+    ) {
+        viewModelScope.launch {
+            changePasswordState = ApiState.Loading
+
+            val token = sharedPref.getString("token", "")
+            val tokenType = sharedPref.getString("token_type", null)
+
+            try {
+                val response = service.changePassword(
+                    "${tokenType ?: "bearer"} $token",
+                    oldPassword,
+                    newPassword
+                )
+
+                if (response.isSuccessful) {
+                    changePasswordState = ApiState.Success(response.body()?.detail)
+                    return@launch
+                } else {
+                    val errorBody = Gson().fromJson(
+                        response.errorBody()?.string(),
+                        BaseResponse::class.java)
+                    changePasswordState = ApiState.Error(errorBody.detail)
+                }
+            } catch (e: Exception) {
+                changePasswordState = ApiState.Error("Network error: ${e.message}")
             }
         }
     }
