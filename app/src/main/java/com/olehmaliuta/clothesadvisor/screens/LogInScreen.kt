@@ -1,14 +1,18 @@
 package com.olehmaliuta.clothesadvisor.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -22,6 +26,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -45,6 +51,7 @@ fun LogInScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var emailToRestorePassword by remember { mutableStateOf("") }
+    var syncByServerData by remember { mutableStateOf(true) }
     var okDialogTitle by remember { mutableStateOf("") }
     var okDialogMessage by remember { mutableStateOf<String?>(null) }
     var isForgotPasswordDialogOpened by remember { mutableStateOf(false) }
@@ -185,11 +192,33 @@ fun LogInScreen(
                 }
             )
 
+            Spacer(Modifier.height(2.dp))
+
+            Row(
+                modifier = Modifier.clickable {
+                    syncByServerData = !syncByServerData
+                }
+            ) {
+                Checkbox(
+                    checked = syncByServerData,
+                    onCheckedChange = null,
+                    modifier = Modifier.semantics {
+                        this.contentDescription =
+                            if (syncByServerData) "Checked" else "Unchecked"
+                    }
+                )
+                Spacer(Modifier.width(8.dp))
+                Text("Sync. by the server data")
+            }
+
+            Spacer(Modifier.height(2.dp))
+
             Button(
                 onClick = {
                     userApiViewModel.logIn(
                         email = email,
-                        password = password
+                        password = password,
+                        syncByServerData = syncByServerData
                     )},
                 modifier = Modifier
                     .fillMaxWidth()

@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.olehmaliuta.clothesadvisor.api.http.HttpServiceManager
 import com.olehmaliuta.clothesadvisor.api.http.services.UserApiService
@@ -12,11 +13,23 @@ import kotlinx.coroutines.launch
 class AuthViewModel(
     context: Context
 ) : ViewModel() {
+    class Factory(
+        private val context: Context
+    ) : ViewModelProvider.Factory {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(AuthViewModel::class.java)) {
+                return AuthViewModel(context) as T
+            }
+            throw IllegalArgumentException("Unknown ViewModel class")
+        }
+    }
+
     private val service = HttpServiceManager.buildService(UserApiService::class.java)
     private val sharedPref = context.getSharedPreferences("user", Context.MODE_PRIVATE)
     var authState = mutableStateOf<AuthState>(AuthState.Loading)
 
-    fun checkAuth() {
+    fun profile() {
         viewModelScope.launch {
             authState.value = AuthState.Loading
             try {

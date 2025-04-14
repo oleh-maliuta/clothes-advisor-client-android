@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -28,6 +29,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.olehmaliuta.clothesadvisor.App
 import com.olehmaliuta.clothesadvisor.MainActivity
 import com.olehmaliuta.clothesadvisor.api.http.security.AuthState
 import com.olehmaliuta.clothesadvisor.api.http.security.AuthViewModel
@@ -39,19 +41,29 @@ import com.olehmaliuta.clothesadvisor.screens.*
 
 @Composable
 fun ScreenManager(activity: MainActivity) {
+    val application = LocalContext.current.applicationContext as App
+
     // AUTHENTICATION
-    val authViewModel: AuthViewModel = viewModel {
-        AuthViewModel(
-            activity
+    val authViewModel: AuthViewModel = viewModel(
+        factory = AuthViewModel.Factory(
+            context = activity
         )
-    }
+    )
 
     // REST API
-    val userApiViewModel = viewModel {
-        UserApiViewModel(
-            activity
+    val userApiViewModel: UserApiViewModel = viewModel(
+        factory = UserApiViewModel.Factory(
+            clothingItemDaoRepository = application.clothingItemDaoRepository,
+            context = activity
         )
-    }
+    )
+
+    // ROOM DATABASE
+    val clothingItemDaoViewModel: ClothingItemDaoViewModel = viewModel(
+        factory = ClothingItemDaoViewModel.Factory(
+            clothingItemDaoRepository = application.clothingItemDaoRepository
+        )
+    )
 
     // NAVIGATION
     val navController = rememberNavController()
@@ -64,13 +76,8 @@ fun ScreenManager(activity: MainActivity) {
         )
     }
 
-    // ROOM DATABASE
-    val clothingItemDaoViewModel: ClothingItemDaoViewModel =
-        viewModel(factory = ClothingItemDaoViewModel.factory)
-
     // SNACK BAR
     val snackBarHostState = remember { SnackbarHostState() }
-
 
     // SIMPLE VARIABLES
     val authState = authViewModel.authState.value
@@ -98,7 +105,7 @@ fun ScreenManager(activity: MainActivity) {
 
     LaunchedEffect(Unit) {
         navController.addOnDestinationChangedListener { _, _, _ ->
-            authViewModel.checkAuth()
+            authViewModel.profile()
         }
     }
 
@@ -192,7 +199,7 @@ private fun ErrorDisplay(
             Spacer(modifier = Modifier.height(10.dp))
 
             TextButton(
-                onClick = { authViewModel.checkAuth() },
+                onClick = { authViewModel.profile() },
                 shape = RoundedCornerShape(8.dp),
                 contentPadding = PaddingValues(0.dp),
                 colors = ButtonDefaults.buttonColors(

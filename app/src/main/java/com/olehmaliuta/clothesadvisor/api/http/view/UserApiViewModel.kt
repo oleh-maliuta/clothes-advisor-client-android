@@ -6,18 +6,37 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.olehmaliuta.clothesadvisor.api.http.HttpServiceManager
 import com.olehmaliuta.clothesadvisor.api.http.responses.BaseResponse
 import com.olehmaliuta.clothesadvisor.api.http.security.ApiState
 import com.olehmaliuta.clothesadvisor.api.http.services.UserApiService
+import com.olehmaliuta.clothesadvisor.database.repositories.ClothingItemDaoRepository
 import com.olehmaliuta.clothesadvisor.navigation.StateHandler
 import kotlinx.coroutines.launch
 
 class UserApiViewModel(
+    private val clothingItemDaoRepository: ClothingItemDaoRepository,
     context: Context
 ) : ViewModel(), StateHandler {
+    class Factory(
+        private val clothingItemDaoRepository: ClothingItemDaoRepository,
+        private val context: Context
+    ) : ViewModelProvider.Factory {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(UserApiViewModel::class.java)) {
+                return UserApiViewModel(
+                    clothingItemDaoRepository,
+                    context
+                ) as T
+            }
+            throw IllegalArgumentException("Unknown ViewModel class")
+        }
+    }
+
     private val service = HttpServiceManager.buildService(UserApiService::class.java)
     private val sharedPref = context.getSharedPreferences("user", Context.MODE_PRIVATE)
 
@@ -67,25 +86,61 @@ class UserApiViewModel(
 
     fun logIn(
         email: String,
-        password: String
+        password: String,
+        syncByServerData: Boolean
     ) {
         viewModelScope.launch {
             logInState = ApiState.Loading
 
             try {
-                val response = service.logIn(email, password)
-                val body = response.body()
+                val logInResponse = service.logIn(email, password)
 
-                if (response.isSuccessful) {
-                    logInState = ApiState.Success(body?.detail)
-                    sharedPref.edit {
-                        putString("token", body?.data?.accessToken)
-                        putString("token_type", body?.data?.tokenType)
+                if (logInResponse.isSuccessful) {
+                    val clothingItems = if (syncByServerData)
+                        clothingItemDaoRepository.getAllClothingItems() else emptyList()
+
+                    val logInBody = logInResponse.body()
+
+                    val synchronizeResponse = service.synchronize(
+                        token = "${logInBody?.data?.tokenType ?: "bearer"} " +
+                                "${logInBody?.data?.accessToken}",
+                        clothingItems = clothingItems.toString(),
+                        clothingCombinations = "",
+                        files = null,
+                        isServerToLocal = syncByServerData
+                    )
+
+                    if (synchronizeResponse.isSuccessful) {
+                        val synchronizedBody = synchronizeResponse.body()
+
+                        sharedPref.edit {
+                            putString("token", logInBody?.data?.accessToken)
+                            putString("token_type", logInBody?.data?.tokenType)
+                            putString("synchronized_at",
+                                synchronizedBody?.data?.synchronizedAt)
+                        }
+
+                        if (syncByServerData) {
+                            clothingItemDaoRepository.insertItems(
+                                synchronizedBody?.data?.items?.map {
+                                    el -> return@map el.toClothingItemDbEntity()
+                                } ?: emptyList()
+                            )
+
+                            TODO("Put all data to the room db")
+                        }
+
+                        logInState = ApiState.Success(logInBody?.detail)
+                        return@launch
+                    } else {
+                        val errorBody = Gson().fromJson(
+                            synchronizeResponse.errorBody()?.string(),
+                            BaseResponse::class.java)
+                        logInState = ApiState.Error(errorBody.detail)
                     }
-                    return@launch
                 } else {
                     val errorBody = Gson().fromJson(
-                        response.errorBody()?.string(),
+                        logInResponse.errorBody()?.string(),
                         BaseResponse::class.java)
                     logInState = ApiState.Error(errorBody.detail)
                 }

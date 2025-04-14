@@ -35,7 +35,7 @@ abstract class AppDb : RoomDatabase() {
                     "main"
                 ).addMigrations().build()
                 INSTANCE = instance
-                instance
+                return instance
             }
         }
     }
