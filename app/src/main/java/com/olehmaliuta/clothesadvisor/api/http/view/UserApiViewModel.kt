@@ -12,6 +12,7 @@ import com.google.gson.Gson
 import com.olehmaliuta.clothesadvisor.api.http.HttpServiceManager
 import com.olehmaliuta.clothesadvisor.api.http.responses.BaseResponse
 import com.olehmaliuta.clothesadvisor.api.http.security.ApiState
+import com.olehmaliuta.clothesadvisor.api.http.security.AuthState
 import com.olehmaliuta.clothesadvisor.api.http.services.UserApiService
 import com.olehmaliuta.clothesadvisor.database.repositories.ClothingItemDaoRepository
 import com.olehmaliuta.clothesadvisor.database.repositories.OutfitDaoRepository
@@ -100,7 +101,7 @@ class UserApiViewModel(
                 val logInResponse = service.logIn(email, password)
 
                 if (logInResponse.isSuccessful) {
-                    val clothingItems = if (syncByServerData)
+                    val clothingItems = if (!syncByServerData)
                         clothingItemDaoRepository.getAllClothingItems() else emptyList()
 
                     val logInBody = logInResponse.body()

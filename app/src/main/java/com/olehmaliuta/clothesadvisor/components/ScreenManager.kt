@@ -47,6 +47,8 @@ fun ScreenManager(activity: MainActivity) {
     // AUTHENTICATION
     val authViewModel: AuthViewModel = viewModel(
         factory = AuthViewModel.Factory(
+            clothingItemDaoRepository = application.clothingItemDaoRepository,
+            outfitDaoRepository = application.outfitDaoRepository,
             context = activity
         )
     )
