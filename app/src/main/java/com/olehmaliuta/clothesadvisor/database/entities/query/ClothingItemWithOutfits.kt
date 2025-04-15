@@ -1,4 +1,4 @@
-package com.olehmaliuta.clothesadvisor.database.entities.relationship
+package com.olehmaliuta.clothesadvisor.database.entities.query
 
 import androidx.room.Embedded
 import androidx.room.Junction

@@ -6,6 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.olehmaliuta.clothesadvisor.database.access.ClothingItemDao
+import com.olehmaliuta.clothesadvisor.database.access.OutfitDao
 import com.olehmaliuta.clothesadvisor.database.converters.DateConverter
 import com.olehmaliuta.clothesadvisor.database.entities.*
 
@@ -22,6 +23,7 @@ import com.olehmaliuta.clothesadvisor.database.entities.*
 ])
 abstract class AppDb : RoomDatabase() {
     abstract fun clothingItemDao(): ClothingItemDao
+    abstract fun outfitDao(): OutfitDao
 
     companion object {
         @Volatile

@@ -35,6 +35,7 @@ import com.olehmaliuta.clothesadvisor.api.http.security.AuthState
 import com.olehmaliuta.clothesadvisor.api.http.security.AuthViewModel
 import com.olehmaliuta.clothesadvisor.api.http.view.UserApiViewModel
 import com.olehmaliuta.clothesadvisor.database.view.ClothingItemDaoViewModel
+import com.olehmaliuta.clothesadvisor.database.view.OutfitDaoViewModel
 import com.olehmaliuta.clothesadvisor.navigation.Router
 import com.olehmaliuta.clothesadvisor.navigation.Screen
 import com.olehmaliuta.clothesadvisor.screens.*
@@ -54,6 +55,7 @@ fun ScreenManager(activity: MainActivity) {
     val userApiViewModel: UserApiViewModel = viewModel(
         factory = UserApiViewModel.Factory(
             clothingItemDaoRepository = application.clothingItemDaoRepository,
+            outfitDaoRepository = application.outfitDaoRepository,
             context = activity
         )
     )
@@ -62,6 +64,11 @@ fun ScreenManager(activity: MainActivity) {
     val clothingItemDaoViewModel: ClothingItemDaoViewModel = viewModel(
         factory = ClothingItemDaoViewModel.Factory(
             clothingItemDaoRepository = application.clothingItemDaoRepository
+        )
+    )
+    val outfitDaoViewModel: OutfitDaoViewModel = viewModel(
+        factory = OutfitDaoViewModel.Factory(
+            outfitDaoRepository = application.outfitDaoRepository
         )
     )
 

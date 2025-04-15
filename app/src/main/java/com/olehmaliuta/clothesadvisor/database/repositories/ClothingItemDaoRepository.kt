@@ -6,12 +6,16 @@ import com.olehmaliuta.clothesadvisor.database.entities.ClothingItem
 class ClothingItemDaoRepository(
     private val dao: ClothingItemDao
 ) {
-    suspend fun insertItem(item: ClothingItem) {
-        dao.insertItem(item)
+    suspend fun insertEntity(item: ClothingItem) {
+        dao.insertEntity(item)
     }
 
-    suspend fun insertItems(items: List<ClothingItem>) {
-        dao.insertItems(items)
+    suspend fun insertEntities(items: List<ClothingItem>) {
+        dao.insertEntities(items)
+    }
+
+    suspend fun deleteAllRows() {
+        dao.deleteAllRows()
     }
 
     suspend fun getAllClothingItems(): List<ClothingItem> {

@@ -47,11 +47,7 @@ class AuthViewModel(
                 if (response.isSuccessful) {
                     authState.value = AuthState.Authenticated(response.body()?.data)
                 } else if (response.code() == 401) {
-                    authState.value = AuthState.Unauthenticated
-                    sharedPref.edit {
-                        remove("token")
-                        remove("token_type")
-                    }
+                    logOut()
                 }
             } catch (e: Exception) {
                 authState.value = AuthState.Error("Network error: ${e.message}")
@@ -63,6 +59,7 @@ class AuthViewModel(
         sharedPref.edit {
             remove("token")
             remove("token_type")
+            remove("synchronized_at")
         }
         authState.value = AuthState.Unauthenticated
     }

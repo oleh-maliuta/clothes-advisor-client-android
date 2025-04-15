@@ -2,7 +2,6 @@ package com.olehmaliuta.clothesadvisor.api.http.responses
 
 import com.google.gson.annotations.SerializedName
 import com.olehmaliuta.clothesadvisor.database.entities.ClothingItem
-import java.security.InvalidParameterException
 
 data class ClothingItemResponse (
     @SerializedName("id") var id: Int? = null,
@@ -15,7 +14,7 @@ data class ClothingItemResponse (
     @SerializedName("material") var material: String? = null,
     @SerializedName("brand") var brand: String? = null,
     @SerializedName("purchase_date") var purchaseDate: String? = null,
-    @SerializedName("price") var price: Float? = null,
+    @SerializedName("price") var price: Double? = null,
     @SerializedName("is_favorite") var isFavorite: Boolean? = null,
     @SerializedName("filename") var filename: String? = null,
 ) {

@@ -14,15 +14,18 @@ import com.olehmaliuta.clothesadvisor.api.http.responses.BaseResponse
 import com.olehmaliuta.clothesadvisor.api.http.security.ApiState
 import com.olehmaliuta.clothesadvisor.api.http.services.UserApiService
 import com.olehmaliuta.clothesadvisor.database.repositories.ClothingItemDaoRepository
+import com.olehmaliuta.clothesadvisor.database.repositories.OutfitDaoRepository
 import com.olehmaliuta.clothesadvisor.navigation.StateHandler
 import kotlinx.coroutines.launch
 
 class UserApiViewModel(
     private val clothingItemDaoRepository: ClothingItemDaoRepository,
+    private val outfitDaoRepository: OutfitDaoRepository,
     context: Context
 ) : ViewModel(), StateHandler {
     class Factory(
         private val clothingItemDaoRepository: ClothingItemDaoRepository,
+        private val outfitDaoRepository: OutfitDaoRepository,
         private val context: Context
     ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
@@ -30,6 +33,7 @@ class UserApiViewModel(
             if (modelClass.isAssignableFrom(UserApiViewModel::class.java)) {
                 return UserApiViewModel(
                     clothingItemDaoRepository,
+                    outfitDaoRepository,
                     context
                 ) as T
             }
@@ -121,13 +125,19 @@ class UserApiViewModel(
                         }
 
                         if (syncByServerData) {
-                            clothingItemDaoRepository.insertItems(
+                            clothingItemDaoRepository.deleteAllRows()
+                            outfitDaoRepository.deleteAllRows()
+
+                            clothingItemDaoRepository.insertEntities(
                                 synchronizedBody?.data?.items?.map {
                                     el -> return@map el.toClothingItemDbEntity()
                                 } ?: emptyList()
                             )
 
-                            TODO("Put all data to the room db")
+                            outfitDaoRepository.insertOutfitWithItems(
+                                synchronizedBody?.data?.combinations ?:
+                                emptyList()
+                            )
                         }
 
                         logInState = ApiState.Success(logInBody?.detail)

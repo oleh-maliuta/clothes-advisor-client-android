@@ -53,7 +53,7 @@ data class ClothingItem(
     @ColumnInfo(
         name = "price",
         defaultValue = "NULL")
-    val price: Float? = null,
+    val price: Double? = null,
 
     @ColumnInfo(name = "is_favorite")
     val isFavorite: Boolean,
