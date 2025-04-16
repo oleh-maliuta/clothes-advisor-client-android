@@ -158,6 +158,7 @@ fun LogInScreen(
                 style = TextStyle(
                     fontSize = 30.sp,
                     fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
 

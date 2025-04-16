@@ -103,7 +103,9 @@ fun ScreenManager(activity: MainActivity) {
         Screen.OutfitList to { OutfitListScreen() },
         Screen.EditCloth to { EditClothScreen() },
         Screen.EditOutfit to { EditOutfitScreen() },
-        Screen.Analysis to { AnalysisScreen() },
+        Screen.Analysis to { AnalysisScreen(
+            authViewModel = authViewModel
+        ) },
         Screen.Statistics to { StatisticsScreen() },
         Screen.Settings to { SettingsScreen(
             router = router,

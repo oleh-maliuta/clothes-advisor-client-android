@@ -8,16 +8,18 @@ import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.google.gson.Gson
 import com.olehmaliuta.clothesadvisor.api.http.HttpServiceManager
 import com.olehmaliuta.clothesadvisor.api.http.responses.BaseResponse
 import com.olehmaliuta.clothesadvisor.api.http.security.ApiState
-import com.olehmaliuta.clothesadvisor.api.http.security.AuthState
 import com.olehmaliuta.clothesadvisor.api.http.services.UserApiService
 import com.olehmaliuta.clothesadvisor.database.repositories.ClothingItemDaoRepository
 import com.olehmaliuta.clothesadvisor.database.repositories.OutfitDaoRepository
 import com.olehmaliuta.clothesadvisor.navigation.StateHandler
+import com.olehmaliuta.clothesadvisor.tools.FileTool
 import kotlinx.coroutines.launch
+import androidx.core.net.toUri
+import com.google.gson.Gson
+import java.io.File
 
 class UserApiViewModel(
     private val clothingItemDaoRepository: ClothingItemDaoRepository,
@@ -43,7 +45,10 @@ class UserApiViewModel(
     }
 
     private val service = HttpServiceManager.buildService(UserApiService::class.java)
+    private val contentResolver = context.contentResolver
+    private val cacheDir = context.cacheDir
     private val sharedPref = context.getSharedPreferences("user", Context.MODE_PRIVATE)
+    private val gson = Gson()
 
     var registrationState by mutableStateOf<ApiState<String?>>(ApiState.Idle)
         private set
@@ -78,7 +83,7 @@ class UserApiViewModel(
                 if (response.isSuccessful) {
                     registrationState = ApiState.Success(response.body()?.detail)
                 } else {
-                    val errorBody = Gson().fromJson(
+                    val errorBody = gson.fromJson(
                         response.errorBody()?.string(),
                         BaseResponse::class.java)
                     registrationState = ApiState.Error(errorBody.detail)
@@ -103,15 +108,41 @@ class UserApiViewModel(
                 if (logInResponse.isSuccessful) {
                     val clothingItems = if (!syncByServerData)
                         clothingItemDaoRepository.getAllClothingItems() else emptyList()
+                    val outfits = if (!syncByServerData)
+                        outfitDaoRepository.getOutfitsWithClothingItemIds() else emptyList()
+
+                    val multipartFiles = if (!syncByServerData) {
+                        var files: List<File> = emptyList()
+
+                        clothingItems.forEach { clothingItem ->
+                            val uri = clothingItem.filename.toUri()
+                            val file = FileTool.uriToFile(
+                                resolver = contentResolver,
+                                cacheDir = cacheDir,
+                                uri = uri,
+                                fileName = clothingItem.id.toString()
+                            )
+
+                            if (file != null) {
+                                files + file
+                            }
+                        }
+
+                        FileTool.filesToMultipartBodyFiles(
+                            files = files,
+                            mediaType = "image/*",
+                            partName = "files"
+                        )
+                    } else null
 
                     val logInBody = logInResponse.body()
 
                     val synchronizeResponse = service.synchronize(
                         token = "${logInBody?.data?.tokenType ?: "bearer"} " +
                                 "${logInBody?.data?.accessToken}",
-                        clothingItems = clothingItems.toString(),
-                        clothingCombinations = "",
-                        files = null,
+                        clothingItems = gson.toJson(clothingItems),
+                        clothingCombinations = gson.toJson(outfits),
+                        files = multipartFiles,
                         isServerToLocal = syncByServerData
                     )
 
@@ -139,18 +170,20 @@ class UserApiViewModel(
                                 synchronizedBody?.data?.combinations ?:
                                 emptyList()
                             )
+                        } else {
+                            // TODO: Implement synchronization by the local data
                         }
 
                         logInState = ApiState.Success(logInBody?.detail)
                         return@launch
                     } else {
-                        val errorBody = Gson().fromJson(
+                        val errorBody = gson.fromJson(
                             synchronizeResponse.errorBody()?.string(),
                             BaseResponse::class.java)
                         logInState = ApiState.Error(errorBody.detail)
                     }
                 } else {
-                    val errorBody = Gson().fromJson(
+                    val errorBody = gson.fromJson(
                         logInResponse.errorBody()?.string(),
                         BaseResponse::class.java)
                     logInState = ApiState.Error(errorBody.detail)
@@ -175,7 +208,7 @@ class UserApiViewModel(
                     forgotPasswordState = ApiState.Success(response.body()?.detail)
                     return@launch
                 } else {
-                    val errorBody = Gson().fromJson(
+                    val errorBody = gson.fromJson(
                         response.errorBody()?.string(),
                         BaseResponse::class.java)
                     forgotPasswordState = ApiState.Error(errorBody.detail)
@@ -209,7 +242,7 @@ class UserApiViewModel(
                     changeEmailState = ApiState.Success(response.body()?.detail)
                     return@launch
                 } else {
-                    val errorBody = Gson().fromJson(
+                    val errorBody = gson.fromJson(
                         response.errorBody()?.string(),
                         BaseResponse::class.java)
                     changeEmailState = ApiState.Error(errorBody.detail)
@@ -241,7 +274,7 @@ class UserApiViewModel(
                     changePasswordState = ApiState.Success(response.body()?.detail)
                     return@launch
                 } else {
-                    val errorBody = Gson().fromJson(
+                    val errorBody = gson.fromJson(
                         response.errorBody()?.string(),
                         BaseResponse::class.java)
                     changePasswordState = ApiState.Error(errorBody.detail)

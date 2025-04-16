@@ -7,7 +7,6 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.olehmaliuta.clothesadvisor.database.access.ClothingItemDao
 import com.olehmaliuta.clothesadvisor.database.access.OutfitDao
-import com.olehmaliuta.clothesadvisor.database.converters.DateConverter
 import com.olehmaliuta.clothesadvisor.database.entities.*
 
 @Database(
@@ -18,9 +17,7 @@ import com.olehmaliuta.clothesadvisor.database.entities.*
     ],
     version = 1
 )
-@TypeConverters(value = [
-    DateConverter::class
-])
+@TypeConverters(DataConverter::class)
 abstract class AppDb : RoomDatabase() {
     abstract fun clothingItemDao(): ClothingItemDao
     abstract fun outfitDao(): OutfitDao

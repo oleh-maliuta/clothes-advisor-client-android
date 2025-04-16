@@ -9,6 +9,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -97,7 +98,8 @@ private fun ContentForUser(
                 fontSize = 30.sp,
                 fontWeight = FontWeight.Bold,
                 letterSpacing = 1.sp,
-                lineHeight = 35.sp)
+                lineHeight = 35.sp),
+            color = MaterialTheme.colorScheme.primary
         )
 
         Spacer(modifier = Modifier.height(30.dp))

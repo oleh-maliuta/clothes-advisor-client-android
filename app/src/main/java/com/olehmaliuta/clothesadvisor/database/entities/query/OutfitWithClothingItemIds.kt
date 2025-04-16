@@ -1,7 +1,9 @@
 package com.olehmaliuta.clothesadvisor.database.entities.query
 
+import com.google.gson.annotations.SerializedName
+
 data class OutfitWithClothingItemIds(
-    val id: Int,
-    val name: String,
-    val itemIds: String
+    @SerializedName("id") val id: Int,
+    @SerializedName("name") val name: String,
+    @SerializedName("item_ids") val itemIds: List<Int>
 )
