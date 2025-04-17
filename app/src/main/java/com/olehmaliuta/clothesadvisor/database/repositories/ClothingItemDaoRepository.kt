@@ -2,6 +2,7 @@ package com.olehmaliuta.clothesadvisor.database.repositories
 
 import com.olehmaliuta.clothesadvisor.database.access.ClothingItemDao
 import com.olehmaliuta.clothesadvisor.database.entities.ClothingItem
+import kotlinx.coroutines.flow.Flow
 
 class ClothingItemDaoRepository(
     private val dao: ClothingItemDao
@@ -18,7 +19,7 @@ class ClothingItemDaoRepository(
         dao.deleteAllRows()
     }
 
-    suspend fun getAllClothingItems(): List<ClothingItem> {
+    fun getAllClothingItems(): Flow<List<ClothingItem>> {
         return dao.getAllClothingItems()
     }
 }

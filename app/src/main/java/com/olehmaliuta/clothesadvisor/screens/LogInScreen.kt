@@ -36,7 +36,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.olehmaliuta.clothesadvisor.api.http.security.ApiState
-import com.olehmaliuta.clothesadvisor.api.http.view.UserApiViewModel
+import com.olehmaliuta.clothesadvisor.viewmodels.UserViewModel
 import com.olehmaliuta.clothesadvisor.components.AcceptCancelDialog
 import com.olehmaliuta.clothesadvisor.components.CenteredScrollContainer
 import com.olehmaliuta.clothesadvisor.components.OkDialog
@@ -46,7 +46,7 @@ import com.olehmaliuta.clothesadvisor.navigation.Screen
 @Composable
 fun LogInScreen(
     router: Router,
-    userApiViewModel: UserApiViewModel
+    userViewModel: UserViewModel
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -60,16 +60,16 @@ fun LogInScreen(
         derivedStateOf {
             email.isNotBlank() &&
                     password.isNotBlank() &&
-                    userApiViewModel.logInState !is ApiState.Loading
+                    userViewModel.logInState !is ApiState.Loading
         }
     }
 
-    LaunchedEffect(userApiViewModel.logInState) {
-        when (val apiState = userApiViewModel.logInState) {
+    LaunchedEffect(userViewModel.logInState) {
+        when (val apiState = userViewModel.logInState) {
             is ApiState.Success -> {
                 router.navigate(
                     route = Screen.ClothesList.name,
-                    apiStatesToRestore = listOf(userApiViewModel)
+                    apiStatesToRestore = listOf(userViewModel)
                 )
             }
             is ApiState.Error -> {
@@ -80,8 +80,8 @@ fun LogInScreen(
         }
     }
 
-    LaunchedEffect(userApiViewModel.forgotPasswordState) {
-        when (val apiState = userApiViewModel.forgotPasswordState) {
+    LaunchedEffect(userViewModel.forgotPasswordState) {
+        when (val apiState = userViewModel.forgotPasswordState) {
             is ApiState.Success -> {
                 isForgotPasswordDialogOpened = false
                 okDialogTitle = "Email is sent"
@@ -111,13 +111,13 @@ fun LogInScreen(
             isForgotPasswordDialogOpened = false
         },
         onAccept = {
-            userApiViewModel.forgotPassword(
+            userViewModel.forgotPassword(
                 email = emailToRestorePassword
             )
         },
         acceptText = "Send mail",
         acceptEnabled =
-            userApiViewModel.forgotPasswordState !is ApiState.Loading &&
+            userViewModel.forgotPasswordState !is ApiState.Loading &&
             emailToRestorePassword.isNotBlank()
     ) {
         Column {
@@ -216,7 +216,7 @@ fun LogInScreen(
 
             Button(
                 onClick = {
-                    userApiViewModel.logIn(
+                    userViewModel.logIn(
                         email = email,
                         password = password,
                         syncByServerData = syncByServerData
@@ -228,7 +228,7 @@ fun LogInScreen(
             ) {
                 Text(
                     text = if (
-                        userApiViewModel.logInState == ApiState.Loading)
+                        userViewModel.logInState == ApiState.Loading)
                         "..." else "Log in",
                     style = TextStyle(
                         fontSize = 18.sp,

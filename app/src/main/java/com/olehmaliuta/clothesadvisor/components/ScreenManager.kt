@@ -33,9 +33,9 @@ import com.olehmaliuta.clothesadvisor.App
 import com.olehmaliuta.clothesadvisor.MainActivity
 import com.olehmaliuta.clothesadvisor.api.http.security.AuthState
 import com.olehmaliuta.clothesadvisor.api.http.security.AuthViewModel
-import com.olehmaliuta.clothesadvisor.api.http.view.UserApiViewModel
-import com.olehmaliuta.clothesadvisor.database.view.ClothingItemDaoViewModel
-import com.olehmaliuta.clothesadvisor.database.view.OutfitDaoViewModel
+import com.olehmaliuta.clothesadvisor.viewmodels.UserViewModel
+import com.olehmaliuta.clothesadvisor.viewmodels.ClothingItemViewModel
+import com.olehmaliuta.clothesadvisor.viewmodels.OutfitViewModel
 import com.olehmaliuta.clothesadvisor.navigation.Router
 import com.olehmaliuta.clothesadvisor.navigation.Screen
 import com.olehmaliuta.clothesadvisor.screens.*
@@ -44,7 +44,7 @@ import com.olehmaliuta.clothesadvisor.screens.*
 fun ScreenManager(activity: MainActivity) {
     val application = LocalContext.current.applicationContext as App
 
-    // AUTHENTICATION
+    // VIEW MODELS
     val authViewModel: AuthViewModel = viewModel(
         factory = AuthViewModel.Factory(
             clothingItemDaoRepository = application.clothingItemDaoRepository,
@@ -52,24 +52,20 @@ fun ScreenManager(activity: MainActivity) {
             context = activity
         )
     )
-
-    // REST API
-    val userApiViewModel: UserApiViewModel = viewModel(
-        factory = UserApiViewModel.Factory(
+    val userViewModel: UserViewModel = viewModel(
+        factory = UserViewModel.Factory(
             clothingItemDaoRepository = application.clothingItemDaoRepository,
             outfitDaoRepository = application.outfitDaoRepository,
             context = activity
         )
     )
-
-    // ROOM DATABASE
-    val clothingItemDaoViewModel: ClothingItemDaoViewModel = viewModel(
-        factory = ClothingItemDaoViewModel.Factory(
+    val clothingItemViewModel: ClothingItemViewModel = viewModel(
+        factory = ClothingItemViewModel.Factory(
             clothingItemDaoRepository = application.clothingItemDaoRepository
         )
     )
-    val outfitDaoViewModel: OutfitDaoViewModel = viewModel(
-        factory = OutfitDaoViewModel.Factory(
+    val outfitViewModel: OutfitViewModel = viewModel(
+        factory = OutfitViewModel.Factory(
             outfitDaoRepository = application.outfitDaoRepository
         )
     )
@@ -80,7 +76,7 @@ fun ScreenManager(activity: MainActivity) {
         Router(
             navController,
             listOf(
-                userApiViewModel
+                userViewModel
             )
         )
     }
@@ -93,24 +89,27 @@ fun ScreenManager(activity: MainActivity) {
     val screens = mapOf<Screen, @Composable () -> Unit>(
         Screen.Registration to { RegistrationScreen(
             router = router,
-            userApiViewModel = userApiViewModel
+            userViewModel = userViewModel
         ) },
         Screen.LogIn to { LogInScreen(
             router = router,
-            userApiViewModel = userApiViewModel
+            userViewModel = userViewModel
         ) },
-        Screen.ClothesList to { ClothesListScreen() },
+        Screen.ClothesList to { ClothesListScreen(
+            clothingItemViewModel = clothingItemViewModel
+        ) },
         Screen.OutfitList to { OutfitListScreen() },
         Screen.EditCloth to { EditClothScreen() },
         Screen.EditOutfit to { EditOutfitScreen() },
         Screen.Analysis to { AnalysisScreen(
+            router = router,
             authViewModel = authViewModel
         ) },
         Screen.Statistics to { StatisticsScreen() },
         Screen.Settings to { SettingsScreen(
             router = router,
             authViewModel = authViewModel,
-            userApiViewModel = userApiViewModel
+            userViewModel = userViewModel
         ) }
     )
 
@@ -122,19 +121,6 @@ fun ScreenManager(activity: MainActivity) {
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = {
-            if (
-                authState is AuthState.Loading ||
-                authState is AuthState.Error
-                ) {
-                return@Scaffold
-            }
-
-            TopBar(
-                router = router,
-                authViewModel = authViewModel
-            )
-        },
         bottomBar = {
             if (
                 authState is AuthState.Loading ||
@@ -248,7 +234,7 @@ private fun ErrorDisplay(
                     .height(32.dp)
             ) {
                 Text(
-                    text = "Log out",
+                    text = "Enter as a guest",
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .padding(0.dp),

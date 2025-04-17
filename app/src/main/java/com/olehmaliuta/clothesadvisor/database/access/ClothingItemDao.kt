@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import com.olehmaliuta.clothesadvisor.database.entities.ClothingItem
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ClothingItemDao {
@@ -17,5 +18,5 @@ interface ClothingItemDao {
     suspend fun deleteAllRows()
 
     @Query("SELECT * FROM clothing_items")
-    suspend fun getAllClothingItems(): List<ClothingItem>
+    fun getAllClothingItems(): Flow<List<ClothingItem>>
 }

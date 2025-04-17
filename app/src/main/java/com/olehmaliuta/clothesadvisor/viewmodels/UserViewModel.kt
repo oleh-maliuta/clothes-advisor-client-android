@@ -1,4 +1,4 @@
-package com.olehmaliuta.clothesadvisor.api.http.view
+package com.olehmaliuta.clothesadvisor.viewmodels
 
 import android.content.Context
 import androidx.compose.runtime.getValue
@@ -19,9 +19,13 @@ import com.olehmaliuta.clothesadvisor.tools.FileTool
 import kotlinx.coroutines.launch
 import androidx.core.net.toUri
 import com.google.gson.Gson
+import com.olehmaliuta.clothesadvisor.database.entities.ClothingItem
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import java.io.File
 
-class UserApiViewModel(
+class UserViewModel(
     private val clothingItemDaoRepository: ClothingItemDaoRepository,
     private val outfitDaoRepository: OutfitDaoRepository,
     context: Context
@@ -33,8 +37,8 @@ class UserApiViewModel(
     ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(UserApiViewModel::class.java)) {
-                return UserApiViewModel(
+            if (modelClass.isAssignableFrom(UserViewModel::class.java)) {
+                return UserViewModel(
                     clothingItemDaoRepository,
                     outfitDaoRepository,
                     context
@@ -44,11 +48,22 @@ class UserApiViewModel(
         }
     }
 
+    init {
+        viewModelScope.launch {
+            clothingItemDaoRepository.getAllClothingItems().collect { newItems ->
+                _allClothingItemsState.value = newItems
+            }
+        }
+    }
+
     private val service = HttpServiceManager.buildService(UserApiService::class.java)
     private val contentResolver = context.contentResolver
     private val cacheDir = context.cacheDir
     private val sharedPref = context.getSharedPreferences("user", Context.MODE_PRIVATE)
     private val gson = Gson()
+
+    private val _allClothingItemsState =
+        MutableStateFlow<List<ClothingItem>>(emptyList())
 
     var registrationState by mutableStateOf<ApiState<String?>>(ApiState.Idle)
         private set
@@ -60,6 +75,9 @@ class UserApiViewModel(
         private set
     var changePasswordState by mutableStateOf<ApiState<String?>>(ApiState.Idle)
         private set
+
+    val allClothingItems: StateFlow<List<ClothingItem>> =
+        _allClothingItemsState.asStateFlow()
 
     override fun restoreState() {
         registrationState = ApiState.Idle
@@ -107,7 +125,7 @@ class UserApiViewModel(
 
                 if (logInResponse.isSuccessful) {
                     val clothingItems = if (!syncByServerData)
-                        clothingItemDaoRepository.getAllClothingItems() else emptyList()
+                        allClothingItems.value else emptyList()
                     val outfits = if (!syncByServerData)
                         outfitDaoRepository.getOutfitsWithClothingItemIds() else emptyList()
 

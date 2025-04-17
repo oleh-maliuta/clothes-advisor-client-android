@@ -1,10 +1,10 @@
-package com.olehmaliuta.clothesadvisor.database.view
+package com.olehmaliuta.clothesadvisor.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.olehmaliuta.clothesadvisor.database.repositories.OutfitDaoRepository
 
-class OutfitDaoViewModel(
+class OutfitViewModel(
     val outfitDaoRepository: OutfitDaoRepository
 ) : ViewModel() {
     class Factory(
@@ -12,8 +12,8 @@ class OutfitDaoViewModel(
     ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(OutfitDaoViewModel::class.java)) {
-                return OutfitDaoViewModel(
+            if (modelClass.isAssignableFrom(OutfitViewModel::class.java)) {
+                return OutfitViewModel(
                     outfitDaoRepository
                 ) as T
             }

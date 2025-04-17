@@ -62,7 +62,8 @@ dependencies {
     implementation(libs.logging.interceptor)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
-    implementation(libs.coil.compose)
+
+    implementation("io.coil-kt:coil-compose:2.6.0")
 
     implementation("androidx.room:room-ktx:2.7.0")
     implementation("androidx.room:room-runtime:2.7.0")

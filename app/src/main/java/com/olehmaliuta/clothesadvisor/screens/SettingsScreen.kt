@@ -9,6 +9,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -31,7 +32,7 @@ import androidx.compose.ui.unit.sp
 import com.olehmaliuta.clothesadvisor.api.http.security.ApiState
 import com.olehmaliuta.clothesadvisor.api.http.security.AuthState
 import com.olehmaliuta.clothesadvisor.api.http.security.AuthViewModel
-import com.olehmaliuta.clothesadvisor.api.http.view.UserApiViewModel
+import com.olehmaliuta.clothesadvisor.viewmodels.UserViewModel
 import com.olehmaliuta.clothesadvisor.components.CenteredScrollContainer
 import com.olehmaliuta.clothesadvisor.components.OkDialog
 import com.olehmaliuta.clothesadvisor.navigation.Router
@@ -41,18 +42,20 @@ import com.olehmaliuta.clothesadvisor.navigation.Screen
 fun SettingsScreen(
     router: Router,
     authViewModel: AuthViewModel,
-    userApiViewModel: UserApiViewModel
+    userViewModel: UserViewModel
 ) {
     when (authViewModel.authState.value) {
         is AuthState.Authenticated -> {
             ContentForUser(
                 router = router,
                 authViewModel = authViewModel,
-                userApiViewModel = userApiViewModel
+                userViewModel = userViewModel
             )
         }
         AuthState.Unauthenticated -> {
-            ContentForGuest()
+            ContentForGuest(
+                router = router
+            )
         }
         else -> {}
     }
@@ -62,7 +65,7 @@ fun SettingsScreen(
 private fun ContentForUser(
     router: Router,
     authViewModel: AuthViewModel,
-    userApiViewModel: UserApiViewModel
+    userViewModel: UserViewModel
 ) {
     var okDialogTitle = remember { mutableStateOf("") }
     var okDialogMessage = remember { mutableStateOf<String?>(null) }
@@ -73,11 +76,11 @@ private fun ContentForUser(
         onConfirm = {
             okDialogMessage.value = null
 
-            if (userApiViewModel.changeEmailState is ApiState.Success) {
+            if (userViewModel.changeEmailState is ApiState.Success) {
                 authViewModel.logOut()
                 router.navigate(
                     route = Screen.LogIn.name,
-                    apiStatesToRestore = listOf(userApiViewModel)
+                    apiStatesToRestore = listOf(userViewModel)
                 )
             }
         }
@@ -89,23 +92,14 @@ private fun ContentForUser(
             .padding(horizontal = 8.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        Text(
-            text = "Settings",
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth(),
-            style = TextStyle(
-                fontSize = 30.sp,
-                fontWeight = FontWeight.Bold,
-                letterSpacing = 1.sp,
-                lineHeight = 35.sp),
-            color = MaterialTheme.colorScheme.primary
+        UserAccountSection(
+            authViewModel = authViewModel
         )
 
         Spacer(modifier = Modifier.height(30.dp))
 
         ChangeEmailForm(
-            userApiViewModel = userApiViewModel,
+            userViewModel = userViewModel,
             okDialogTitle = okDialogTitle,
             okDialogMessage = okDialogMessage
         )
@@ -113,7 +107,7 @@ private fun ContentForUser(
         Spacer(modifier = Modifier.height(30.dp))
 
         ChangePasswordForm(
-            userApiViewModel = userApiViewModel,
+            userViewModel = userViewModel,
             okDialogTitle = okDialogTitle,
             okDialogMessage = okDialogMessage
         )
@@ -124,26 +118,124 @@ private fun ContentForUser(
 
 
 @Composable
-private fun ContentForGuest() {
+private fun ContentForGuest(
+    router: Router
+) {
     CenteredScrollContainer(
         modifier = Modifier
             .padding(horizontal = 8.dp)
     ) {
+        Column {
+            Text(
+                text = "You need to log in to see the settings menu.",
+                textAlign = TextAlign.Center,
+                style = TextStyle(
+                    fontSize = 25.sp,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 1.sp,
+                    lineHeight = 35.sp)
+            )
+
+            Spacer(modifier = Modifier.height(30.dp))
+
+            Button(
+                onClick = { router.navigate(Screen.LogIn.name) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+            ) {
+                Text(
+                    text = "Log In",
+                    style = TextStyle(
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = { router.navigate(Screen.Registration.name) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.tertiary,
+                    contentColor = MaterialTheme.colorScheme.onTertiary
+                )
+            ) {
+                Text(
+                    text = "Sign Up",
+                    style = TextStyle(
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun UserAccountSection(
+    authViewModel: AuthViewModel
+) {
+    val currentUser = (authViewModel.authState.value as? AuthState.Authenticated)?.user
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
         Text(
-            text = "You need to log in to see the settings menu.",
-            textAlign = TextAlign.Center,
+            text = "Account",
             style = TextStyle(
-                fontSize = 25.sp,
+                fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 letterSpacing = 1.sp,
                 lineHeight = 35.sp)
         )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Text(
+            text = "Logged in as:",
+            style = TextStyle(
+                fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+            )
+        )
+
+        Text(
+            text = currentUser?.email ?: "Unknown",
+            style = TextStyle(
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Medium
+            ),
+            modifier = Modifier.padding(top = 4.dp)
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Button(
+            onClick = {
+                authViewModel.logOut()
+            },
+            modifier = Modifier
+                .height(40.dp)
+        ) {
+            Text(
+                text = "Log Out",
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 1.sp)
+            )
+        }
     }
 }
 
 @Composable
 private fun ChangeEmailForm(
-    userApiViewModel: UserApiViewModel,
+    userViewModel: UserViewModel,
     okDialogTitle: MutableState<String>,
     okDialogMessage: MutableState<String?>
 ) {
@@ -154,13 +246,13 @@ private fun ChangeEmailForm(
         derivedStateOf {
             newEmail.isNotBlank() &&
                     password.isNotBlank() &&
-                    userApiViewModel.changeEmailState !is ApiState.Loading &&
-                    userApiViewModel.changePasswordState !is ApiState.Loading
+                    userViewModel.changeEmailState !is ApiState.Loading &&
+                    userViewModel.changePasswordState !is ApiState.Loading
         }
     }
 
-    LaunchedEffect(userApiViewModel.changeEmailState) {
-        when (val apiState = userApiViewModel.changeEmailState) {
+    LaunchedEffect(userViewModel.changeEmailState) {
+        when (val apiState = userViewModel.changeEmailState) {
             is ApiState.Success -> {
                 okDialogTitle.value = "Success"
                 okDialogMessage.value = apiState.data
@@ -214,7 +306,7 @@ private fun ChangeEmailForm(
 
         Button(
             onClick = {
-                userApiViewModel.changeEmail(
+                userViewModel.changeEmail(
                     newEmail,
                     password
                 )
@@ -236,7 +328,7 @@ private fun ChangeEmailForm(
 
 @Composable
 private fun ChangePasswordForm(
-    userApiViewModel: UserApiViewModel,
+    userViewModel: UserViewModel,
     okDialogTitle: MutableState<String>,
     okDialogMessage: MutableState<String?>
 ) {
@@ -252,13 +344,13 @@ private fun ChangePasswordForm(
             oldPassword.isNotBlank() &&
                     newPassword.isNotBlank() &&
                     passwordsMatch &&
-                    userApiViewModel.changeEmailState !is ApiState.Loading &&
-                    userApiViewModel.changePasswordState !is ApiState.Loading
+                    userViewModel.changeEmailState !is ApiState.Loading &&
+                    userViewModel.changePasswordState !is ApiState.Loading
         }
     }
 
-    LaunchedEffect(userApiViewModel.changePasswordState) {
-        when (val apiState = userApiViewModel.changePasswordState) {
+    LaunchedEffect(userViewModel.changePasswordState) {
+        when (val apiState = userViewModel.changePasswordState) {
             is ApiState.Success -> {
                 okDialogTitle.value = "Success"
                 okDialogMessage.value = apiState.data
@@ -321,7 +413,7 @@ private fun ChangePasswordForm(
 
         Button(
             onClick = {
-                userApiViewModel.changePassword(
+                userViewModel.changePassword(
                     oldPassword,
                     newPassword
                 )
