@@ -19,7 +19,27 @@ class ClothingItemDaoRepository(
         dao.deleteAllRows()
     }
 
-    fun getAllClothingItems(): Flow<List<ClothingItem>> {
+    suspend fun getAllClothingItems(): List<ClothingItem> {
         return dao.getAllClothingItems()
+    }
+
+    fun countClothingItems(): Flow<Int> {
+        return dao.countClothingItems()
+    }
+
+    fun searchItems(
+        query: String,
+        sortBy: String,
+        ascSort: Boolean,
+        categories: List<String>,
+        seasons: List<String>
+    ): Flow<List<ClothingItem>> {
+        return dao.searchAllFields(
+            query.trim(),
+            sortBy,
+            ascSort,
+            categories,
+            seasons
+        )
     }
 }

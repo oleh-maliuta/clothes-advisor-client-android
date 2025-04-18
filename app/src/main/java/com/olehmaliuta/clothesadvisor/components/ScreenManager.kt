@@ -61,7 +61,7 @@ fun ScreenManager(activity: MainActivity) {
     )
     val clothingItemViewModel: ClothingItemViewModel = viewModel(
         factory = ClothingItemViewModel.Factory(
-            clothingItemDaoRepository = application.clothingItemDaoRepository
+            repository = application.clothingItemDaoRepository
         )
     )
     val outfitViewModel: OutfitViewModel = viewModel(

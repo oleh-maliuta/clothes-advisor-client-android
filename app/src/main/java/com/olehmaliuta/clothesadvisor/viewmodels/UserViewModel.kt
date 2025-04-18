@@ -19,10 +19,6 @@ import com.olehmaliuta.clothesadvisor.tools.FileTool
 import kotlinx.coroutines.launch
 import androidx.core.net.toUri
 import com.google.gson.Gson
-import com.olehmaliuta.clothesadvisor.database.entities.ClothingItem
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import java.io.File
 
 class UserViewModel(
@@ -48,22 +44,11 @@ class UserViewModel(
         }
     }
 
-    init {
-        viewModelScope.launch {
-            clothingItemDaoRepository.getAllClothingItems().collect { newItems ->
-                _allClothingItemsState.value = newItems
-            }
-        }
-    }
-
     private val service = HttpServiceManager.buildService(UserApiService::class.java)
     private val contentResolver = context.contentResolver
     private val cacheDir = context.cacheDir
     private val sharedPref = context.getSharedPreferences("user", Context.MODE_PRIVATE)
     private val gson = Gson()
-
-    private val _allClothingItemsState =
-        MutableStateFlow<List<ClothingItem>>(emptyList())
 
     var registrationState by mutableStateOf<ApiState<String?>>(ApiState.Idle)
         private set
@@ -75,9 +60,6 @@ class UserViewModel(
         private set
     var changePasswordState by mutableStateOf<ApiState<String?>>(ApiState.Idle)
         private set
-
-    val allClothingItems: StateFlow<List<ClothingItem>> =
-        _allClothingItemsState.asStateFlow()
 
     override fun restoreState() {
         registrationState = ApiState.Idle
@@ -125,7 +107,7 @@ class UserViewModel(
 
                 if (logInResponse.isSuccessful) {
                     val clothingItems = if (!syncByServerData)
-                        allClothingItems.value else emptyList()
+                        clothingItemDaoRepository.getAllClothingItems() else emptyList()
                     val outfits = if (!syncByServerData)
                         outfitDaoRepository.getOutfitsWithClothingItemIds() else emptyList()
 

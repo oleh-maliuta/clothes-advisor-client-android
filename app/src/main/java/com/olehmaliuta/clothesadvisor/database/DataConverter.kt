@@ -38,7 +38,7 @@ open class DataConverter {
             } else {
                 value.split(",").map { it.trim().toInt() }
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             emptyList()
         }
     }
