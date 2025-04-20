@@ -61,7 +61,8 @@ fun ScreenManager(activity: MainActivity) {
     )
     val clothingItemViewModel: ClothingItemViewModel = viewModel(
         factory = ClothingItemViewModel.Factory(
-            repository = application.clothingItemDaoRepository
+            repository = application.clothingItemDaoRepository,
+            context = activity
         )
     )
     val outfitViewModel: OutfitViewModel = viewModel(
@@ -76,7 +77,8 @@ fun ScreenManager(activity: MainActivity) {
         Router(
             navController,
             listOf(
-                userViewModel
+                userViewModel,
+                clothingItemViewModel
             )
         )
     }
@@ -96,10 +98,14 @@ fun ScreenManager(activity: MainActivity) {
             userViewModel = userViewModel
         ) },
         Screen.ClothesList to { ClothesListScreen(
+            router = router,
             clothingItemViewModel = clothingItemViewModel
         ) },
         Screen.OutfitList to { OutfitListScreen() },
-        Screen.EditCloth to { EditClothScreen() },
+        Screen.EditClothingItem to { EditClothingItemScreen(
+            router = router,
+            clothingItemViewModel = clothingItemViewModel
+        ) },
         Screen.EditOutfit to { EditOutfitScreen() },
         Screen.Analysis to { AnalysisScreen(
             router = router,

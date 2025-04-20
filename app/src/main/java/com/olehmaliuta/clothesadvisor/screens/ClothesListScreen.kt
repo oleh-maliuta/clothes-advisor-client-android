@@ -1,5 +1,6 @@
 package com.olehmaliuta.clothesadvisor.screens
 
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -17,9 +18,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -67,11 +72,17 @@ import coil.request.ImageRequest
 import com.olehmaliuta.clothesadvisor.R
 import com.olehmaliuta.clothesadvisor.components.AcceptCancelDialog
 import com.olehmaliuta.clothesadvisor.database.entities.ClothingItem
+import com.olehmaliuta.clothesadvisor.navigation.Router
+import com.olehmaliuta.clothesadvisor.navigation.Screen
+import com.olehmaliuta.clothesadvisor.tools.FileTool
 import com.olehmaliuta.clothesadvisor.viewmodels.ClothingItemViewModel
 import java.io.File
+import androidx.core.net.toUri
+import com.olehmaliuta.clothesadvisor.components.OkDialog
 
 @Composable
 fun ClothesListScreen(
+    router: Router,
     clothingItemViewModel: ClothingItemViewModel
 ) {
     var searchQuery by remember { mutableStateOf("") }
@@ -86,36 +97,71 @@ fun ClothesListScreen(
         .searchItems(searchQuery, sortBy.second, ascSort, categoryFilter, seasonFilter)
         .collectAsState(initial = null)
 
+    var okDialogTitle by remember { mutableStateOf("") }
+    var okDialogMessage by remember { mutableStateOf<String?>(null) }
     var isFilterDialogOpened by remember { mutableStateOf(false) }
 
-    var selectedCategories by remember {
-        mutableStateOf(mapOf(
-            "pants" to FilterOption("pants", false),
-            "jacket" to FilterOption("jacket", false),
-            "tshirt" to FilterOption("t-shirt", false),
-            "dress" to FilterOption("dress", false)
-        ))
-    }
     var selectedSeasons by remember {
-        mutableStateOf(mapOf(
-            "winter" to FilterOption("Winter", false),
-            "spring" to FilterOption("Spring", false),
-            "summer" to FilterOption("Summer", false),
-            "autumn" to FilterOption("Autumn", false)
+        mutableStateOf(listOf(
+            FilterOption("winter", "Winter"),
+            FilterOption("spring", "Spring"),
+            FilterOption("summer", "Summer"),
+            FilterOption("autumn", "Autumn")
         ))
     }
+    var selectedCategories by remember {
+        mutableStateOf(listOf(
+            FilterOption("tshirt", "t-shirt"),
+            FilterOption("pants", "pants"),
+            FilterOption("jacket", "jacket"),
+            FilterOption("dress", "dress"),
+            FilterOption("skirt", "skirt"),
+            FilterOption("shorts", "shorts"),
+            FilterOption("hoodie", "hoodie"),
+            FilterOption("sweater", "sweater"),
+            FilterOption("coat", "coat"),
+            FilterOption("blouse", "blouse"),
+            FilterOption("shoes", "shoes"),
+            FilterOption("accessories", "accessories"),
+            FilterOption("boots", "boots"),
+            FilterOption("sneakers", "sneakers"),
+            FilterOption("sandals", "sandals"),
+            FilterOption("hat", "hat"),
+            FilterOption("scarf", "scarf"),
+            FilterOption("gloves", "gloves"),
+            FilterOption("socks", "socks"),
+            FilterOption("underwear", "underwear"),
+            FilterOption("swimwear", "swimwear"),
+            FilterOption("belt", "belt"),
+            FilterOption("bag", "bag"),
+            FilterOption("watch", "watch"),
+            FilterOption("jeans", "jeans"),
+            FilterOption("leggings", "leggings"),
+            FilterOption("tank_top", "tank_top"),
+            FilterOption("overalls", "overalls"),
+            FilterOption("beanie", "beanie"),
+        ))
+    }
+
+    OkDialog(
+        title = okDialogTitle,
+        content = okDialogMessage,
+        onConfirm = {
+            okDialogMessage = null
+        }
+    )
 
     AcceptCancelDialog(
         isOpened = isFilterDialogOpened,
         title = "Filters",
         onDismissRequest = { isFilterDialogOpened = false },
         onAccept = {
-            categoryFilter = selectedCategories
-                .filterValues { it.isSelected }
-                .keys.toList()
             seasonFilter = selectedSeasons
-                .filterValues { it.isSelected }
-                .keys.toList()
+                .filter { it.isSelected }
+                .map { it.value }
+            categoryFilter = selectedCategories
+                .filter { it.isSelected }
+                .map { it.value }
             isFilterDialogOpened = false
         },
         acceptText = "Apply",
@@ -123,16 +169,22 @@ fun ClothesListScreen(
         FilterMenu(
             categories = selectedCategories,
             seasons = selectedSeasons,
-            onCategorySelected = { key ->
-                selectedCategories = selectedCategories.toMutableMap().apply {
-                    this[key] = this[key]?.copy(isSelected = !this[key]?.isSelected!!)
-                            as FilterOption
+            onSeasonSelected = { idx ->
+                selectedSeasons = selectedSeasons.toMutableList().apply {
+                    this[idx] = FilterOption(
+                        this[idx].value,
+                        this[idx].displayName,
+                        !this[idx].isSelected
+                    )
                 }
             },
-            onSeasonSelected = { key ->
-                selectedSeasons = selectedSeasons.toMutableMap().apply {
-                    this[key] = this[key]?.copy(isSelected = !this[key]?.isSelected!!)
-                            as FilterOption
+            onCategorySelected = { idx ->
+                selectedCategories = selectedCategories.toMutableList().apply {
+                    this[idx] = FilterOption(
+                        this[idx].value,
+                        this[idx].displayName,
+                        !this[idx].isSelected
+                    )
                 }
             }
         )
@@ -178,7 +230,18 @@ fun ClothesListScreen(
                         containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = MaterialTheme.colorScheme.onPrimary
                     ),
-                    onClick = { /* Handle click */ }
+                    onClick = {
+                        if (itemCount != null) {
+                            if (itemCount!! < 100) {
+                                clothingItemViewModel.idOfItemToEdit.value = null
+                                router.navigate(Screen.EditClothingItem.name)
+                            } else {
+                                okDialogTitle = "Error"
+                                okDialogMessage = "Item limit reached. " +
+                                        "Maximum 100 clothing items allowed per user."
+                            }
+                        }
+                    }
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Add,
@@ -269,7 +332,10 @@ fun ClothesListScreen(
                 ClothingItemCard(
                     item = item,
                     onFavoriteClick = {},
-                    onClick = {}
+                    onClick = {
+                        clothingItemViewModel.idOfItemToEdit.value = item.id
+                        router.navigate(Screen.EditClothingItem.name)
+                    }
                 )
             }
         } else if (itemCount == 0) {
@@ -288,7 +354,11 @@ fun ClothesListScreen(
     }
 }
 
-private data class FilterOption(val displayName: String, var isSelected: Boolean)
+private data class FilterOption(
+    val value: String,
+    var displayName: String,
+    var isSelected: Boolean = false
+)
 
 @Composable
 private fun ClothingItemCard(
@@ -340,6 +410,9 @@ private fun ClothingItemCard(
                         }
                         item.filename.startsWith("content://") ||
                                 item.filename.startsWith("file://") -> {
+                            FileTool.persistUriPermission(
+                                LocalContext.current,
+                                item.filename.toUri())
                             val painter = rememberAsyncImagePainter(
                                 ImageRequest.Builder(LocalContext.current)
                                     .data(item.filename)
@@ -503,41 +576,45 @@ private fun ClothingItemCard(
 
 @Composable
 private fun FilterMenu(
-    categories: Map<String, FilterOption>,
-    seasons: Map<String, FilterOption>,
-    onCategorySelected: (String) -> Unit,
-    onSeasonSelected: (String) -> Unit
+    seasons: List<FilterOption>,
+    categories: List<FilterOption>,
+    onSeasonSelected: (Int) -> Unit,
+    onCategorySelected: (Int) -> Unit
 ) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = Alignment.Start,
         modifier = Modifier
+            .verticalScroll(rememberScrollState())
             .fillMaxWidth()
     ) {
         Text(
-            text = "Categories",
+            text = "Seasons",
+            textAlign = TextAlign.Center,
             fontSize = 18.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(2.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
         Column {
-            categories.forEach { (key, category) ->
-                Spacer(modifier = Modifier.height(6.dp))
+            seasons.forEachIndexed { index, option ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { onCategorySelected(key) }
+                        .clickable { onSeasonSelected(index) }
+                        .padding(vertical = 4.dp)
                 ) {
                     Checkbox(
-                        checked = category.isSelected,
+                        checked = option.isSelected,
                         onCheckedChange = null
                     )
                     Spacer(Modifier.width(8.dp))
                     Text(
-                        text = category.displayName,
-                        fontSize = 18.sp
+                        text = option.displayName,
+                        fontSize = 16.sp
                     )
                 }
             }
@@ -546,34 +623,38 @@ private fun FilterMenu(
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "Seasons",
+            text = "Categories",
+            textAlign = TextAlign.Center,
             fontSize = 18.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(2.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
         Column {
-            seasons.forEach { (key, season) ->
-                Spacer(modifier = Modifier.height(6.dp))
+            categories.forEachIndexed { index, option ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { onSeasonSelected(key) }
+                        .clickable { onCategorySelected(index) }
+                        .padding(vertical = 4.dp)
                 ) {
                     Checkbox(
-                        checked = season.isSelected,
-                        onCheckedChange = null // Handled by parent click
+                        checked = option.isSelected,
+                        onCheckedChange = null
                     )
                     Spacer(Modifier.width(8.dp))
                     Text(
-                        text = season.displayName,
-                        fontSize = 18.sp
+                        text = option.displayName,
+                        fontSize = 16.sp
                     )
                 }
             }
         }
+
     }
 }
 

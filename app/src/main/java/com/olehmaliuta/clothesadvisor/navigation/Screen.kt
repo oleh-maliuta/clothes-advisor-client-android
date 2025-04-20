@@ -5,7 +5,7 @@ enum class Screen {
     LogIn,
     ClothesList,
     OutfitList,
-    EditCloth,
+    EditClothingItem,
     EditOutfit,
     Analysis,
     Statistics,

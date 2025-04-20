@@ -2,6 +2,7 @@ package com.olehmaliuta.clothesadvisor.database.access
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy.Companion.REPLACE
 import androidx.room.Query
 import androidx.room.RawQuery
 import androidx.sqlite.db.SimpleSQLiteQuery
@@ -26,8 +27,13 @@ interface ClothingItemDao {
     @Query("SELECT COUNT(*) FROM clothing_items")
     fun countClothingItems(): Flow<Int>
 
+    @Query("SELECT * FROM clothing_items WHERE id = :id LIMIT 1")
+    fun getItemById(id: Int?): Flow<ClothingItem?>
+
     @RawQuery(observedEntities = [ClothingItem::class])
-    fun searchAllFieldsRaw(query: SupportSQLiteQuery): Flow<List<ClothingItem>>
+    fun searchAllFieldsRaw(
+        query: SupportSQLiteQuery
+    ): Flow<List<ClothingItem>>
 
     fun searchAllFields(
         query: String,

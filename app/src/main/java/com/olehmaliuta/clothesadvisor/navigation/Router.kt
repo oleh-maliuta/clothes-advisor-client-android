@@ -29,6 +29,10 @@ class Router(
         }
     }
 
+    fun navigateBack() {
+        controller.popBackStack()
+    }
+
     @Composable
     fun currentBackStackEntryAsState(): State<NavBackStackEntry?> {
         return controller.currentBackStackEntryAsState()
