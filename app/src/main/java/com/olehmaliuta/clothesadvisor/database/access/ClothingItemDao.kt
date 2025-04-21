@@ -2,21 +2,58 @@ package com.olehmaliuta.clothesadvisor.database.access
 
 import androidx.room.Dao
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy.Companion.REPLACE
 import androidx.room.Query
 import androidx.room.RawQuery
+import androidx.room.Transaction
+import androidx.room.Update
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
+import com.olehmaliuta.clothesadvisor.api.http.responses.NewClothingItemFileResponse
 import com.olehmaliuta.clothesadvisor.database.entities.ClothingItem
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ClothingItemDao {
+    @Transaction
+    suspend fun replaceClothingItemIdsAndFilenames(
+        responses: List<NewClothingItemFileResponse>
+    ) {
+        responses.forEach { response ->
+            response.oldId?.let { oldId ->
+                response.newFile?.let { newFilename ->
+                    updateClothingItemFilename(oldId, newFilename)
+                }
+                response.newId?.let { newId ->
+                    updateClothingItemId(oldId, newId)
+                }
+            }
+        }
+        responses.forEach { response ->
+            response.oldId?.let { oldId ->
+                response.newId?.let { newId ->
+                    updateCrossRefClothingItemIds(oldId, newId)
+                }
+            }
+        }
+    }
+
     @Insert
     suspend fun insertEntity(entity: ClothingItem)
 
     @Insert
     suspend fun insertEntities(entities: List<ClothingItem>)
+
+    @Update
+    suspend fun updateEntity(entity: ClothingItem)
+
+    @Query("UPDATE clothing_items SET id = :newId WHERE id = :oldId")
+    suspend fun updateClothingItemId(oldId: Int, newId: Int)
+
+    @Query("UPDATE clothing_items SET filename = :newFilename WHERE id = :oldId")
+    suspend fun updateClothingItemFilename(oldId: Int, newFilename: String)
+
+    @Query("UPDATE clothing_item_outfit_cross SET clothing_item_id = :newId WHERE clothing_item_id = :oldId")
+    suspend fun updateCrossRefClothingItemIds(oldId: Int, newId: Int)
 
     @Query("DELETE FROM clothing_items")
     suspend fun deleteAllRows()

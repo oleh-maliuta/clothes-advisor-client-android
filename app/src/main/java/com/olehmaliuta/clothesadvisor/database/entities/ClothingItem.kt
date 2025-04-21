@@ -4,6 +4,7 @@ import androidx.annotation.Size
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "clothing_items")
 data class ClothingItem(
@@ -45,6 +46,7 @@ data class ClothingItem(
     @Size(max = 100)
     val brand: String? = null,
 
+    @SerializedName("purchase_date")
     @ColumnInfo(
         name = "purchase_date",
         defaultValue = "NULL")
@@ -55,6 +57,7 @@ data class ClothingItem(
         defaultValue = "NULL")
     val price: Double? = null,
 
+    @SerializedName("is_favorite")
     @ColumnInfo(name = "is_favorite")
     val isFavorite: Boolean,
 )

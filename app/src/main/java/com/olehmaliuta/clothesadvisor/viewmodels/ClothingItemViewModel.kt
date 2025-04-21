@@ -49,7 +49,7 @@ class ClothingItemViewModel(
         .getSharedPreferences("user", Context.MODE_PRIVATE)
     private val gson = Gson()
 
-    var itemAddingState by mutableStateOf<ApiState<Unit>>(ApiState.Idle)
+    var itemUploadingState by mutableStateOf<ApiState<Unit>>(ApiState.Idle)
         private set
 
     var idOfItemToEdit = mutableStateOf<Int?>(null)
@@ -57,7 +57,7 @@ class ClothingItemViewModel(
     val countClothingItems = repository.countClothingItems()
 
     override fun restoreState() {
-        itemAddingState = ApiState.Idle
+        itemUploadingState = ApiState.Idle
     }
 
     fun getItemToEdit(id: Int?): Flow<ClothingItem?> {
@@ -85,7 +85,7 @@ class ClothingItemViewModel(
         item: ClothingItem
     ) {
         viewModelScope.launch {
-            itemAddingState = ApiState.Loading
+            itemUploadingState = ApiState.Loading
 
             val token = sharedPref.getString("token", null)
             val tokenType = sharedPref.getString("token_type", null)
@@ -131,17 +131,85 @@ class ClothingItemViewModel(
                         val errorBody = gson.fromJson(
                             response.errorBody()?.string(),
                             BaseResponse::class.java)
-                        itemAddingState = ApiState.Error(errorBody.detail)
+                        itemUploadingState = ApiState.Error(errorBody.detail)
                         return@launch
                     }
                 }
 
                 repository.insertEntity(currentItem)
-                itemAddingState = ApiState.Success(Unit)
+                itemUploadingState = ApiState.Success(Unit)
             } catch (e: Exception) {
-                itemAddingState = ApiState.Error("Network error: ${e.message}")
+                itemUploadingState = ApiState.Error("Network error: ${e.message}")
             } finally {
                 file.delete()
+            }
+        }
+    }
+
+    fun updateClothingItem(
+        file: File?,
+        item: ClothingItem
+    ) {
+        viewModelScope.launch {
+            itemUploadingState = ApiState.Loading
+
+            val token = sharedPref.getString("token", null)
+            val tokenType = sharedPref.getString("token_type", null)
+            var currentItem: ClothingItem = item
+
+            try {
+                if (token != null) {
+                    val response = service.updateClothingItem(
+                        "${tokenType ?: "bearer"} $token",
+                        item.id,
+                        if (file != null)
+                            FileTool.prepareFilePart("file", file) else null,
+                        item.name
+                            .toRequestBody("text/plain".toMediaTypeOrNull()),
+                        item.category
+                            .toRequestBody("text/plain".toMediaTypeOrNull()),
+                        item.season
+                            .toRequestBody("text/plain".toMediaTypeOrNull()),
+                        item.red.toString()
+                            .toRequestBody("text/plain".toMediaTypeOrNull()),
+                        item.green.toString()
+                            .toRequestBody("text/plain".toMediaTypeOrNull()),
+                        item.blue.toString()
+                            .toRequestBody("text/plain".toMediaTypeOrNull()),
+                        item.material
+                            .toRequestBody("text/plain".toMediaTypeOrNull()),
+                        item.brand
+                            ?.toRequestBody("text/plain".toMediaTypeOrNull()),
+                        item.purchaseDate
+                            ?.toRequestBody("text/plain".toMediaTypeOrNull()),
+                        item.price?.toString()
+                            ?.toRequestBody("text/plain".toMediaTypeOrNull()),
+                        item.isFavorite.toString()
+                            .toRequestBody("text/plain".toMediaTypeOrNull()))
+
+                    if (response.isSuccessful) {
+                        currentItem = response.body()?.data
+                            ?.toClothingItemDbEntity() ?: item
+                        sharedPref.edit {
+                            putString(
+                                "synchronized_at",
+                                response.body()?.data?.synchronizedAt)
+                        }
+                    } else {
+                        val errorBody = gson.fromJson(
+                            response.errorBody()?.string(),
+                            BaseResponse::class.java)
+                        itemUploadingState = ApiState.Error(errorBody.detail)
+                        return@launch
+                    }
+                }
+
+                repository.updateEntity(currentItem)
+                itemUploadingState = ApiState.Success(Unit)
+            } catch (e: Exception) {
+                itemUploadingState = ApiState.Error("Network error: ${e.message}")
+            } finally {
+                file?.delete()
             }
         }
     }

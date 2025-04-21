@@ -1,6 +1,7 @@
 package com.olehmaliuta.clothesadvisor.database.repositories
 
 import com.olehmaliuta.clothesadvisor.api.http.responses.CombinationResponse
+import com.olehmaliuta.clothesadvisor.api.http.responses.IdReplaceResponse
 import com.olehmaliuta.clothesadvisor.database.access.OutfitDao
 import com.olehmaliuta.clothesadvisor.database.entities.ClothingItemOutfitCross
 import com.olehmaliuta.clothesadvisor.database.entities.Outfit
@@ -9,8 +10,16 @@ import com.olehmaliuta.clothesadvisor.database.entities.query.OutfitWithClothing
 class OutfitDaoRepository(
     private val dao: OutfitDao
 ) {
-    suspend fun insertOutfitWithItems(combination: List<CombinationResponse>) {
+    suspend fun insertOutfitWithItems(
+        combination: List<CombinationResponse>
+    ) {
         dao.insertOutfitWithItems(combination)
+    }
+
+    suspend fun replaceOutfitIds(
+        responses: List<IdReplaceResponse>
+    ) {
+        dao.replaceOutfitIds(responses)
     }
 
     suspend fun insertOutfit(outfit: Outfit) {

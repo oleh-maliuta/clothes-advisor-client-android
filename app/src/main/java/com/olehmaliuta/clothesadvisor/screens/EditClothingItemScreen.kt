@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -44,7 +43,6 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -59,12 +57,9 @@ import com.olehmaliuta.clothesadvisor.database.entities.ClothingItem
 import com.olehmaliuta.clothesadvisor.navigation.Router
 import com.olehmaliuta.clothesadvisor.tools.FileTool
 import com.olehmaliuta.clothesadvisor.viewmodels.ClothingItemViewModel
-import java.text.DecimalFormat
 import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.Date
 import java.util.Locale
-import java.util.TimeZone
 
 @Composable
 fun EditClothingItemScreen(
@@ -140,8 +135,8 @@ fun EditClothingItemScreen(
     }
     val isFormValid = isNameValid &&
             isMaterialValid &&
-            imageUri != null &&
-            clothingItemViewModel.itemAddingState !is ApiState.Loading
+            !imageUri.isNullOrBlank() &&
+            clothingItemViewModel.itemUploadingState !is ApiState.Loading
 
     LaunchedEffect(currentItem) {
         currentItem?.let { item ->
@@ -161,8 +156,8 @@ fun EditClothingItemScreen(
         }
     }
 
-    LaunchedEffect(clothingItemViewModel.itemAddingState) {
-        when (val apiState = clothingItemViewModel.itemAddingState) {
+    LaunchedEffect(clothingItemViewModel.itemUploadingState) {
+        when (val apiState = clothingItemViewModel.itemUploadingState) {
             is ApiState.Success -> {
                 router.navigateBack()
             }
@@ -450,16 +445,24 @@ fun EditClothingItemScreen(
                             isFavorite = isFavorite
                         )
 
-                        val file = FileTool.getFileFromUri(
-                            context,
-                            newItem.filename.toUri()) ?: return@Button
-
                         if (currentItem == null) {
+                            val file = FileTool.getFileFromUri(
+                                context,
+                                newItem.filename.toUri()) ?: return@Button
+
                             clothingItemViewModel.addClothingItem(
                                 file,
                                 newItem)
                         } else {
+                            val file = if (imageUri != currentItem?.filename)
+                                FileTool.getFileFromUri(
+                                    context,
+                                    newItem.filename.toUri()
+                                ) else null
 
+                            clothingItemViewModel.updateClothingItem(
+                                file,
+                                newItem)
                         }
                     },
                     enabled = isFormValid

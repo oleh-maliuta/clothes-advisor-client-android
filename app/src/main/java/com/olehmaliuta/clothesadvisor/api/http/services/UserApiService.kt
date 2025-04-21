@@ -42,9 +42,9 @@ interface UserApiService {
     @POST("synchronize")
     suspend fun synchronize(
         @Header("Authorization") token: String,
+        @Part files: List<MultipartBody.Part>?,
         @Part("clothing_items") clothingItems: RequestBody,
         @Part("clothing_combinations") clothingCombinations: RequestBody,
-        @Part files: List<MultipartBody.Part>?,
         @Part("is_server_to_local") isServerToLocal: RequestBody
     ): Response<BaseResponse<UserDataResponse>>
 

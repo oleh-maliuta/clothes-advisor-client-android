@@ -31,9 +31,22 @@ interface ClothingItemApiService {
         @Part("is_favorite") isFavorite: RequestBody,
     ): Response<BaseResponse<ClothingItemResponse>>
 
+    @Multipart
     @PUT("/clothing-items/{item_id}")
     suspend fun updateClothingItem(
         @Header("Authorization") token: String,
-        @Path("item_id") id: Int
+        @Path("item_id") id: Int,
+        @Part file: MultipartBody.Part?,
+        @Part("name") name: RequestBody,
+        @Part("category") category: RequestBody,
+        @Part("season") season: RequestBody,
+        @Part("red") red: RequestBody,
+        @Part("green") green: RequestBody,
+        @Part("blue") blue: RequestBody,
+        @Part("material") material: RequestBody,
+        @Part("brand") brand: RequestBody?,
+        @Part("purchase_date") purchaseDate: RequestBody?,
+        @Part("price") price: RequestBody?,
+        @Part("is_favorite") isFavorite: RequestBody,
     ): Response<BaseResponse<ClothingItemResponse>>
 }

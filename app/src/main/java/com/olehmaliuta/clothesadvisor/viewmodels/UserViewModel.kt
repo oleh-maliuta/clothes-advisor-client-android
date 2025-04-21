@@ -1,6 +1,7 @@
 package com.olehmaliuta.clothesadvisor.viewmodels
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -47,8 +48,6 @@ class UserViewModel(
     }
 
     private val service = HttpServiceManager.buildService(UserApiService::class.java)
-    private val contentResolver = context.contentResolver
-    private val cacheDir = context.cacheDir
     private val sharedPref = context.getSharedPreferences("user", Context.MODE_PRIVATE)
     private val gson = Gson()
 
@@ -99,7 +98,8 @@ class UserViewModel(
     fun logIn(
         email: String,
         password: String,
-        syncByServerData: Boolean
+        syncByServerData: Boolean,
+        context: Context
     ) {
         viewModelScope.launch {
             logInState = ApiState.Loading
@@ -114,52 +114,58 @@ class UserViewModel(
                         outfitDaoRepository.getOutfitsWithClothingItemIds() else emptyList()
 
                     val multipartFiles = if (!syncByServerData) {
-                        var files: List<File> = emptyList()
+                        var files: MutableList<File> = mutableListOf()
 
                         clothingItems.forEach { clothingItem ->
-                            val uri = clothingItem.filename.toUri()
-                            val file = FileTool.uriToFile(
-                                resolver = contentResolver,
-                                cacheDir = cacheDir,
-                                uri = uri,
-                                fileName = clothingItem.id.toString()
-                            )
+                            val file = if (
+                                clothingItem.filename.startsWith("file://") ||
+                                clothingItem.filename.startsWith("content://")
+                                ) {
+                                val uri = clothingItem.filename.toUri()
+                                FileTool.persistUriPermission(context, uri)
+                                FileTool.getFileFromUri(context, uri)
+                            } else {
+                                FileTool.downloadFileByUrl(
+                                    context,
+                                    clothingItem.filename.replace(
+                                        "://localhost", "://10.0.2.2"))
+                            }
 
                             if (file != null) {
-                                files + file
+                                files.add(file)
+                            } else {
+                                logInState = ApiState.Error(
+                                    "Image were not found by path: " +
+                                            clothingItem.filename)
+                                return@launch
                             }
                         }
 
-                        FileTool.filesToMultipartBodyFiles(
+                        val result = FileTool.filesToMultipartBodyFiles(
                             files = files,
-                            mediaType = "image/*",
                             partName = "files"
                         )
-                    } else null
+
+                        files.forEach { f -> f.delete() }
+                        result
+                    } else emptyList()
 
                     val logInBody = logInResponse.body()
 
                     val synchronizeResponse = service.synchronize(
                         token = "${logInBody?.data?.tokenType ?: "bearer"} " +
                                 "${logInBody?.data?.accessToken}",
+                        files = multipartFiles,
                         clothingItems = gson.toJson(clothingItems)
                             .toRequestBody("text/plain".toMediaTypeOrNull()),
                         clothingCombinations = gson.toJson(outfits)
                             .toRequestBody("text/plain".toMediaTypeOrNull()),
-                        files = multipartFiles,
                         isServerToLocal = syncByServerData.toString()
                             .toRequestBody("text/plain".toMediaTypeOrNull())
                     )
 
                     if (synchronizeResponse.isSuccessful) {
                         val synchronizedBody = synchronizeResponse.body()
-
-                        sharedPref.edit {
-                            putString("token", logInBody?.data?.accessToken)
-                            putString("token_type", logInBody?.data?.tokenType)
-                            putString("synchronized_at",
-                                synchronizedBody?.data?.synchronizedAt)
-                        }
 
                         if (syncByServerData) {
                             clothingItemDaoRepository.deleteAllRows()
@@ -176,11 +182,20 @@ class UserViewModel(
                                 emptyList()
                             )
                         } else {
-                            // TODO: Implement synchronization by the local data
+                            clothingItemDaoRepository.replaceClothingItemIdsAndFilenames(
+                                    synchronizedBody?.data?.itemIdMapping ?: emptyList())
+                            outfitDaoRepository.replaceOutfitIds(
+                                synchronizedBody?.data?.comboIdMapping ?: emptyList())
+                        }
+
+                        sharedPref.edit {
+                            putString("token", logInBody?.data?.accessToken)
+                            putString("token_type", logInBody?.data?.tokenType)
+                            putString("synchronized_at",
+                                synchronizedBody?.data?.synchronizedAt)
                         }
 
                         logInState = ApiState.Success(logInBody?.detail)
-                        return@launch
                     } else {
                         val errorBody = gson.fromJson(
                             synchronizeResponse.errorBody()?.string(),
