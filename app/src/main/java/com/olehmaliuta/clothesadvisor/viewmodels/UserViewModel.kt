@@ -19,6 +19,8 @@ import com.olehmaliuta.clothesadvisor.tools.FileTool
 import kotlinx.coroutines.launch
 import androidx.core.net.toUri
 import com.google.gson.Gson
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
 class UserViewModel(
@@ -140,10 +142,13 @@ class UserViewModel(
                     val synchronizeResponse = service.synchronize(
                         token = "${logInBody?.data?.tokenType ?: "bearer"} " +
                                 "${logInBody?.data?.accessToken}",
-                        clothingItems = gson.toJson(clothingItems),
-                        clothingCombinations = gson.toJson(outfits),
+                        clothingItems = gson.toJson(clothingItems)
+                            .toRequestBody("text/plain".toMediaTypeOrNull()),
+                        clothingCombinations = gson.toJson(outfits)
+                            .toRequestBody("text/plain".toMediaTypeOrNull()),
                         files = multipartFiles,
-                        isServerToLocal = syncByServerData
+                        isServerToLocal = syncByServerData.toString()
+                            .toRequestBody("text/plain".toMediaTypeOrNull())
                     )
 
                     if (synchronizeResponse.isSuccessful) {

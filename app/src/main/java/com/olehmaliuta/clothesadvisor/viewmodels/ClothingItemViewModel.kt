@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -18,6 +19,8 @@ import com.olehmaliuta.clothesadvisor.navigation.StateHandler
 import com.olehmaliuta.clothesadvisor.tools.FileTool
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
 class ClothingItemViewModel(
@@ -93,21 +96,37 @@ class ClothingItemViewModel(
                     val response = service.addClothingItem(
                         "${tokenType ?: "bearer"} $token",
                         FileTool.prepareFilePart("file", file),
-                        item.name,
-                        item.category,
-                        item.season,
-                        item.red,
-                        item.green,
-                        item.blue,
-                        item.material,
-                        item.brand,
-                        item.purchaseDate,
-                        item.price,
-                        item.isFavorite)
+                        item.name
+                            .toRequestBody("text/plain".toMediaTypeOrNull()),
+                        item.category
+                            .toRequestBody("text/plain".toMediaTypeOrNull()),
+                        item.season
+                            .toRequestBody("text/plain".toMediaTypeOrNull()),
+                        item.red.toString()
+                            .toRequestBody("text/plain".toMediaTypeOrNull()),
+                        item.green.toString()
+                            .toRequestBody("text/plain".toMediaTypeOrNull()),
+                        item.blue.toString()
+                            .toRequestBody("text/plain".toMediaTypeOrNull()),
+                        item.material
+                            .toRequestBody("text/plain".toMediaTypeOrNull()),
+                        item.brand
+                            ?.toRequestBody("text/plain".toMediaTypeOrNull()),
+                        item.purchaseDate
+                            ?.toRequestBody("text/plain".toMediaTypeOrNull()),
+                        item.price?.toString()
+                            ?.toRequestBody("text/plain".toMediaTypeOrNull()),
+                        item.isFavorite.toString()
+                            .toRequestBody("text/plain".toMediaTypeOrNull()))
 
                     if (response.isSuccessful) {
                         currentItem = response.body()?.data
                             ?.toClothingItemDbEntity() ?: item
+                        sharedPref.edit {
+                            putString(
+                                "synchronized_at",
+                                response.body()?.data?.synchronizedAt)
+                        }
                     } else {
                         val errorBody = gson.fromJson(
                             response.errorBody()?.string(),

@@ -146,7 +146,6 @@ fun EditClothingItemScreen(
     LaunchedEffect(currentItem) {
         currentItem?.let { item ->
             val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            val currentUtc = Calendar.getInstance(TimeZone.getTimeZone("UTC")).time
 
             imageUri = item.filename
             color = Color(item.red, item.green, item.blue)
@@ -444,21 +443,23 @@ fun EditClothingItemScreen(
                             green = (color.green * 255).toInt(),
                             blue = (color.blue * 255).toInt(),
                             material = material,
-                            brand = brand,
+                            brand = if (brand.isNotBlank()) brand else null,
                             purchaseDate = if (purchaseDate != null)
                                 dateFormatter.format(purchaseDate ?: Date()) else null,
                             price = price,
                             isFavorite = isFavorite
                         )
 
-                        if (currentItem == null) {
-                            val file = FileTool.getFileFromUri(
-                                context,
-                                newItem.filename.toUri()) ?: return@Button
+                        val file = FileTool.getFileFromUri(
+                            context,
+                            newItem.filename.toUri()) ?: return@Button
 
+                        if (currentItem == null) {
                             clothingItemViewModel.addClothingItem(
                                 file,
                                 newItem)
+                        } else {
+
                         }
                     },
                     enabled = isFormValid

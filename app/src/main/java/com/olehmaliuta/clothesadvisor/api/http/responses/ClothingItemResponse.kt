@@ -17,6 +17,7 @@ data class ClothingItemResponse (
     @SerializedName("price") var price: Double? = null,
     @SerializedName("is_favorite") var isFavorite: Boolean? = null,
     @SerializedName("filename") var filename: String? = null,
+    @SerializedName("synchronized_at") var synchronizedAt: String? = null
 ) {
     fun toClothingItemDbEntity(): ClothingItem {
         return ClothingItem(

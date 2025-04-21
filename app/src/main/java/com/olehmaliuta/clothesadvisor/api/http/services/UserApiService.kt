@@ -5,6 +5,7 @@ import com.olehmaliuta.clothesadvisor.api.http.responses.TokenResponse
 import com.olehmaliuta.clothesadvisor.api.http.responses.UserDataResponse
 import com.olehmaliuta.clothesadvisor.api.http.responses.UserProfileResponse
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -41,10 +42,10 @@ interface UserApiService {
     @POST("synchronize")
     suspend fun synchronize(
         @Header("Authorization") token: String,
-        @Part("clothing_items") clothingItems: String,
-        @Part("clothing_combinations") clothingCombinations: String,
+        @Part("clothing_items") clothingItems: RequestBody,
+        @Part("clothing_combinations") clothingCombinations: RequestBody,
         @Part files: List<MultipartBody.Part>?,
-        @Part("is_server_to_local") isServerToLocal: Boolean
+        @Part("is_server_to_local") isServerToLocal: RequestBody
     ): Response<BaseResponse<UserDataResponse>>
 
     @FormUrlEncoded

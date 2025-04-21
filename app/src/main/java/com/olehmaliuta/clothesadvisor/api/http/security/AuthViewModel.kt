@@ -13,6 +13,8 @@ import com.olehmaliuta.clothesadvisor.api.http.services.UserApiService
 import com.olehmaliuta.clothesadvisor.database.repositories.ClothingItemDaoRepository
 import com.olehmaliuta.clothesadvisor.database.repositories.OutfitDaoRepository
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
 
 class AuthViewModel(
     private val clothingItemDaoRepository: ClothingItemDaoRepository,
@@ -66,10 +68,13 @@ class AuthViewModel(
                     ) {
                         val synchronizeResponse = service.synchronize(
                             token = "${tokenType ?: "bearer"} $token",
-                            clothingItems = "",
-                            clothingCombinations = "",
+                            clothingItems = ""
+                                .toRequestBody("text/plain".toMediaTypeOrNull()),
+                            clothingCombinations = ""
+                                .toRequestBody("text/plain".toMediaTypeOrNull()),
                             files = null,
-                            isServerToLocal = true
+                            isServerToLocal = true.toString()
+                                .toRequestBody("text/plain".toMediaTypeOrNull())
                         )
 
                         if (synchronizeResponse.isSuccessful) {

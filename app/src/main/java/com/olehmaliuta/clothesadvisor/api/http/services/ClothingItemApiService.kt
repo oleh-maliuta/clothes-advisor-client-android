@@ -3,11 +3,14 @@ package com.olehmaliuta.clothesadvisor.api.http.services
 import com.olehmaliuta.clothesadvisor.api.http.responses.BaseResponse
 import com.olehmaliuta.clothesadvisor.api.http.responses.ClothingItemResponse
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Header
 import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Part
+import retrofit2.http.Path
 
 interface ClothingItemApiService {
     @Multipart
@@ -15,16 +18,22 @@ interface ClothingItemApiService {
     suspend fun addClothingItem(
         @Header("Authorization") token: String,
         @Part file: MultipartBody.Part,
-        @Part("name") name: String,
-        @Part("category") category: String,
-        @Part("season") season: String,
-        @Part("red") red: Int,
-        @Part("green") green: Int,
-        @Part("blue") blue: Int,
-        @Part("material") material: String,
-        @Part("brand") brand: String? = null,
-        @Part("purchase_date") purchaseDate: String? = null,
-        @Part("price") price: Double? = null,
-        @Part("is_favorite") isFavorite: Boolean? = null,
+        @Part("name") name: RequestBody,
+        @Part("category") category: RequestBody,
+        @Part("season") season: RequestBody,
+        @Part("red") red: RequestBody,
+        @Part("green") green: RequestBody,
+        @Part("blue") blue: RequestBody,
+        @Part("material") material: RequestBody,
+        @Part("brand") brand: RequestBody?,
+        @Part("purchase_date") purchaseDate: RequestBody?,
+        @Part("price") price: RequestBody?,
+        @Part("is_favorite") isFavorite: RequestBody,
+    ): Response<BaseResponse<ClothingItemResponse>>
+
+    @PUT("/clothing-items/{item_id}")
+    suspend fun updateClothingItem(
+        @Header("Authorization") token: String,
+        @Path("item_id") id: Int
     ): Response<BaseResponse<ClothingItemResponse>>
 }
