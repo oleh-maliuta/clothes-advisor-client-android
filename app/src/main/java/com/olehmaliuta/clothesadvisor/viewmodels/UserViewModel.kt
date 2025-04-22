@@ -176,7 +176,7 @@ class UserViewModel(
                             putString("token", logInBody?.data?.accessToken)
                             putString("token_type", logInBody?.data?.tokenType)
                             putString("synchronized_at",
-                                synchronizedBody?.data?.synchronizedAt)
+                                synchronizedBody?.synchronizedAt)
                         }
 
                         logInState = ApiState.Success(logInBody?.detail)

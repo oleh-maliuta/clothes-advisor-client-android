@@ -65,7 +65,7 @@ class AuthViewModel(
 
                     if (
                         synchronizedAt == null ||
-                        synchronizedAt != profileBody?.data?.synchronizedAt.toString()
+                        synchronizedAt != profileBody?.synchronizedAt
                     ) {
                         val synchronizeResponse = service.synchronize(
                             token = "${tokenType ?: "bearer"} $token",
@@ -97,7 +97,7 @@ class AuthViewModel(
 
                             sharedPref.edit {
                                 putString("synchronized_at",
-                                    synchronizedBody?.data?.synchronizedAt)
+                                    synchronizedBody?.synchronizedAt)
                             }
                         } else {
                             val errorBody = Gson().fromJson(

@@ -125,7 +125,7 @@ class ClothingItemViewModel(
                         sharedPref.edit {
                             putString(
                                 "synchronized_at",
-                                response.body()?.data?.synchronizedAt)
+                                response.body()?.synchronizedAt)
                         }
                     } else {
                         val errorBody = gson.fromJson(
@@ -193,7 +193,7 @@ class ClothingItemViewModel(
                         sharedPref.edit {
                             putString(
                                 "synchronized_at",
-                                response.body()?.data?.synchronizedAt)
+                                response.body()?.synchronizedAt)
                         }
                     } else {
                         val errorBody = gson.fromJson(

@@ -5,5 +5,4 @@ import com.google.gson.annotations.SerializedName
 data class UserDataResponse (
     @SerializedName("items") var items: List<ClothingItemResponse>? = null,
     @SerializedName("combinations") var combinations: List<CombinationResponse>? = null,
-    @SerializedName("synchronized_at") var synchronizedAt: String? = null,
 )
