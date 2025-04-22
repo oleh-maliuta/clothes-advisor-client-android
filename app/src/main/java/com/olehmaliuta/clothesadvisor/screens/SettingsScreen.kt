@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.olehmaliuta.clothesadvisor.api.http.security.ApiState
 import com.olehmaliuta.clothesadvisor.api.http.security.AuthState
-import com.olehmaliuta.clothesadvisor.api.http.security.AuthViewModel
+import com.olehmaliuta.clothesadvisor.viewmodels.AuthViewModel
 import com.olehmaliuta.clothesadvisor.viewmodels.UserViewModel
 import com.olehmaliuta.clothesadvisor.components.CenteredScrollContainer
 import com.olehmaliuta.clothesadvisor.components.OkDialog

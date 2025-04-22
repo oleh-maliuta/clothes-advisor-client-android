@@ -1,4 +1,4 @@
-package com.olehmaliuta.clothesadvisor.api.http.security
+package com.olehmaliuta.clothesadvisor.viewmodels
 
 import android.content.Context
 import androidx.compose.runtime.mutableStateOf
@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.olehmaliuta.clothesadvisor.api.http.HttpServiceManager
 import com.olehmaliuta.clothesadvisor.api.http.responses.BaseResponse
+import com.olehmaliuta.clothesadvisor.api.http.security.AuthState
 import com.olehmaliuta.clothesadvisor.api.http.services.UserApiService
 import com.olehmaliuta.clothesadvisor.database.repositories.ClothingItemDaoRepository
 import com.olehmaliuta.clothesadvisor.database.repositories.OutfitDaoRepository

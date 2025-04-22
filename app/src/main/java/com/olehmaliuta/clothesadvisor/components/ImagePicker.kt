@@ -138,5 +138,12 @@ fun ImagePicker(
                 modifier = Modifier.padding(top = 8.dp)
             )
         }
+
+        if (!currentImageUri.isNullOrBlank()) {
+            Text(
+                text = currentImageUri,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+        }
     }
 }

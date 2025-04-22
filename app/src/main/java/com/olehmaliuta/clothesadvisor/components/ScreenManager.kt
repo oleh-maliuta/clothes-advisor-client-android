@@ -32,13 +32,10 @@ import androidx.navigation.compose.rememberNavController
 import com.olehmaliuta.clothesadvisor.App
 import com.olehmaliuta.clothesadvisor.MainActivity
 import com.olehmaliuta.clothesadvisor.api.http.security.AuthState
-import com.olehmaliuta.clothesadvisor.api.http.security.AuthViewModel
-import com.olehmaliuta.clothesadvisor.viewmodels.UserViewModel
-import com.olehmaliuta.clothesadvisor.viewmodels.ClothingItemViewModel
-import com.olehmaliuta.clothesadvisor.viewmodels.OutfitViewModel
 import com.olehmaliuta.clothesadvisor.navigation.Router
 import com.olehmaliuta.clothesadvisor.navigation.Screen
 import com.olehmaliuta.clothesadvisor.screens.*
+import com.olehmaliuta.clothesadvisor.viewmodels.*
 
 @Composable
 fun ScreenManager(activity: MainActivity) {

@@ -394,7 +394,8 @@ fun EditClothingItemScreen(
                 selectedDate = purchaseDate,
                 onDateChanged = { newDate -> purchaseDate = newDate },
                 label = "Purchase date",
-                dateFormat = "yyyy-MM-dd"
+                dateFormat = "yyyy-MM-dd",
+                modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(8.dp))

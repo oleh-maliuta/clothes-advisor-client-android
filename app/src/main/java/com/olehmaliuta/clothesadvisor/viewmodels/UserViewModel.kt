@@ -1,14 +1,15 @@
 package com.olehmaliuta.clothesadvisor.viewmodels
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.content.edit
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
 import com.olehmaliuta.clothesadvisor.api.http.HttpServiceManager
 import com.olehmaliuta.clothesadvisor.api.http.responses.BaseResponse
 import com.olehmaliuta.clothesadvisor.api.http.security.ApiState
@@ -18,8 +19,6 @@ import com.olehmaliuta.clothesadvisor.database.repositories.OutfitDaoRepository
 import com.olehmaliuta.clothesadvisor.navigation.StateHandler
 import com.olehmaliuta.clothesadvisor.tools.FileTool
 import kotlinx.coroutines.launch
-import androidx.core.net.toUri
-import com.google.gson.Gson
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
@@ -113,14 +112,12 @@ class UserViewModel(
                     val outfits = if (!syncByServerData)
                         outfitDaoRepository.getOutfitsWithClothingItemIds() else emptyList()
 
-                    val multipartFiles = if (!syncByServerData) {
-                        var files: MutableList<File> = mutableListOf()
-
-                        clothingItems.forEach { clothingItem ->
+                    var files: List<File> = if (!syncByServerData)
+                        clothingItems.map { clothingItem ->
                             val file = if (
                                 clothingItem.filename.startsWith("file://") ||
                                 clothingItem.filename.startsWith("content://")
-                                ) {
+                            ) {
                                 val uri = clothingItem.filename.toUri()
                                 FileTool.persistUriPermission(context, uri)
                                 FileTool.getFileFromUri(context, uri)
@@ -132,23 +129,19 @@ class UserViewModel(
                             }
 
                             if (file != null) {
-                                files.add(file)
+                                file
                             } else {
                                 logInState = ApiState.Error(
-                                    "Image were not found by path: " +
+                                    "Image were not found by the path: " +
                                             clothingItem.filename)
                                 return@launch
                             }
-                        }
+                        } else emptyList()
 
-                        val result = FileTool.filesToMultipartBodyFiles(
+                    val multipartFiles = if (!syncByServerData)
+                        FileTool.filesToMultipartBodyFiles(
                             files = files,
-                            partName = "files"
-                        )
-
-                        files.forEach { f -> f.delete() }
-                        result
-                    } else emptyList()
+                            partName = "files") else null
 
                     val logInBody = logInResponse.body()
 
@@ -167,26 +160,17 @@ class UserViewModel(
                     if (synchronizeResponse.isSuccessful) {
                         val synchronizedBody = synchronizeResponse.body()
 
-                        if (syncByServerData) {
-                            clothingItemDaoRepository.deleteAllRows()
-                            outfitDaoRepository.deleteAllRows()
-
-                            clothingItemDaoRepository.insertEntities(
-                                synchronizedBody?.data?.items?.map {
+                        clothingItemDaoRepository.deleteAllRows()
+                        outfitDaoRepository.deleteAllRows()
+                        clothingItemDaoRepository.insertEntities(
+                            synchronizedBody?.data?.items?.map {
                                     el -> return@map el.toClothingItemDbEntity()
-                                } ?: emptyList()
-                            )
-
-                            outfitDaoRepository.insertOutfitWithItems(
-                                synchronizedBody?.data?.combinations ?:
-                                emptyList()
-                            )
-                        } else {
-                            clothingItemDaoRepository.replaceClothingItemIdsAndFilenames(
-                                    synchronizedBody?.data?.itemIdMapping ?: emptyList())
-                            outfitDaoRepository.replaceOutfitIds(
-                                synchronizedBody?.data?.comboIdMapping ?: emptyList())
-                        }
+                            } ?: emptyList()
+                        )
+                        outfitDaoRepository.insertOutfitWithItems(
+                            synchronizedBody?.data?.combinations ?:
+                            emptyList()
+                        )
 
                         sharedPref.edit {
                             putString("token", logInBody?.data?.accessToken)
@@ -202,6 +186,8 @@ class UserViewModel(
                             BaseResponse::class.java)
                         logInState = ApiState.Error(errorBody.detail)
                     }
+
+                    files.forEach { f -> f.delete() }
                 } else {
                     val errorBody = gson.fromJson(
                         logInResponse.errorBody()?.string(),

@@ -1,6 +1,5 @@
 package com.olehmaliuta.clothesadvisor.screens
 
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -18,8 +17,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -65,20 +62,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.olehmaliuta.clothesadvisor.R
 import com.olehmaliuta.clothesadvisor.components.AcceptCancelDialog
+import com.olehmaliuta.clothesadvisor.components.OkDialog
 import com.olehmaliuta.clothesadvisor.database.entities.ClothingItem
 import com.olehmaliuta.clothesadvisor.navigation.Router
 import com.olehmaliuta.clothesadvisor.navigation.Screen
 import com.olehmaliuta.clothesadvisor.tools.FileTool
 import com.olehmaliuta.clothesadvisor.viewmodels.ClothingItemViewModel
 import java.io.File
-import androidx.core.net.toUri
-import com.olehmaliuta.clothesadvisor.components.OkDialog
 
 @Composable
 fun ClothesListScreen(

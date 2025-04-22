@@ -5,11 +5,9 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import com.olehmaliuta.clothesadvisor.api.http.responses.CombinationResponse
-import com.olehmaliuta.clothesadvisor.api.http.responses.IdReplaceResponse
 import com.olehmaliuta.clothesadvisor.database.entities.ClothingItemOutfitCross
 import com.olehmaliuta.clothesadvisor.database.entities.Outfit
 import com.olehmaliuta.clothesadvisor.database.entities.query.OutfitWithClothingItemIds
-import kotlin.collections.forEach
 
 @Dao
 interface OutfitDao {
@@ -31,37 +29,11 @@ interface OutfitDao {
         }
     }
 
-    @Transaction
-    suspend fun replaceOutfitIds(
-        responses: List<IdReplaceResponse>
-    ) {
-        responses.forEach { response ->
-            response.oldId?.let { oldId ->
-                response.newId?.let { newId ->
-                    updateOutfitId(oldId, newId)
-                }
-            }
-        }
-        responses.forEach { response ->
-            response.oldId?.let { oldId ->
-                response.newId?.let { newId ->
-                    updateCrossRefOutfitIds(oldId, newId)
-                }
-            }
-        }
-    }
-
     @Insert
     suspend fun insertEntity(entity: Outfit)
 
     @Insert
     suspend fun insertCrossReference(crossRef: ClothingItemOutfitCross)
-
-    @Query("UPDATE outfits SET id = :newId WHERE id = :oldId")
-    suspend fun updateOutfitId(oldId: Int, newId: Int)
-
-    @Query("UPDATE clothing_item_outfit_cross SET outfit_id = :newId WHERE outfit_id = :oldId")
-    suspend fun updateCrossRefOutfitIds(oldId: Int, newId: Int)
 
     @Query("DELETE FROM outfits")
     suspend fun deleteAllRows()

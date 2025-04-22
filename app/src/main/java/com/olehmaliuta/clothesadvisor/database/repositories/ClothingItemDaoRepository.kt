@@ -1,6 +1,5 @@
 package com.olehmaliuta.clothesadvisor.database.repositories
 
-import com.olehmaliuta.clothesadvisor.api.http.responses.NewClothingItemFileResponse
 import com.olehmaliuta.clothesadvisor.database.access.ClothingItemDao
 import com.olehmaliuta.clothesadvisor.database.entities.ClothingItem
 import kotlinx.coroutines.flow.Flow
@@ -8,12 +7,6 @@ import kotlinx.coroutines.flow.Flow
 class ClothingItemDaoRepository(
     private val dao: ClothingItemDao
 ) {
-    suspend fun replaceClothingItemIdsAndFilenames(
-        responses: List<NewClothingItemFileResponse>
-    ) {
-        dao.replaceClothingItemIdsAndFilenames(responses)
-    }
-
     suspend fun insertEntity(item: ClothingItem) {
         dao.insertEntity(item)
     }

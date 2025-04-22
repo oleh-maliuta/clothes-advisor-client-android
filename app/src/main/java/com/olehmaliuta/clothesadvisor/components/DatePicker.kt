@@ -1,21 +1,32 @@
 package com.olehmaliuta.clothesadvisor.components
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.olehmaliuta.clothesadvisor.R
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -24,20 +35,34 @@ import java.util.Locale
 @Composable
 fun DatePicker(
     selectedDate: Date?,
-    onDateChanged: (Date) -> Unit,
+    onDateChanged: (Date?) -> Unit,
     modifier: Modifier = Modifier,
     label: String = "Select Date",
     dateFormat: String = "yyyy-MM-dd"
 ) {
-    val context = LocalContext.current
-    val calendar = remember { Calendar.getInstance() }
     val dateFormat = remember { SimpleDateFormat(dateFormat, Locale.getDefault()) }
-
     val showDialog = remember { mutableStateOf(false) }
 
-    Column {
-        Button(onClick = { showDialog.value = true }) {
-            Text(label)
+    Column(modifier = modifier) {
+        Row {
+            Button(onClick = { showDialog.value = true }) {
+                Text(label)
+            }
+
+            IconButton(
+                colors = IconButtonDefaults.iconButtonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                ),
+                onClick = { onDateChanged(null) },
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = null,
+                    modifier = Modifier.size(22.dp),
+                    tint = MaterialTheme.colorScheme.onPrimary
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(8.dp))
