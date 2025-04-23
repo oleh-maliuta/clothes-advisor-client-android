@@ -51,7 +51,10 @@ class ClothingItemViewModel(
 
     var itemUploadingState by mutableStateOf<ApiState<Unit>>(ApiState.Idle)
         private set
+    var itemDeletingState by mutableStateOf<ApiState<Unit>>(ApiState.Idle)
+        private set
     var isFavoriteTogglingState by mutableStateOf<ApiState<Unit>>(ApiState.Idle)
+        private set
 
     var idOfItemToEdit = mutableStateOf<Int?>(null)
 
@@ -59,6 +62,7 @@ class ClothingItemViewModel(
 
     override fun restoreState() {
         itemUploadingState = ApiState.Idle
+        itemDeletingState = ApiState.Idle
         isFavoriteTogglingState = ApiState.Idle
     }
 
@@ -253,6 +257,41 @@ class ClothingItemViewModel(
                     isFavoriteTogglingState =
                         ApiState.Error("Network error: ${e.message}")
                 }
+            }
+        }
+    }
+
+    fun deleteClothingItem(
+        id: Int
+    ) {
+        viewModelScope.launch {
+            itemDeletingState = ApiState.Loading
+
+            val token = sharedPref.getString("token", "")
+            val tokenType = sharedPref.getString("token_type", null)
+
+            try {
+                val response = service.deleteClothingItem(
+                    "${tokenType ?: "bearer"} $token",
+                    id
+                )
+
+                if (response.isSuccessful) {
+                    repository.deleteItemById(id)
+                    sharedPref.edit {
+                        putString(
+                            "synchronized_at",
+                            response.body()?.synchronizedAt)
+                    }
+                    itemDeletingState = ApiState.Success(Unit)
+                } else {
+                    val errorBody = gson.fromJson(
+                        response.errorBody()?.string(),
+                        BaseResponse::class.java)
+                    itemDeletingState = ApiState.Error(errorBody.detail)
+                }
+            } catch (e: Exception) {
+                itemDeletingState = ApiState.Error("Network error: ${e.message}")
             }
         }
     }

@@ -6,6 +6,7 @@ import com.olehmaliuta.clothesadvisor.api.http.responses.ToggleFavoriteResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
+import retrofit2.http.DELETE
 import retrofit2.http.Header
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -56,4 +57,10 @@ interface ClothingItemApiService {
         @Header("Authorization") token: String,
         @Path("item_id") id: Int,
     ): Response<BaseResponse<ToggleFavoriteResponse>>
+
+    @DELETE("clothing-items/{item_id}")
+    suspend fun deleteClothingItem(
+        @Header("Authorization") token: String,
+        @Path("item_id") id: Int,
+    ): Response<BaseResponse<Nothing>>
 }

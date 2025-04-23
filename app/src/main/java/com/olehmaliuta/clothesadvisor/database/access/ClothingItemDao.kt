@@ -28,6 +28,9 @@ interface ClothingItemDao {
         """)
     suspend fun updateIsFavoriteValue(id: Int)
 
+    @Query("DELETE FROM clothing_items WHERE id = :id")
+    suspend fun deleteItemById(id: Int)
+
     @Query("DELETE FROM clothing_items")
     suspend fun deleteAllRows()
 

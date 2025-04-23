@@ -12,17 +12,23 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -43,11 +49,13 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import com.olehmaliuta.clothesadvisor.api.http.security.ApiState
+import com.olehmaliuta.clothesadvisor.components.AcceptCancelDialog
 import com.olehmaliuta.clothesadvisor.components.ColorPicker
 import com.olehmaliuta.clothesadvisor.components.DatePicker
 import com.olehmaliuta.clothesadvisor.components.FloatingPointNumberInput
@@ -126,6 +134,7 @@ fun EditClothingItemScreen(
     var isCategoryDropMenuOpened by remember { mutableStateOf(false) }
     var okDialogTitle by remember { mutableStateOf("") }
     var okDialogMessage by remember { mutableStateOf<String?>(null) }
+    var isDeleteAcceptDialogOpened by remember { mutableStateOf(false) }
 
     val isNameValid by remember(name) {
         derivedStateOf { name.isNotBlank() }
@@ -169,6 +178,19 @@ fun EditClothingItemScreen(
         }
     }
 
+    LaunchedEffect(clothingItemViewModel.itemDeletingState) {
+        when (val apiState = clothingItemViewModel.itemDeletingState) {
+            is ApiState.Success -> {
+                router.navigateBack()
+            }
+            is ApiState.Error -> {
+                okDialogTitle = "Error"
+                okDialogMessage = apiState.message
+            }
+            else -> {}
+        }
+    }
+
     OkDialog(
         title = okDialogTitle,
         content = okDialogMessage,
@@ -176,6 +198,26 @@ fun EditClothingItemScreen(
             okDialogMessage = null
         }
     )
+
+    if (currentItem != null) {
+        AcceptCancelDialog(
+            isOpened = isDeleteAcceptDialogOpened,
+            title = "Delete the clothing item",
+            onDismissRequest = {
+                isDeleteAcceptDialogOpened = false
+            },
+            onAccept = {
+                clothingItemViewModel
+                    .deleteClothingItem(currentItem!!.id)
+            },
+            acceptText = "Accept",
+        ) {
+            Text(
+                text = "Are you sure you want to delete the item?",
+                textAlign = TextAlign.Justify
+            )
+        }
+    }
 
     if (
         clothingItemViewModel.idOfItemToEdit.value != null &&
@@ -486,11 +528,38 @@ fun EditClothingItemScreen(
                     )
                 }
 
+                if (currentItem != null) {
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    IconButton(
+                        colors = IconButtonDefaults.iconButtonColors(
+                            containerColor = MaterialTheme.colorScheme.errorContainer,
+                            contentColor = MaterialTheme.colorScheme.onErrorContainer
+                        ),
+                        onClick = {
+                            isDeleteAcceptDialogOpened = true
+                        },
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = null,
+                            modifier = Modifier.size(22.dp),
+                            tint = MaterialTheme.colorScheme.onErrorContainer
+                        )
+                    }
+                }
+
                 Spacer(modifier = Modifier.width(8.dp))
 
-                TextButton(onClick = {
-                    router.navigateBack()
-                }) {
+                TextButton(
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.tertiary,
+                        contentColor = MaterialTheme.colorScheme.onTertiary
+                    ),
+                    onClick = {
+                        router.navigateBack()
+                    }
+                ) {
                     Text("Cancel")
                 }
             }
