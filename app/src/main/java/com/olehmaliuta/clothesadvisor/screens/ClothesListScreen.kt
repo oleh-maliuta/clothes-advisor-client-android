@@ -43,6 +43,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -68,6 +69,7 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.olehmaliuta.clothesadvisor.R
+import com.olehmaliuta.clothesadvisor.api.http.security.ApiState
 import com.olehmaliuta.clothesadvisor.components.AcceptCancelDialog
 import com.olehmaliuta.clothesadvisor.components.OkDialog
 import com.olehmaliuta.clothesadvisor.database.entities.ClothingItem
@@ -138,6 +140,16 @@ fun ClothesListScreen(
             FilterOption("overalls", "overalls"),
             FilterOption("beanie", "beanie"),
         ))
+    }
+
+    LaunchedEffect(clothingItemViewModel.isFavoriteTogglingState) {
+        when (val apiState = clothingItemViewModel.isFavoriteTogglingState) {
+            is ApiState.Error -> {
+                okDialogTitle = "Error"
+                okDialogMessage = apiState.message
+            }
+            else -> {}
+        }
     }
 
     OkDialog(
@@ -328,7 +340,9 @@ fun ClothesListScreen(
             ) { item ->
                 ClothingItemCard(
                     item = item,
-                    onFavoriteClick = {},
+                    onFavoriteClick = {
+                        clothingItemViewModel.updateIsFavoriteValue(item.id)
+                    },
                     onClick = {
                         clothingItemViewModel.idOfItemToEdit.value = item.id
                         router.navigate(Screen.EditClothingItem.name)

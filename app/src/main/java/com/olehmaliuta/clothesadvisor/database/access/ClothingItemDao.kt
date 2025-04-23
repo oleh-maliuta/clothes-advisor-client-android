@@ -21,6 +21,13 @@ interface ClothingItemDao {
     @Update
     suspend fun updateEntity(entity: ClothingItem)
 
+    @Query("""
+        UPDATE clothing_items
+        SET is_favorite = NOT is_favorite
+        WHERE id = :id
+        """)
+    suspend fun updateIsFavoriteValue(id: Int)
+
     @Query("DELETE FROM clothing_items")
     suspend fun deleteAllRows()
 

@@ -266,7 +266,11 @@ fun EditClothingItemScreen(
 
             OutlinedTextField(
                 value = name,
-                onValueChange = { name = it },
+                onValueChange = {
+                    if (it.length <= 100) {
+                        name = it
+                    }
+                },
                 label = { Text("Name*") },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
@@ -360,7 +364,11 @@ fun EditClothingItemScreen(
 
             OutlinedTextField(
                 value = material,
-                onValueChange = { material = it },
+                onValueChange = {
+                    if (it.length <= 50) {
+                        material = it
+                    }
+                },
                 label = { Text("Material*") },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
@@ -374,7 +382,11 @@ fun EditClothingItemScreen(
 
             OutlinedTextField(
                 value = brand,
-                onValueChange = { brand = it },
+                onValueChange = {
+                    if (it.length <= 100) {
+                        brand = it
+                    }
+                },
                 label = { Text("Brand") },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()

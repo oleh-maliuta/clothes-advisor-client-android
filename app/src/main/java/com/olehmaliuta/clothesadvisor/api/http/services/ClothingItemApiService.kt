@@ -2,6 +2,7 @@ package com.olehmaliuta.clothesadvisor.api.http.services
 
 import com.olehmaliuta.clothesadvisor.api.http.responses.BaseResponse
 import com.olehmaliuta.clothesadvisor.api.http.responses.ClothingItemResponse
+import com.olehmaliuta.clothesadvisor.api.http.responses.ToggleFavoriteResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -32,7 +33,7 @@ interface ClothingItemApiService {
     ): Response<BaseResponse<ClothingItemResponse>>
 
     @Multipart
-    @PUT("/clothing-items/{item_id}")
+    @PUT("clothing-items/{item_id}")
     suspend fun updateClothingItem(
         @Header("Authorization") token: String,
         @Path("item_id") id: Int,
@@ -49,4 +50,10 @@ interface ClothingItemApiService {
         @Part("price") price: RequestBody?,
         @Part("is_favorite") isFavorite: RequestBody,
     ): Response<BaseResponse<ClothingItemResponse>>
+
+    @PUT("items/{item_id}/toggle-favorite")
+    suspend fun toggleFavorite(
+        @Header("Authorization") token: String,
+        @Path("item_id") id: Int,
+    ): Response<BaseResponse<ToggleFavoriteResponse>>
 }

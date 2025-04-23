@@ -19,6 +19,10 @@ class ClothingItemDaoRepository(
         dao.updateEntity(item)
     }
 
+    suspend fun updateIsFavoriteValue(id: Int) {
+        dao.updateIsFavoriteValue(id)
+    }
+
     suspend fun deleteAllRows() {
         dao.deleteAllRows()
     }

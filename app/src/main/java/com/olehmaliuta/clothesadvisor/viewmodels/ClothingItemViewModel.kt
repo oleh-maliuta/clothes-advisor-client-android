@@ -51,6 +51,7 @@ class ClothingItemViewModel(
 
     var itemUploadingState by mutableStateOf<ApiState<Unit>>(ApiState.Idle)
         private set
+    var isFavoriteTogglingState by mutableStateOf<ApiState<Unit>>(ApiState.Idle)
 
     var idOfItemToEdit = mutableStateOf<Int?>(null)
 
@@ -58,6 +59,7 @@ class ClothingItemViewModel(
 
     override fun restoreState() {
         itemUploadingState = ApiState.Idle
+        isFavoriteTogglingState = ApiState.Idle
     }
 
     fun getItemToEdit(id: Int?): Flow<ClothingItem?> {
@@ -210,6 +212,47 @@ class ClothingItemViewModel(
                 itemUploadingState = ApiState.Error("Network error: ${e.message}")
             } finally {
                 file?.delete()
+            }
+        }
+    }
+
+    fun updateIsFavoriteValue(
+        id: Int
+    ) {
+        viewModelScope.launch {
+            if (isFavoriteTogglingState !is ApiState.Loading) {
+                isFavoriteTogglingState = ApiState.Loading
+            }
+
+            val token = sharedPref.getString("token", "")
+            val tokenType = sharedPref.getString("token_type", null)
+
+            try {
+                val response = service.toggleFavorite(
+                    "${tokenType ?: "bearer"} $token",
+                    id
+                )
+
+                if (response.isSuccessful) {
+                    repository.updateIsFavoriteValue(id)
+                    sharedPref.edit {
+                        putString(
+                            "synchronized_at",
+                            response.body()?.synchronizedAt)
+                    }
+                } else {
+                    if (isFavoriteTogglingState !is ApiState.Error) {
+                        val errorBody = gson.fromJson(
+                            response.errorBody()?.string(),
+                            BaseResponse::class.java)
+                        isFavoriteTogglingState = ApiState.Error(errorBody.detail)
+                    }
+                }
+            } catch (e: Exception) {
+                if (isFavoriteTogglingState !is ApiState.Error) {
+                    isFavoriteTogglingState =
+                        ApiState.Error("Network error: ${e.message}")
+                }
             }
         }
     }
