@@ -228,30 +228,34 @@ class ClothingItemViewModel(
                 isFavoriteTogglingState = ApiState.Loading
             }
 
-            val token = sharedPref.getString("token", "")
+            val token = sharedPref.getString("token", null)
             val tokenType = sharedPref.getString("token_type", null)
 
             try {
-                val response = service.toggleFavorite(
-                    "${tokenType ?: "bearer"} $token",
-                    id
-                )
+                if (token != null) {
+                    val response = service.toggleFavorite(
+                        "${tokenType ?: "bearer"} $token",
+                        id
+                    )
 
-                if (response.isSuccessful) {
-                    repository.updateIsFavoriteValue(id)
-                    sharedPref.edit {
-                        putString(
-                            "synchronized_at",
-                            response.body()?.synchronizedAt)
-                    }
-                } else {
-                    if (isFavoriteTogglingState !is ApiState.Error) {
-                        val errorBody = gson.fromJson(
-                            response.errorBody()?.string(),
-                            BaseResponse::class.java)
-                        isFavoriteTogglingState = ApiState.Error(errorBody.detail)
+                    if (response.isSuccessful) {
+                        sharedPref.edit {
+                            putString(
+                                "synchronized_at",
+                                response.body()?.synchronizedAt)
+                        }
+                    } else {
+                        if (isFavoriteTogglingState !is ApiState.Error) {
+                            val errorBody = gson.fromJson(
+                                response.errorBody()?.string(),
+                                BaseResponse::class.java)
+                            isFavoriteTogglingState = ApiState.Error(errorBody.detail)
+                        }
+                        return@launch
                     }
                 }
+
+                repository.updateIsFavoriteValue(id)
             } catch (e: Exception) {
                 if (isFavoriteTogglingState !is ApiState.Error) {
                     isFavoriteTogglingState =
@@ -267,29 +271,33 @@ class ClothingItemViewModel(
         viewModelScope.launch {
             itemDeletingState = ApiState.Loading
 
-            val token = sharedPref.getString("token", "")
+            val token = sharedPref.getString("token", null)
             val tokenType = sharedPref.getString("token_type", null)
 
             try {
-                val response = service.deleteClothingItem(
-                    "${tokenType ?: "bearer"} $token",
-                    id
-                )
+                if (token != null) {
+                    val response = service.deleteClothingItem(
+                        "${tokenType ?: "bearer"} $token",
+                        id
+                    )
 
-                if (response.isSuccessful) {
-                    repository.deleteItemById(id)
-                    sharedPref.edit {
-                        putString(
-                            "synchronized_at",
-                            response.body()?.synchronizedAt)
+                    if (response.isSuccessful) {
+                        sharedPref.edit {
+                            putString(
+                                "synchronized_at",
+                                response.body()?.synchronizedAt)
+                        }
+                    } else {
+                        val errorBody = gson.fromJson(
+                            response.errorBody()?.string(),
+                            BaseResponse::class.java)
+                        itemDeletingState = ApiState.Error(errorBody.detail)
+                        return@launch
                     }
-                    itemDeletingState = ApiState.Success(Unit)
-                } else {
-                    val errorBody = gson.fromJson(
-                        response.errorBody()?.string(),
-                        BaseResponse::class.java)
-                    itemDeletingState = ApiState.Error(errorBody.detail)
                 }
+
+                repository.deleteItemById(id)
+                itemDeletingState = ApiState.Success(Unit)
             } catch (e: Exception) {
                 itemDeletingState = ApiState.Error("Network error: ${e.message}")
             }
