@@ -14,6 +14,7 @@ class Router(
 ) {
     fun navigate(
         route: String,
+        noHistory: Boolean = false,
         navOptions: NavOptions? = null,
         navigatorExtras: Navigator.Extras? = null,
         apiStatesToRestore: List<StateHandler>? = null
@@ -24,13 +25,16 @@ class Router(
             ?.route
 
         if (currentRoute?.split('?')?.first() != route.split('?').first()) {
-            controller.navigate(route, navOptions, navigatorExtras)
+            if (noHistory) {
+                controller.navigate(route) {
+                    popUpTo(controller.graph.startDestinationId)
+                    launchSingleTop = true
+                }
+            } else {
+                controller.navigate(route, navOptions, navigatorExtras)
+            }
             restoreState(apiStatesToRestore)
         }
-    }
-
-    fun navigateBack() {
-        controller.popBackStack()
     }
 
     @Composable

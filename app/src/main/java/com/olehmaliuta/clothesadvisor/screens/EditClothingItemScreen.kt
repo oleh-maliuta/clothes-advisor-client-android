@@ -55,6 +55,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import com.olehmaliuta.clothesadvisor.api.http.security.ApiState
+import com.olehmaliuta.clothesadvisor.api.http.security.AuthState
 import com.olehmaliuta.clothesadvisor.components.AcceptCancelDialog
 import com.olehmaliuta.clothesadvisor.components.ColorPicker
 import com.olehmaliuta.clothesadvisor.components.DatePicker
@@ -63,7 +64,9 @@ import com.olehmaliuta.clothesadvisor.components.ImagePicker
 import com.olehmaliuta.clothesadvisor.components.OkDialog
 import com.olehmaliuta.clothesadvisor.database.entities.ClothingItem
 import com.olehmaliuta.clothesadvisor.navigation.Router
+import com.olehmaliuta.clothesadvisor.navigation.Screen
 import com.olehmaliuta.clothesadvisor.tools.FileTool
+import com.olehmaliuta.clothesadvisor.viewmodels.AuthViewModel
 import com.olehmaliuta.clothesadvisor.viewmodels.ClothingItemViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -72,6 +75,7 @@ import java.util.Locale
 @Composable
 fun EditClothingItemScreen(
     router: Router,
+    authViewModel: AuthViewModel,
     clothingItemViewModel: ClothingItemViewModel
 ) {
     val context = LocalContext.current
@@ -130,6 +134,7 @@ fun EditClothingItemScreen(
     }
     var isFavorite by remember { mutableStateOf(false) }
 
+    var isImageUriChanged by remember { mutableStateOf(false) }
     var isSeasonDropMenuOpened by remember { mutableStateOf(false) }
     var isCategoryDropMenuOpened by remember { mutableStateOf(false) }
     var okDialogTitle by remember { mutableStateOf("") }
@@ -168,7 +173,7 @@ fun EditClothingItemScreen(
     LaunchedEffect(clothingItemViewModel.itemUploadingState) {
         when (val apiState = clothingItemViewModel.itemUploadingState) {
             is ApiState.Success -> {
-                router.navigateBack()
+                router.navigate(Screen.ClothesList.name, true)
             }
             is ApiState.Error -> {
                 okDialogTitle = "Error"
@@ -181,7 +186,20 @@ fun EditClothingItemScreen(
     LaunchedEffect(clothingItemViewModel.itemDeletingState) {
         when (val apiState = clothingItemViewModel.itemDeletingState) {
             is ApiState.Success -> {
-                router.navigateBack()
+                router.navigate(Screen.ClothesList.name, true)
+            }
+            is ApiState.Error -> {
+                okDialogTitle = "Error"
+                okDialogMessage = apiState.message
+            }
+            else -> {}
+        }
+    }
+
+    LaunchedEffect(clothingItemViewModel.backgroundRemovingState) {
+        when (val apiState = clothingItemViewModel.backgroundRemovingState) {
+            is ApiState.Success -> {
+                imageUri = apiState.data.toUri().toString()
             }
             is ApiState.Error -> {
                 okDialogTitle = "Error"
@@ -268,9 +286,81 @@ fun EditClothingItemScreen(
                 currentImageUri = imageUri,
                 onImageSelected = { uri ->
                     imageUri = uri?.toString() ?: ""
+                    clothingItemViewModel.cancelBackgroundRemoving()
                 },
                 modifier = Modifier.padding(vertical = 16.dp)
             )
+
+            if (
+                currentItem != null &&
+                imageUri != currentItem!!.filename &&
+                clothingItemViewModel.backgroundRemovingState
+                        !is ApiState.Success
+                ) {
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    onClick = {
+                        imageUri = currentItem!!.filename
+                    },
+                ) {
+                    Text(
+                        text = "Return the original",
+                    )
+                }
+            }
+
+            if (
+                !imageUri.isNullOrBlank() &&
+                currentItem != null
+                ) {
+                if (
+                    clothingItemViewModel.backgroundRemovingState
+                            !is ApiState.Success
+                    ) {
+                    if (imageUri == currentItem!!.filename) {
+                        Button(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            onClick = {
+                                clothingItemViewModel.getImageWithNoBackground(
+                                    context,
+                                    currentItem!!.id
+                                )
+                            },
+                            enabled = authViewModel.authState.value
+                                    is AuthState.Authenticated &&
+                                    clothingItemViewModel.backgroundRemovingState
+                                            !is ApiState.Loading,
+                        ) {
+                            Text(
+                                text = "Remove background",
+                            )
+                        }
+                    }
+                } else {
+                    Button(
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.errorContainer,
+                            contentColor = MaterialTheme.colorScheme.onErrorContainer
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        onClick = {
+                            clothingItemViewModel.cancelBackgroundRemoving()
+                            imageUri = currentItem!!.filename
+                        },
+                        enabled = authViewModel.authState.value
+                                is AuthState.Authenticated &&
+                                clothingItemViewModel.backgroundRemovingState
+                                        !is ApiState.Loading,
+                    ) {
+                        Text(
+                            text = "Remove background (Cancel)",
+                        )
+                    }
+                }
+            }
 
             HorizontalDivider(
                 modifier = Modifier.padding(vertical = 16.dp),
@@ -558,7 +648,7 @@ fun EditClothingItemScreen(
                         contentColor = MaterialTheme.colorScheme.onTertiary
                     ),
                     onClick = {
-                        router.navigateBack()
+                        router.navigate(Screen.ClothesList.name, true)
                     }
                 ) {
                     Text("Cancel")

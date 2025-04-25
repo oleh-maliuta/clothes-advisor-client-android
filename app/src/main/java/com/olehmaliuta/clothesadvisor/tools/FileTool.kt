@@ -10,6 +10,7 @@ import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.Response
 import java.io.File
 import java.io.FileOutputStream
 
@@ -36,17 +37,32 @@ object FileTool {
         }
     }
 
-    suspend fun downloadFileByUrl(context: Context, url: String): File? {
+    suspend fun downloadFileByUrl(
+        context: Context,
+        url: String,
+        authToken: String? = null
+    ): File? {
         return withContext(Dispatchers.IO) {
             try {
                 val client = OkHttpClient()
-                val request = Request.Builder().url(url).build()
+                val request = if (authToken != null)
+                    Request.Builder()
+                        .url(url)
+                        .header("Authorization", authToken)
+                        .build() else
+                    Request.Builder()
+                        .url(url)
+                        .build()
 
                 client.newCall(request).execute().use { response ->
                     if (!response.isSuccessful) return@withContext null
-
-                    val fileName = url.substringAfterLast('/')
-                    val file = File(context.cacheDir, fileName)
+                    val fileName = getFileNameFromResponse(url, response)
+                        ?: "download_${System.currentTimeMillis()}"
+                    val file = File.createTempFile(
+                        "temp_${System.currentTimeMillis()}_",
+                        getFileExtension(fileName),
+                        context.cacheDir
+                    )
 
                     response.body?.byteStream()?.use { inputStream ->
                         file.outputStream().use { outputStream ->
@@ -54,7 +70,12 @@ object FileTool {
                         }
                     }
 
-                    file
+                    val finalFile = File(file.parent, fileName)
+                    if (file.renameTo(finalFile)) {
+                        finalFile
+                    } else {
+                        file
+                    }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -89,5 +110,26 @@ object FileTool {
             uri,
             Intent.FLAG_GRANT_READ_URI_PERMISSION
         )
+    }
+
+    private fun getFileNameFromResponse(url: String, response: Response): String? {
+        val contentDisposition = response.header("Content-Disposition")
+        if (!contentDisposition.isNullOrBlank()) {
+            val filenameRegex = "filename=\"?([^\"]+)\"?".toRegex()
+            val matchResult = filenameRegex.find(contentDisposition)
+            if (matchResult != null) {
+                return matchResult.groupValues[1]
+            }
+        }
+
+        return url.substringAfterLast('/').takeIf { it.isNotBlank() }
+    }
+
+    private fun getFileExtension(fileName: String): String {
+        return if (fileName.contains('.')) {
+            ".${fileName.substringAfterLast('.')}"
+        } else {
+            ""
+        }
     }
 }

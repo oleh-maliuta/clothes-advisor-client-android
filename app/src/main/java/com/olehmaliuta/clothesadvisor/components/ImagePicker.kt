@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -31,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -95,7 +97,7 @@ fun ImagePicker(
                 },
             contentAlignment = Alignment.Center
         ) {
-            if (!currentImageUri.isNullOrEmpty()) {
+            if (!currentImageUri.isNullOrBlank()) {
                 val resultImageUrl = if (currentImageUri.startsWith("http"))
                     currentImageUri.replace("://localhost", "://10.0.2.2") else
                         currentImageUri
@@ -114,6 +116,7 @@ fun ImagePicker(
                         .build(),
                     contentDescription = "Selected image",
                     contentScale = ContentScale.Fit,
+                    error = rememberVectorPainter(Icons.Default.Warning),
                     modifier = Modifier.fillMaxSize()
                 )
             } else {

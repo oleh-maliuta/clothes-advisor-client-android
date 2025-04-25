@@ -102,6 +102,7 @@ fun ScreenManager(navItems: List<NavItem>) {
         Screen.OutfitList to { OutfitListScreen() },
         Screen.EditClothingItem to { EditClothingItemScreen(
             router = router,
+            authViewModel = authViewModel,
             clothingItemViewModel = clothingItemViewModel
         ) },
         Screen.EditOutfit to { EditOutfitScreen() },

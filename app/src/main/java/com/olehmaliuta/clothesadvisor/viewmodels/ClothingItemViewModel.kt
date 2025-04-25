@@ -55,15 +55,20 @@ class ClothingItemViewModel(
         private set
     var isFavoriteTogglingState by mutableStateOf<ApiState<Unit>>(ApiState.Idle)
         private set
+    var backgroundRemovingState by mutableStateOf<ApiState<File>>(ApiState.Idle)
+        private set
 
     var idOfItemToEdit = mutableStateOf<Int?>(null)
 
     val countClothingItems = repository.countClothingItems()
 
     override fun restoreState() {
+        (backgroundRemovingState as? ApiState.Success)?.data?.delete()
+
         itemUploadingState = ApiState.Idle
         itemDeletingState = ApiState.Idle
         isFavoriteTogglingState = ApiState.Idle
+        backgroundRemovingState = ApiState.Idle
     }
 
     fun getItemToEdit(id: Int?): Flow<ClothingItem?> {
@@ -302,5 +307,40 @@ class ClothingItemViewModel(
                 itemDeletingState = ApiState.Error("Network error: ${e.message}")
             }
         }
+    }
+
+    fun getImageWithNoBackground(
+        context: Context,
+        id: Int
+    ) {
+        viewModelScope.launch {
+            backgroundRemovingState = ApiState.Loading
+
+            val token = sharedPref.getString("token", "")
+            val tokenType = sharedPref.getString("token_type", null)
+
+            try {
+                val file = FileTool.downloadFileByUrl(
+                    context,
+                    HttpServiceManager.BASE_URL +
+                            "clothing-items/$id/preview-remove-background",
+                    "${tokenType ?: "bearer"} $token"
+                )
+
+                if (file != null) {
+                    backgroundRemovingState = ApiState.Success(file)
+                } else {
+                    itemDeletingState = ApiState.Error(
+                        "Could not remove the background.")
+                }
+            } catch (e: Exception) {
+                itemDeletingState = ApiState.Error("Network error: ${e.message}")
+            }
+        }
+    }
+
+    fun cancelBackgroundRemoving() {
+        (backgroundRemovingState as? ApiState.Success)?.data?.delete()
+        backgroundRemovingState = ApiState.Idle
     }
 }
