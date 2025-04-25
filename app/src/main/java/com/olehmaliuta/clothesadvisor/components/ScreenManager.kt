@@ -30,36 +30,37 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.olehmaliuta.clothesadvisor.App
-import com.olehmaliuta.clothesadvisor.MainActivity
 import com.olehmaliuta.clothesadvisor.api.http.security.AuthState
+import com.olehmaliuta.clothesadvisor.navigation.NavItem
 import com.olehmaliuta.clothesadvisor.navigation.Router
 import com.olehmaliuta.clothesadvisor.navigation.Screen
 import com.olehmaliuta.clothesadvisor.screens.*
 import com.olehmaliuta.clothesadvisor.viewmodels.*
 
 @Composable
-fun ScreenManager(activity: MainActivity) {
-    val application = LocalContext.current.applicationContext as App
+fun ScreenManager(navItems: List<NavItem>) {
+    val context = LocalContext.current
+    val application = context.applicationContext as App
 
     // VIEW MODELS
     val authViewModel: AuthViewModel = viewModel(
         factory = AuthViewModel.Factory(
             clothingItemDaoRepository = application.clothingItemDaoRepository,
             outfitDaoRepository = application.outfitDaoRepository,
-            context = activity
+            context = context
         )
     )
     val userViewModel: UserViewModel = viewModel(
         factory = UserViewModel.Factory(
             clothingItemDaoRepository = application.clothingItemDaoRepository,
             outfitDaoRepository = application.outfitDaoRepository,
-            context = activity
+            context = context
         )
     )
     val clothingItemViewModel: ClothingItemViewModel = viewModel(
         factory = ClothingItemViewModel.Factory(
             repository = application.clothingItemDaoRepository,
-            context = activity
+            context = context
         )
     )
     val outfitViewModel: OutfitViewModel = viewModel(
@@ -134,7 +135,7 @@ fun ScreenManager(activity: MainActivity) {
 
             BottomBar(
                 router = router,
-                navItems = activity.navItems
+                navItems = navItems
             )
         },
         snackbarHost = {

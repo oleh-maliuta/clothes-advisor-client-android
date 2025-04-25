@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ClothesAdvisorTheme {
-                ScreenManager(this)
+                ScreenManager(navItems)
             }
         }
     }

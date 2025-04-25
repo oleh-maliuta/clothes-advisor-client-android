@@ -287,6 +287,7 @@ fun EditClothingItemScreen(
 
             ColorPicker(
                 color = color,
+                imageUri = imageUri,
                 onColorChange = { selectedColor ->
                     color = selectedColor
                 },
