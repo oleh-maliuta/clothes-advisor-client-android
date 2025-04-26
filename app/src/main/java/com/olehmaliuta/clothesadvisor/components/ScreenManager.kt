@@ -65,7 +65,8 @@ fun ScreenManager(navItems: List<NavItem>) {
     )
     val outfitViewModel: OutfitViewModel = viewModel(
         factory = OutfitViewModel.Factory(
-            outfitDaoRepository = application.outfitDaoRepository
+            repository = application.outfitDaoRepository,
+            context = context
         )
     )
 
@@ -76,7 +77,8 @@ fun ScreenManager(navItems: List<NavItem>) {
             navController,
             listOf(
                 userViewModel,
-                clothingItemViewModel
+                clothingItemViewModel,
+                outfitViewModel
             )
         )
     }
@@ -99,7 +101,10 @@ fun ScreenManager(navItems: List<NavItem>) {
             router = router,
             clothingItemViewModel = clothingItemViewModel
         ) },
-        Screen.OutfitList to { OutfitListScreen() },
+        Screen.OutfitList to { OutfitListScreen(
+            router = router,
+            outfitViewModel = outfitViewModel
+        ) },
         Screen.EditClothingItem to { EditClothingItemScreen(
             router = router,
             authViewModel = authViewModel,

@@ -10,9 +10,12 @@ import com.olehmaliuta.clothesadvisor.database.entities.Outfit
 data class OutfitWithClothingItems (
     @Embedded val outfit: Outfit,
     @Relation(
-        parentColumn = "outfit_id",
-        entityColumn = "clothing_item_id",
-        associateBy = Junction(ClothingItemOutfitCross::class)
+        parentColumn = "id",
+        entityColumn = "id",
+        associateBy = Junction(ClothingItemOutfitCross::class,
+            parentColumn = "outfit_id",
+            entityColumn = "clothing_item_id"
+        )
     )
     val clothingItems: List<ClothingItem>
 )

@@ -24,7 +24,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
 class ClothingItemViewModel(
-    val repository: ClothingItemDaoRepository,
+    private val repository: ClothingItemDaoRepository,
     context: Context
 ) : ViewModel(), StateHandler {
     class Factory(

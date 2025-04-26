@@ -21,6 +21,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -60,6 +62,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -84,6 +87,8 @@ fun ClothesListScreen(
     router: Router,
     clothingItemViewModel: ClothingItemViewModel
 ) {
+    var searchInputValue by remember { mutableStateOf("") }
+
     var searchQuery by remember { mutableStateOf("") }
     var sortBy by remember { mutableStateOf(Pair<String, String>("name", "name")) }
     var ascSort by remember { mutableStateOf(true) }
@@ -206,8 +211,8 @@ fun ClothesListScreen(
     ) {
         item {
             TextField(
-                value = searchQuery,
-                onValueChange = { searchQuery = it },
+                value = searchInputValue,
+                onValueChange = { searchInputValue = it },
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
@@ -215,6 +220,14 @@ fun ClothesListScreen(
                         shape = RoundedCornerShape(28.dp))
                     .clip(RoundedCornerShape(28.dp)),
                 placeholder = { Text("Search") },
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Search
+                ),
+                keyboardActions = KeyboardActions(
+                    onSearch = {
+                        searchQuery = searchInputValue
+                    }
+                ),
                 singleLine = true,
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
@@ -349,16 +362,20 @@ fun ClothesListScreen(
                     }
                 )
             }
-        } else if (itemCount == 0) {
+        }
+
+        if (itemCount == 0) {
             item {
                 InfoMessage(
                     "You have no clothing items at the moment."
                 )
             }
-        } else {
+        }
+
+        if (itemCount != 0 && searchResults?.isEmpty() == true) {
             item {
                 InfoMessage(
-                    "Loading..."
+                    "No items were found according to the parameters."
                 )
             }
         }
@@ -381,7 +398,7 @@ private fun ClothingItemCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(vertical = 8.dp),
         shape = RoundedCornerShape(12.dp),
         onClick = { onClick?.invoke() }
     ) {

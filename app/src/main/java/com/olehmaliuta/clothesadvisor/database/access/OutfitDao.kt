@@ -7,7 +7,10 @@ import androidx.room.Transaction
 import com.olehmaliuta.clothesadvisor.api.http.responses.CombinationResponse
 import com.olehmaliuta.clothesadvisor.database.entities.ClothingItemOutfitCross
 import com.olehmaliuta.clothesadvisor.database.entities.Outfit
+import com.olehmaliuta.clothesadvisor.database.entities.query.OutfitWithClothingItemCount
 import com.olehmaliuta.clothesadvisor.database.entities.query.OutfitWithClothingItemIds
+import com.olehmaliuta.clothesadvisor.database.entities.query.OutfitWithClothingItems
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface OutfitDao {
@@ -50,4 +53,31 @@ interface OutfitDao {
         FROM outfits o
     """)
     suspend fun getOutfitsWithClothingItemIds(): List<OutfitWithClothingItemIds>
+
+    @Query("SELECT COUNT(*) FROM outfits")
+    fun countOutfits(): Flow<Int>
+
+    @Query("SELECT * FROM outfits WHERE id = :id LIMIT 1")
+    fun getOutfitWithItemsById(id: Int?): Flow<OutfitWithClothingItems?>
+
+    @Query("""
+        SELECT 
+            o.id AS id,
+            o.name AS name,
+            COUNT(cioc.clothing_item_id) AS item_count
+        FROM 
+            outfits o
+        LEFT JOIN 
+            clothing_item_outfit_cross cioc ON o.id = cioc.outfit_id
+        WHERE 
+            o.name LIKE '%' || :query || '%' OR
+            :query = ''
+        GROUP BY 
+            o.id, o.name
+        ORDER BY 
+            o.name ASC
+    """)
+    fun searchOutfitsWithClothingItemCount(
+        query: String
+    ): Flow<List<OutfitWithClothingItemCount>>
 }
