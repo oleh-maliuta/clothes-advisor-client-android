@@ -1,18 +1,28 @@
 package com.olehmaliuta.clothesadvisor.viewmodels
 
 import android.content.Context
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.olehmaliuta.clothesadvisor.api.http.HttpServiceManager
+import com.olehmaliuta.clothesadvisor.api.http.responses.BaseResponse
+import com.olehmaliuta.clothesadvisor.api.http.security.ApiState
 import com.olehmaliuta.clothesadvisor.api.http.services.OutfitApiService
-import com.olehmaliuta.clothesadvisor.database.entities.ClothingItem
+import com.olehmaliuta.clothesadvisor.database.entities.Outfit
 import com.olehmaliuta.clothesadvisor.database.entities.query.OutfitWithClothingItemCount
-import com.olehmaliuta.clothesadvisor.database.entities.query.OutfitWithClothingItems
+import com.olehmaliuta.clothesadvisor.database.entities.query.OutfitWithClothingItemIds
 import com.olehmaliuta.clothesadvisor.database.repositories.OutfitDaoRepository
 import com.olehmaliuta.clothesadvisor.navigation.StateHandler
+import com.olehmaliuta.clothesadvisor.tools.FileTool
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
 
 class OutfitViewModel(
     private val repository: OutfitDaoRepository,
@@ -40,14 +50,19 @@ class OutfitViewModel(
         .getSharedPreferences("user", Context.MODE_PRIVATE)
     private val gson = Gson()
 
+    var outfitUploadingState by mutableStateOf<ApiState<Int>>(ApiState.Idle)
+        private set
+
     var idOfOutfitToEdit = mutableStateOf<Int?>(null)
 
     val countOutfits = repository.countOutfits()
 
-    override fun restoreState() {}
+    override fun restoreState() {
+        outfitUploadingState = ApiState.Idle
+    }
 
-    fun getOutfitToEdit(id: Int?): Flow<OutfitWithClothingItems?> {
-        return repository.getOutfitWithItemsById(id)
+    fun getOutfitToEdit(id: Int?): Flow<OutfitWithClothingItemIds?> {
+        return repository.getOutfitWithItemIdsById(id)
     }
 
     fun searchOutfits(
@@ -56,5 +71,52 @@ class OutfitViewModel(
         return repository.searchOutfits(
             query
         )
+    }
+
+    fun addOutfit(
+        name: String,
+        itemIds: List<Int>
+    ) {
+        viewModelScope.launch {
+            outfitUploadingState = ApiState.Loading
+
+            val token = sharedPref.getString("token", null)
+            val tokenType = sharedPref.getString("token_type", null)
+            var outfit = Outfit(name = name)
+
+            try {
+                if (token != null) {
+                    val response = service.addClothingCombination(
+                        "${tokenType ?: "bearer"} $token",
+                        mapOf(
+                            "name" to name,
+                            "item_ids" to itemIds
+                        ))
+
+                    if (response.isSuccessful) {
+                        outfit = Outfit(
+                            id = response.body()?.data?.combinationId ?: 0,
+                            name = name
+                        )
+                        sharedPref.edit {
+                            putString(
+                                "synchronized_at",
+                                response.body()?.synchronizedAt)
+                        }
+                    } else {
+                        val errorBody = gson.fromJson(
+                            response.errorBody()?.string(),
+                            BaseResponse::class.java)
+                        outfitUploadingState = ApiState.Error(errorBody.detail)
+                        return@launch
+                    }
+                }
+
+                repository.insertOutfitsWithItems(outfit, itemIds)
+                outfitUploadingState = ApiState.Success(outfit.id)
+            } catch (e: Exception) {
+                outfitUploadingState = ApiState.Error("Network error: ${e.message}")
+            }
+        }
     }
 }

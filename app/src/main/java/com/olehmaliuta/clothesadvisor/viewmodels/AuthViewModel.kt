@@ -90,7 +90,7 @@ class AuthViewModel(
                                 } ?: emptyList()
                             )
 
-                            outfitDaoRepository.insertOutfitWithItems(
+                            outfitDaoRepository.insertOutfitsWithItemsByHttpResponse(
                                 synchronizedBody?.data?.combinations ?:
                                 emptyList()
                             )

@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -49,7 +48,6 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -134,7 +132,6 @@ fun EditClothingItemScreen(
     }
     var isFavorite by remember { mutableStateOf(false) }
 
-    var isImageUriChanged by remember { mutableStateOf(false) }
     var isSeasonDropMenuOpened by remember { mutableStateOf(false) }
     var isCategoryDropMenuOpened by remember { mutableStateOf(false) }
     var okDialogTitle by remember { mutableStateOf("") }
@@ -173,7 +170,7 @@ fun EditClothingItemScreen(
     LaunchedEffect(clothingItemViewModel.itemUploadingState) {
         when (val apiState = clothingItemViewModel.itemUploadingState) {
             is ApiState.Success -> {
-                router.navigate(Screen.ClothesList.name, true)
+                router.navigateBack()
             }
             is ApiState.Error -> {
                 okDialogTitle = "Error"
@@ -186,7 +183,7 @@ fun EditClothingItemScreen(
     LaunchedEffect(clothingItemViewModel.itemDeletingState) {
         when (val apiState = clothingItemViewModel.itemDeletingState) {
             is ApiState.Success -> {
-                router.navigate(Screen.ClothesList.name, true)
+                router.navigateBack()
             }
             is ApiState.Error -> {
                 okDialogTitle = "Error"
@@ -257,7 +254,6 @@ fun EditClothingItemScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 10.dp, bottom = 20.dp)
                 .padding(horizontal = 8.dp)
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -648,12 +644,14 @@ fun EditClothingItemScreen(
                         contentColor = MaterialTheme.colorScheme.onTertiary
                     ),
                     onClick = {
-                        router.navigate(Screen.ClothesList.name, true)
+                        router.navigateBack()
                     }
                 ) {
                     Text("Cancel")
                 }
             }
+
+            Spacer(modifier = Modifier.height(20.dp))
         }
     }
 }

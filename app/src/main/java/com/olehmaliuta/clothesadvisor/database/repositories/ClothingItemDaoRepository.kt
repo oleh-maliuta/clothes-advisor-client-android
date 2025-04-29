@@ -43,6 +43,10 @@ class ClothingItemDaoRepository(
         return dao.getItemById(id)
     }
 
+    fun getItemsByIds(ids: List<Int>): Flow<List<ClothingItem>> {
+        return dao.getItemsByIds(ids)
+    }
+
     fun searchItems(
         query: String,
         sortBy: String,

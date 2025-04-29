@@ -10,7 +10,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 
 class Router(
     private val controller: NavHostController,
-    private val defaultStateHandlers: List<StateHandler>
+    private val startDestination: String,
+    private val defaultStateHandlers: List<StateHandler> = emptyList()
 ) {
     fun navigate(
         route: String,
@@ -34,6 +35,12 @@ class Router(
                 controller.navigate(route, navOptions, navigatorExtras)
             }
             restoreState(apiStatesToRestore)
+        }
+    }
+
+    fun navigateBack() {
+        if (!controller.popBackStack()) {
+            controller.navigate(startDestination)
         }
     }
 

@@ -43,6 +43,9 @@ interface ClothingItemDao {
     @Query("SELECT * FROM clothing_items WHERE id = :id LIMIT 1")
     fun getItemById(id: Int?): Flow<ClothingItem?>
 
+    @Query("SELECT * FROM clothing_items WHERE id IN (:ids)")
+    fun getItemsByIds(ids: List<Int>): Flow<List<ClothingItem>>
+
     @RawQuery(observedEntities = [ClothingItem::class])
     fun searchAllFieldsRaw(
         query: SupportSQLiteQuery

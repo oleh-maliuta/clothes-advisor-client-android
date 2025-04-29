@@ -6,16 +6,25 @@ import com.olehmaliuta.clothesadvisor.database.entities.ClothingItemOutfitCross
 import com.olehmaliuta.clothesadvisor.database.entities.Outfit
 import com.olehmaliuta.clothesadvisor.database.entities.query.OutfitWithClothingItemCount
 import com.olehmaliuta.clothesadvisor.database.entities.query.OutfitWithClothingItemIds
-import com.olehmaliuta.clothesadvisor.database.entities.query.OutfitWithClothingItems
 import kotlinx.coroutines.flow.Flow
 
 class OutfitDaoRepository(
     private val dao: OutfitDao
 ) {
-    suspend fun insertOutfitWithItems(
+    suspend fun insertOutfitsWithItems(
+        outfit: Outfit,
+        itemIds: List<Int>
+    ) {
+        dao.insertOutfitsWithItems(
+            outfit,
+            itemIds
+        )
+    }
+
+    suspend fun insertOutfitsWithItemsByHttpResponse(
         combination: List<CombinationResponse>
     ) {
-        dao.insertOutfitWithItems(combination)
+        dao.insertOutfitsWithItemsByHttpResponse(combination)
     }
 
     suspend fun insertOutfit(outfit: Outfit) {
@@ -38,10 +47,10 @@ class OutfitDaoRepository(
         return dao.countOutfits()
     }
 
-    fun getOutfitWithItemsById(
+    fun getOutfitWithItemIdsById(
         id: Int?
-    ): Flow<OutfitWithClothingItems?> {
-        return dao.getOutfitWithItemsById(id)
+    ): Flow<OutfitWithClothingItemIds?> {
+        return dao.getOutfitWithItemIdsById(id)
     }
 
     fun searchOutfits(

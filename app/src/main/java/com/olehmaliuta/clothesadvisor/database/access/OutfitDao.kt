@@ -9,13 +9,28 @@ import com.olehmaliuta.clothesadvisor.database.entities.ClothingItemOutfitCross
 import com.olehmaliuta.clothesadvisor.database.entities.Outfit
 import com.olehmaliuta.clothesadvisor.database.entities.query.OutfitWithClothingItemCount
 import com.olehmaliuta.clothesadvisor.database.entities.query.OutfitWithClothingItemIds
-import com.olehmaliuta.clothesadvisor.database.entities.query.OutfitWithClothingItems
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface OutfitDao {
     @Transaction
-    suspend fun insertOutfitWithItems(
+    suspend fun insertOutfitsWithItems(
+        outfit: Outfit,
+        itemIds: List<Int>
+    ) {
+        insertEntity(outfit)
+
+        itemIds.forEach { itemId ->
+            val crossRef = ClothingItemOutfitCross(
+                clothingItemId = itemId,
+                outfitId = outfit.id
+            )
+            insertCrossReference(crossRef)
+        }
+    }
+
+    @Transaction
+    suspend fun insertOutfitsWithItemsByHttpResponse(
         combinations: List<CombinationResponse>
     ) {
         combinations.forEach { combination ->
@@ -57,8 +72,22 @@ interface OutfitDao {
     @Query("SELECT COUNT(*) FROM outfits")
     fun countOutfits(): Flow<Int>
 
-    @Query("SELECT * FROM outfits WHERE id = :id LIMIT 1")
-    fun getOutfitWithItemsById(id: Int?): Flow<OutfitWithClothingItems?>
+    @Query("""
+        SELECT 
+            o.id AS id,
+            o.name AS name,
+            (
+                SELECT JSON_GROUP_ARRAY(cioc.clothing_item_id)
+                FROM clothing_item_outfit_cross cioc
+                WHERE cioc.outfit_id = o.id
+            ) AS itemIds
+        FROM outfits o
+        WHERE id = :id
+        LIMIT 1
+    """)
+    fun getOutfitWithItemIdsById(
+        id: Int?
+    ): Flow<OutfitWithClothingItemIds?>
 
     @Query("""
         SELECT 

@@ -167,7 +167,7 @@ class UserViewModel(
                                     el -> return@map el.toClothingItemDbEntity()
                             } ?: emptyList()
                         )
-                        outfitDaoRepository.insertOutfitWithItems(
+                        outfitDaoRepository.insertOutfitsWithItemsByHttpResponse(
                             synchronizedBody?.data?.combinations ?:
                             emptyList()
                         )

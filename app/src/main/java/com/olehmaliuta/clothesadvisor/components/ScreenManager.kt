@@ -41,6 +41,7 @@ import com.olehmaliuta.clothesadvisor.viewmodels.*
 fun ScreenManager(navItems: List<NavItem>) {
     val context = LocalContext.current
     val application = context.applicationContext as App
+    val startDestination = Screen.ClothesList.name
 
     // VIEW MODELS
     val authViewModel: AuthViewModel = viewModel(
@@ -75,6 +76,7 @@ fun ScreenManager(navItems: List<NavItem>) {
     val router = remember {
         Router(
             navController,
+            startDestination,
             listOf(
                 userViewModel,
                 clothingItemViewModel,
@@ -110,7 +112,11 @@ fun ScreenManager(navItems: List<NavItem>) {
             authViewModel = authViewModel,
             clothingItemViewModel = clothingItemViewModel
         ) },
-        Screen.EditOutfit to { EditOutfitScreen() },
+        Screen.EditOutfit to { EditOutfitScreen(
+            router = router,
+            clothingItemViewModel = clothingItemViewModel,
+            outfitViewModel = outfitViewModel
+        ) },
         Screen.Analysis to { AnalysisScreen(
             router = router,
             authViewModel = authViewModel
@@ -123,12 +129,14 @@ fun ScreenManager(navItems: List<NavItem>) {
         ) }
     )
 
+    // SIDE EFFECTS
     LaunchedEffect(Unit) {
         navController.addOnDestinationChangedListener { _, _, _ ->
             authViewModel.profile()
         }
     }
 
+    // IMPLEMENTATION
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {

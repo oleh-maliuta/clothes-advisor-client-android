@@ -75,6 +75,10 @@ class ClothingItemViewModel(
         return repository.getItemById(id)
     }
 
+    fun getItemsByIds(ids: List<Int>): Flow<List<ClothingItem>> {
+        return repository.getItemsByIds(ids)
+    }
+
     fun searchItems(
         query: String,
         sortBy: String,

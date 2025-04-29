@@ -203,6 +203,8 @@ fun OutfitCard(
 
             Text(
                 text = "Item count: ${outfit.itemCount}",
+                color = if (outfit.itemCount == 0)
+                    MaterialTheme.colorScheme.error else Color.Unspecified,
                 style = MaterialTheme.typography.bodyLarge
             )
         }
