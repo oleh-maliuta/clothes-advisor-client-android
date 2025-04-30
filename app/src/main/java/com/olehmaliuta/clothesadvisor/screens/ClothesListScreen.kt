@@ -58,7 +58,7 @@ import com.olehmaliuta.clothesadvisor.R
 import com.olehmaliuta.clothesadvisor.api.http.security.ApiState
 import com.olehmaliuta.clothesadvisor.components.AcceptCancelDialog
 import com.olehmaliuta.clothesadvisor.components.ClothingItemCard
-import com.olehmaliuta.clothesadvisor.components.OkDialog
+import com.olehmaliuta.clothesadvisor.components.InfoDialog
 import com.olehmaliuta.clothesadvisor.navigation.Router
 import com.olehmaliuta.clothesadvisor.navigation.Screen
 import com.olehmaliuta.clothesadvisor.viewmodels.ClothingItemViewModel
@@ -84,7 +84,7 @@ fun ClothesListScreen(
 
     var okDialogTitle by remember { mutableStateOf("") }
     var okDialogMessage by remember { mutableStateOf<String?>(null) }
-    var isFilterDialogOpened by remember { mutableStateOf(false) }
+    var isFilterDialogOpen by remember { mutableStateOf(false) }
 
     var selectedSeasons by remember {
         mutableStateOf(listOf(
@@ -138,7 +138,7 @@ fun ClothesListScreen(
         }
     }
 
-    OkDialog(
+    InfoDialog(
         title = okDialogTitle,
         content = okDialogMessage,
         onConfirm = {
@@ -147,9 +147,9 @@ fun ClothesListScreen(
     )
 
     AcceptCancelDialog(
-        isOpened = isFilterDialogOpened,
+        isOpen = isFilterDialogOpen,
         title = "Filters",
-        onDismissRequest = { isFilterDialogOpened = false },
+        onDismissRequest = { isFilterDialogOpen = false },
         onAccept = {
             seasonFilter = selectedSeasons
                 .filter { it.isSelected }
@@ -157,7 +157,7 @@ fun ClothesListScreen(
             categoryFilter = selectedCategories
                 .filter { it.isSelected }
                 .map { it.value }
-            isFilterDialogOpened = false
+            isFilterDialogOpen = false
         },
         acceptText = "Apply",
     ) {
@@ -312,7 +312,7 @@ fun ClothesListScreen(
                         containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = MaterialTheme.colorScheme.onPrimary
                     ),
-                    onClick = { isFilterDialogOpened = true },
+                    onClick = { isFilterDialogOpen = true },
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.filter),

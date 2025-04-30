@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.olehmaliuta.clothesadvisor.api.http.HttpServiceManager
+import com.olehmaliuta.clothesadvisor.api.http.requests.UploadOutfitRequest
 import com.olehmaliuta.clothesadvisor.api.http.responses.BaseResponse
 import com.olehmaliuta.clothesadvisor.api.http.security.ApiState
 import com.olehmaliuta.clothesadvisor.api.http.services.OutfitApiService
@@ -52,6 +53,8 @@ class OutfitViewModel(
 
     var outfitUploadingState by mutableStateOf<ApiState<Int>>(ApiState.Idle)
         private set
+    var outfitDeletingState by mutableStateOf<ApiState<Unit>>(ApiState.Idle)
+        private set
 
     var idOfOutfitToEdit = mutableStateOf<Int?>(null)
 
@@ -59,6 +62,7 @@ class OutfitViewModel(
 
     override fun restoreState() {
         outfitUploadingState = ApiState.Idle
+        outfitDeletingState = ApiState.Idle
     }
 
     fun getOutfitToEdit(id: Int?): Flow<OutfitWithClothingItemIds?> {
@@ -88,10 +92,8 @@ class OutfitViewModel(
                 if (token != null) {
                     val response = service.addClothingCombination(
                         "${tokenType ?: "bearer"} $token",
-                        mapOf(
-                            "name" to name,
-                            "item_ids" to itemIds
-                        ))
+                        UploadOutfitRequest(name, itemIds)
+                    )
 
                     if (response.isSuccessful) {
                         outfit = Outfit(
@@ -116,6 +118,92 @@ class OutfitViewModel(
                 outfitUploadingState = ApiState.Success(outfit.id)
             } catch (e: Exception) {
                 outfitUploadingState = ApiState.Error("Network error: ${e.message}")
+            }
+        }
+    }
+
+    fun updateOutfit(
+        id: Int,
+        name: String,
+        itemIds: List<Int>
+    ) {
+        viewModelScope.launch {
+            outfitUploadingState = ApiState.Loading
+
+            val token = sharedPref.getString("token", null)
+            val tokenType = sharedPref.getString("token_type", null)
+            var outfit = Outfit(name = name)
+
+            try {
+                if (token != null) {
+                    val response = service.updateClothingCombination(
+                        "${tokenType ?: "bearer"} $token",
+                        id,
+                        UploadOutfitRequest(name, itemIds)
+                    )
+
+                    if (response.isSuccessful) {
+                        outfit = Outfit(
+                            id = response.body()?.data?.combinationId ?: 0,
+                            name = name
+                        )
+                        sharedPref.edit {
+                            putString(
+                                "synchronized_at",
+                                response.body()?.synchronizedAt)
+                        }
+                    } else {
+                        val errorBody = gson.fromJson(
+                            response.errorBody()?.string(),
+                            BaseResponse::class.java)
+                        outfitUploadingState = ApiState.Error(errorBody.detail)
+                        return@launch
+                    }
+                }
+
+                repository.updateOutfitsWithItems(outfit, itemIds)
+                outfitUploadingState = ApiState.Success(outfit.id)
+            } catch (e: Exception) {
+                outfitUploadingState = ApiState.Error("Network error: ${e.message}")
+            }
+        }
+    }
+
+    fun deleteOutfit(
+        id: Int
+    ) {
+        viewModelScope.launch {
+            outfitDeletingState = ApiState.Loading
+
+            val token = sharedPref.getString("token", null)
+            val tokenType = sharedPref.getString("token_type", null)
+
+            try {
+                if (token != null) {
+                    val response = service.deleteClothingCombination(
+                        "${tokenType ?: "bearer"} $token",
+                        id
+                    )
+
+                    if (response.isSuccessful) {
+                        sharedPref.edit {
+                            putString(
+                                "synchronized_at",
+                                response.body()?.synchronizedAt)
+                        }
+                    } else {
+                        val errorBody = gson.fromJson(
+                            response.errorBody()?.string(),
+                            BaseResponse::class.java)
+                        outfitDeletingState = ApiState.Error(errorBody.detail)
+                        return@launch
+                    }
+                }
+
+                repository.deleteOutfitById(id)
+                outfitDeletingState = ApiState.Success(Unit)
+            } catch (e: Exception) {
+                outfitDeletingState = ApiState.Error("Network error: ${e.message}")
             }
         }
     }

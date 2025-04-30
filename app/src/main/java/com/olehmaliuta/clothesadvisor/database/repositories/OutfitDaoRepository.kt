@@ -27,12 +27,20 @@ class OutfitDaoRepository(
         dao.insertOutfitsWithItemsByHttpResponse(combination)
     }
 
-    suspend fun insertOutfit(outfit: Outfit) {
-        dao.insertEntity(outfit)
+    suspend fun updateOutfitsWithItems(
+        outfit: Outfit,
+        itemIds: List<Int>
+    ) {
+        dao.updateOutfitsWithItems(
+            outfit,
+            itemIds
+        )
     }
 
-    suspend fun insertCrossReference(crossRef: ClothingItemOutfitCross) {
-        dao.insertCrossReference(crossRef)
+    suspend fun deleteOutfitById(
+        id: Int
+    ) {
+        dao.deleteOutfitById(id)
     }
 
     suspend fun deleteAllRows() {

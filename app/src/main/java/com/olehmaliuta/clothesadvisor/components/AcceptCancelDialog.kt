@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun AcceptCancelDialog(
-    isOpened: Boolean,
+    isOpen: Boolean,
     title: String,
     onDismissRequest: () -> Unit,
     onAccept: () -> Unit,
@@ -18,7 +18,7 @@ fun AcceptCancelDialog(
     acceptEnabled: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    if (!isOpened) {
+    if (!isOpen) {
         return
     }
 

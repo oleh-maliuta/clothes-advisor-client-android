@@ -59,10 +59,9 @@ import com.olehmaliuta.clothesadvisor.components.ColorPicker
 import com.olehmaliuta.clothesadvisor.components.DatePicker
 import com.olehmaliuta.clothesadvisor.components.FloatingPointNumberInput
 import com.olehmaliuta.clothesadvisor.components.ImagePicker
-import com.olehmaliuta.clothesadvisor.components.OkDialog
+import com.olehmaliuta.clothesadvisor.components.InfoDialog
 import com.olehmaliuta.clothesadvisor.database.entities.ClothingItem
 import com.olehmaliuta.clothesadvisor.navigation.Router
-import com.olehmaliuta.clothesadvisor.navigation.Screen
 import com.olehmaliuta.clothesadvisor.tools.FileTool
 import com.olehmaliuta.clothesadvisor.viewmodels.AuthViewModel
 import com.olehmaliuta.clothesadvisor.viewmodels.ClothingItemViewModel
@@ -136,7 +135,7 @@ fun EditClothingItemScreen(
     var isCategoryDropMenuOpened by remember { mutableStateOf(false) }
     var okDialogTitle by remember { mutableStateOf("") }
     var okDialogMessage by remember { mutableStateOf<String?>(null) }
-    var isDeleteAcceptDialogOpened by remember { mutableStateOf(false) }
+    var isDeleteAcceptDialogOpen by remember { mutableStateOf(false) }
 
     val isNameValid by remember(name) {
         derivedStateOf { name.isNotBlank() }
@@ -147,7 +146,8 @@ fun EditClothingItemScreen(
     val isFormValid = isNameValid &&
             isMaterialValid &&
             !imageUri.isNullOrBlank() &&
-            clothingItemViewModel.itemUploadingState !is ApiState.Loading
+            clothingItemViewModel.itemUploadingState !is ApiState.Loading &&
+            clothingItemViewModel.itemDeletingState !is ApiState.Loading
 
     LaunchedEffect(currentItem) {
         currentItem?.let { item ->
@@ -206,7 +206,7 @@ fun EditClothingItemScreen(
         }
     }
 
-    OkDialog(
+    InfoDialog(
         title = okDialogTitle,
         content = okDialogMessage,
         onConfirm = {
@@ -216,10 +216,10 @@ fun EditClothingItemScreen(
 
     if (currentItem != null) {
         AcceptCancelDialog(
-            isOpened = isDeleteAcceptDialogOpened,
+            isOpen = isDeleteAcceptDialogOpen,
             title = "Delete the clothing item",
             onDismissRequest = {
-                isDeleteAcceptDialogOpened = false
+                isDeleteAcceptDialogOpen = false
             },
             onAccept = {
                 clothingItemViewModel
@@ -624,8 +624,12 @@ fun EditClothingItemScreen(
                             contentColor = MaterialTheme.colorScheme.onErrorContainer
                         ),
                         onClick = {
-                            isDeleteAcceptDialogOpened = true
+                            isDeleteAcceptDialogOpen = true
                         },
+                        enabled = clothingItemViewModel
+                            .itemUploadingState !is ApiState.Loading &&
+                                clothingItemViewModel
+                                    .itemDeletingState !is ApiState.Loading
                     ) {
                         Icon(
                             imageVector = Icons.Default.Delete,

@@ -40,7 +40,7 @@ import com.olehmaliuta.clothesadvisor.api.http.security.ApiState
 import com.olehmaliuta.clothesadvisor.viewmodels.UserViewModel
 import com.olehmaliuta.clothesadvisor.components.AcceptCancelDialog
 import com.olehmaliuta.clothesadvisor.components.CenteredScrollContainer
-import com.olehmaliuta.clothesadvisor.components.OkDialog
+import com.olehmaliuta.clothesadvisor.components.InfoDialog
 import com.olehmaliuta.clothesadvisor.navigation.Router
 import com.olehmaliuta.clothesadvisor.navigation.Screen
 
@@ -57,7 +57,7 @@ fun LogInScreen(
     var syncByServerData by remember { mutableStateOf(true) }
     var okDialogTitle by remember { mutableStateOf("") }
     var okDialogMessage by remember { mutableStateOf<String?>(null) }
-    var isForgotPasswordDialogOpened by remember { mutableStateOf(false) }
+    var isForgotPasswordDialogOpen by remember { mutableStateOf(false) }
 
     val isFormValid by remember {
         derivedStateOf {
@@ -86,12 +86,12 @@ fun LogInScreen(
     LaunchedEffect(userViewModel.forgotPasswordState) {
         when (val apiState = userViewModel.forgotPasswordState) {
             is ApiState.Success -> {
-                isForgotPasswordDialogOpened = false
+                isForgotPasswordDialogOpen = false
                 okDialogTitle = "Email is sent"
                 okDialogMessage = apiState.data
             }
             is ApiState.Error -> {
-                isForgotPasswordDialogOpened = false
+                isForgotPasswordDialogOpen = false
                 okDialogTitle = "Error"
                 okDialogMessage = apiState.message
             }
@@ -99,7 +99,7 @@ fun LogInScreen(
         }
     }
 
-    OkDialog(
+    InfoDialog(
         title = okDialogTitle,
         content = okDialogMessage,
         onConfirm = {
@@ -108,10 +108,10 @@ fun LogInScreen(
     )
 
     AcceptCancelDialog(
-        isOpened = isForgotPasswordDialogOpened,
+        isOpen = isForgotPasswordDialogOpen,
         title = "Forgot password?",
         onDismissRequest = {
-            isForgotPasswordDialogOpened = false
+            isForgotPasswordDialogOpen = false
         },
         onAccept = {
             userViewModel.forgotPassword(
@@ -184,7 +184,7 @@ fun LogInScreen(
                 singleLine = true,
                 trailingIcon = {
                     TextButton(
-                        onClick = { isForgotPasswordDialogOpened = true },
+                        onClick = { isForgotPasswordDialogOpen = true },
                         modifier = Modifier.padding(end = 4.dp)
                     ) {
                         Text(

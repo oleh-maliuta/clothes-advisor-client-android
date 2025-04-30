@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.sp
 import com.olehmaliuta.clothesadvisor.api.http.security.ApiState
 import com.olehmaliuta.clothesadvisor.viewmodels.UserViewModel
 import com.olehmaliuta.clothesadvisor.components.CenteredScrollContainer
-import com.olehmaliuta.clothesadvisor.components.OkDialog
+import com.olehmaliuta.clothesadvisor.components.InfoDialog
 import com.olehmaliuta.clothesadvisor.navigation.Router
 import com.olehmaliuta.clothesadvisor.navigation.Screen
 
@@ -69,7 +69,7 @@ fun RegistrationScreen(
         }
     }
 
-    OkDialog(
+    InfoDialog(
         title = if (success) "Success" else "Error",
         content = dialogMessage,
         onConfirm = {

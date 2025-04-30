@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import com.olehmaliuta.clothesadvisor.api.http.responses.CombinationResponse
 import com.olehmaliuta.clothesadvisor.database.entities.ClothingItemOutfitCross
 import com.olehmaliuta.clothesadvisor.database.entities.Outfit
@@ -47,11 +48,40 @@ interface OutfitDao {
         }
     }
 
+    @Transaction
+    suspend fun updateOutfitsWithItems(
+        outfit: Outfit,
+        itemIds: List<Int>
+    ) {
+        deleteCrossReferencesByOutfitId(outfit.id)
+        updateEntity(outfit)
+
+        itemIds.forEach { itemId ->
+            val crossRef = ClothingItemOutfitCross(
+                clothingItemId = itemId,
+                outfitId = outfit.id
+            )
+            insertCrossReference(crossRef)
+        }
+    }
+
     @Insert
     suspend fun insertEntity(entity: Outfit)
 
     @Insert
     suspend fun insertCrossReference(crossRef: ClothingItemOutfitCross)
+
+    @Update
+    suspend fun updateEntity(entity: Outfit)
+
+    @Query("DELETE FROM outfits WHERE id = :id")
+    suspend fun deleteOutfitById(id: Int)
+
+    @Query("""
+        DELETE FROM clothing_item_outfit_cross
+        WHERE outfit_id = :id
+    """)
+    suspend fun deleteCrossReferencesByOutfitId(id: Int)
 
     @Query("DELETE FROM outfits")
     suspend fun deleteAllRows()

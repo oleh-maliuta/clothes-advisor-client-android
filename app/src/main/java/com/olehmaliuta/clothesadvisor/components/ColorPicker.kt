@@ -6,7 +6,6 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,10 +43,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.toIntSize
 import androidx.core.graphics.get
 import coil.ImageLoader
-import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.request.CachePolicy
 import coil.request.ImageRequest
@@ -66,7 +63,7 @@ fun ColorPicker(
     var green by remember(color) { mutableFloatStateOf(color.green) }
     var blue by remember(color) { mutableFloatStateOf(color.blue) }
 
-    var isPipetteMenuOpened by remember { mutableStateOf(false) }
+    var isPipetteMenuOpen by remember { mutableStateOf(false) }
     var pipetteColor by remember { mutableStateOf(Color.Black) }
     var imageRequest by remember { mutableStateOf<ImageRequest?>(null) }
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
@@ -77,8 +74,8 @@ fun ColorPicker(
         onColorChange(Color(red, green, blue))
     }
 
-    LaunchedEffect(isPipetteMenuOpened) {
-        if (isPipetteMenuOpened) {
+    LaunchedEffect(isPipetteMenuOpen) {
+        if (isPipetteMenuOpen) {
             touchPosition = Offset(
                 imageSize.width.toFloat() / 2,
                 imageSize.height.toFloat() / 2)
@@ -111,15 +108,15 @@ fun ColorPicker(
     }
 
     AcceptCancelDialog(
-        isOpened = isPipetteMenuOpened,
+        isOpen = isPipetteMenuOpen,
         title = "Pick a color",
-        onDismissRequest = { isPipetteMenuOpened = false },
+        onDismissRequest = { isPipetteMenuOpen = false },
         onAccept = {
             red = pipetteColor.red
             green = pipetteColor.green
             blue = pipetteColor.blue
             updateColor()
-            isPipetteMenuOpened = false
+            isPipetteMenuOpen = false
         },
         acceptText = "Apply"
     ) {
@@ -245,7 +242,7 @@ fun ColorPicker(
                         containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = MaterialTheme.colorScheme.onPrimary
                     ),
-                    onClick = { isPipetteMenuOpened  = true },
+                    onClick = { isPipetteMenuOpen  = true },
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.pipette),

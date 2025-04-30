@@ -39,7 +39,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.olehmaliuta.clothesadvisor.components.OkDialog
+import com.olehmaliuta.clothesadvisor.components.InfoDialog
 import com.olehmaliuta.clothesadvisor.database.entities.query.OutfitWithClothingItemCount
 import com.olehmaliuta.clothesadvisor.navigation.Router
 import com.olehmaliuta.clothesadvisor.navigation.Screen
@@ -63,7 +63,7 @@ fun OutfitListScreen(
     var okDialogTitle by remember { mutableStateOf("") }
     var okDialogMessage by remember { mutableStateOf<String?>(null) }
 
-    OkDialog(
+    InfoDialog(
         title = okDialogTitle,
         content = okDialogMessage,
         onConfirm = {

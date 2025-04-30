@@ -34,7 +34,7 @@ import com.olehmaliuta.clothesadvisor.api.http.security.AuthState
 import com.olehmaliuta.clothesadvisor.viewmodels.AuthViewModel
 import com.olehmaliuta.clothesadvisor.viewmodels.UserViewModel
 import com.olehmaliuta.clothesadvisor.components.CenteredScrollContainer
-import com.olehmaliuta.clothesadvisor.components.OkDialog
+import com.olehmaliuta.clothesadvisor.components.InfoDialog
 import com.olehmaliuta.clothesadvisor.navigation.Router
 import com.olehmaliuta.clothesadvisor.navigation.Screen
 
@@ -70,7 +70,7 @@ private fun ContentForUser(
     var okDialogTitle = remember { mutableStateOf("") }
     var okDialogMessage = remember { mutableStateOf<String?>(null) }
 
-    OkDialog(
+    InfoDialog(
         title = okDialogTitle.value,
         content = okDialogMessage.value,
         onConfirm = {

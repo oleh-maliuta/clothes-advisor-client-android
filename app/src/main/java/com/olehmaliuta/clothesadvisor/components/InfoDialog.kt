@@ -6,7 +6,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 
 @Composable
-fun OkDialog(
+fun InfoDialog(
     title: String,
     content: String?,
     onConfirm: () -> Unit
