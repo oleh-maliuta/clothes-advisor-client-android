@@ -26,7 +26,7 @@ import androidx.room.Index
 )
 data class ClothingItemOutfitCross (
     @ColumnInfo(name = "clothing_item_id")
-    val clothingItemId: Int,
+    val clothingItemId: Long,
     @ColumnInfo(name = "outfit_id")
-    val outfitId: Int,
+    val outfitId: Long,
 )

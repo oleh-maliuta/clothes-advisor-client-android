@@ -326,7 +326,7 @@ fun ClothesListScreen(
 
         if (
             itemCount != null &&
-            itemCount != 0 &&
+            itemCount != 0L &&
             !searchResults.isNullOrEmpty()
             ) {
             items(
@@ -345,7 +345,7 @@ fun ClothesListScreen(
             }
         }
 
-        if (itemCount == 0) {
+        if (itemCount == 0L) {
             item {
                 InfoMessage(
                     "You have no clothing items at the moment."
@@ -353,7 +353,7 @@ fun ClothesListScreen(
             }
         }
 
-        if (itemCount != 0 && searchResults?.isEmpty() == true) {
+        if (itemCount != 0L && searchResults?.isEmpty() == true) {
             item {
                 InfoMessage(
                     "No items were found according to the parameters."

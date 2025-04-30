@@ -26,10 +26,10 @@ interface ClothingItemDao {
         SET is_favorite = NOT is_favorite
         WHERE id = :id
         """)
-    suspend fun updateIsFavoriteValue(id: Int)
+    suspend fun updateIsFavoriteValue(id: Long)
 
     @Query("DELETE FROM clothing_items WHERE id = :id")
-    suspend fun deleteItemById(id: Int)
+    suspend fun deleteItemById(id: Long)
 
     @Query("DELETE FROM clothing_items")
     suspend fun deleteAllRows()
@@ -38,13 +38,13 @@ interface ClothingItemDao {
     suspend fun getAllClothingItems(): List<ClothingItem>
 
     @Query("SELECT COUNT(*) FROM clothing_items")
-    fun countClothingItems(): Flow<Int>
+    fun countClothingItems(): Flow<Long>
 
     @Query("SELECT * FROM clothing_items WHERE id = :id LIMIT 1")
-    fun getItemById(id: Int?): Flow<ClothingItem?>
+    fun getItemById(id: Long?): Flow<ClothingItem?>
 
     @Query("SELECT * FROM clothing_items WHERE id IN (:ids)")
-    fun getItemsByIds(ids: List<Int>): Flow<List<ClothingItem>>
+    fun getItemsByIds(ids: List<Long>): Flow<List<ClothingItem>>
 
     @RawQuery(observedEntities = [ClothingItem::class])
     fun searchAllFieldsRaw(

@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "outfits")
 data class Outfit (
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    val id: Long = 0,
 
     @ColumnInfo(name = "name")
     @Size(max = 100)

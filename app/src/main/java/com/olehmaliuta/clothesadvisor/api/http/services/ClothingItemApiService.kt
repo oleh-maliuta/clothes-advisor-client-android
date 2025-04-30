@@ -37,7 +37,7 @@ interface ClothingItemApiService {
     @PUT("clothing-items/{item_id}")
     suspend fun updateClothingItem(
         @Header("Authorization") token: String,
-        @Path("item_id") id: Int,
+        @Path("item_id") id: Long,
         @Part file: MultipartBody.Part?,
         @Part("name") name: RequestBody,
         @Part("category") category: RequestBody,
@@ -55,12 +55,12 @@ interface ClothingItemApiService {
     @PUT("items/{item_id}/toggle-favorite")
     suspend fun toggleFavorite(
         @Header("Authorization") token: String,
-        @Path("item_id") id: Int,
+        @Path("item_id") id: Long,
     ): Response<BaseResponse<ToggleFavoriteResponse>>
 
     @DELETE("clothing-items/{item_id}")
     suspend fun deleteClothingItem(
         @Header("Authorization") token: String,
-        @Path("item_id") id: Int,
+        @Path("item_id") id: Long,
     ): Response<BaseResponse<Nothing>>
 }

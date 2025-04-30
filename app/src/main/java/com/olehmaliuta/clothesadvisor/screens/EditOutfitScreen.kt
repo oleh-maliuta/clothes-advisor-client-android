@@ -77,7 +77,7 @@ fun EditOutfitScreen(
     outfitViewModel: OutfitViewModel
 ) {
     var name by remember { mutableStateOf("") }
-    var itemIds by remember { mutableStateOf(emptySet<Int>()) }
+    var itemIds by remember { mutableStateOf(emptySet<Long>()) }
 
     val currentOutfit by outfitViewModel
         .getOutfitToEdit(outfitViewModel.idOfOutfitToEdit.value)
@@ -348,8 +348,8 @@ fun EditOutfitScreen(
 private fun SelectItemsToOutfitDialog(
     clothingItemViewModel: ClothingItemViewModel,
     isOpen: Boolean,
-    selectedItems: Set<Int>,
-    onItemToggle: (Int) -> Unit,
+    selectedItems: Set<Long>,
+    onItemToggle: (Long) -> Unit,
     onConfirm: () -> Unit
 ) {
     if (!isOpen) {

@@ -27,16 +27,16 @@ open class DataConverter {
     }
 
     @TypeConverter
-    fun fromJsonToIntList(value: String?): List<Int> {
+    fun fromJsonToLongList(value: String?): List<Long> {
         if (value.isNullOrEmpty() || value == "null") {
             return emptyList()
         }
         return try {
             if (value.startsWith('[')) {
-                val type = object : TypeToken<List<Int>>() {}.type
+                val type = object : TypeToken<List<Long>>() {}.type
                 gson.fromJson(value, type)
             } else {
-                value.split(",").map { it.trim().toInt() }
+                value.split(",").map { it.trim().toLong() }
             }
         } catch (_: Exception) {
             emptyList()
@@ -44,7 +44,7 @@ open class DataConverter {
     }
 
     @TypeConverter
-    fun fromIntListToJson(list: List<Int>?): String {
+    fun fromLongListToJson(list: List<Long>?): String {
         return list?.let { gson.toJson(it) } ?: "[]"
     }
 }

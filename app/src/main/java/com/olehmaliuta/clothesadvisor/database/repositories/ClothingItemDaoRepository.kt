@@ -19,11 +19,11 @@ class ClothingItemDaoRepository(
         dao.updateEntity(item)
     }
 
-    suspend fun updateIsFavoriteValue(id: Int) {
+    suspend fun updateIsFavoriteValue(id: Long) {
         dao.updateIsFavoriteValue(id)
     }
 
-    suspend fun deleteItemById(id: Int) {
+    suspend fun deleteItemById(id: Long) {
         dao.deleteItemById(id)
     }
 
@@ -35,15 +35,15 @@ class ClothingItemDaoRepository(
         return dao.getAllClothingItems()
     }
 
-    fun countClothingItems(): Flow<Int> {
+    fun countClothingItems(): Flow<Long> {
         return dao.countClothingItems()
     }
 
-    fun getItemById(id: Int?): Flow<ClothingItem?> {
+    fun getItemById(id: Long?): Flow<ClothingItem?> {
         return dao.getItemById(id)
     }
 
-    fun getItemsByIds(ids: List<Int>): Flow<List<ClothingItem>> {
+    fun getItemsByIds(ids: List<Long>): Flow<List<ClothingItem>> {
         return dao.getItemsByIds(ids)
     }
 

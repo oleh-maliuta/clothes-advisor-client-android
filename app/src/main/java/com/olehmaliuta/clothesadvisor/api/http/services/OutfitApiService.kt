@@ -1,6 +1,5 @@
 package com.olehmaliuta.clothesadvisor.api.http.services
 
-import com.google.gson.JsonObject
 import com.olehmaliuta.clothesadvisor.api.http.requests.UploadOutfitRequest
 import com.olehmaliuta.clothesadvisor.api.http.responses.BaseResponse
 import com.olehmaliuta.clothesadvisor.api.http.responses.NewCombinationResponse
@@ -22,13 +21,13 @@ interface OutfitApiService {
     @PUT("clothing-combinations/{combination_id}")
     suspend fun updateClothingCombination(
         @Header("Authorization") token: String,
-        @Path("combination_id") id: Int,
+        @Path("combination_id") id: Long,
         @Body body: UploadOutfitRequest
     ): Response<BaseResponse<NewCombinationResponse>>
 
     @DELETE("clothing-combinations/{combination_id}")
     suspend fun deleteClothingCombination(
         @Header("Authorization") token: String,
-        @Path("combination_id") id: Int,
+        @Path("combination_id") id: Long,
     ): Response<BaseResponse<Nothing>>
 }

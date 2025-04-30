@@ -58,7 +58,7 @@ class ClothingItemViewModel(
     var backgroundRemovingState by mutableStateOf<ApiState<File>>(ApiState.Idle)
         private set
 
-    var idOfItemToEdit = mutableStateOf<Int?>(null)
+    var idOfItemToEdit = mutableStateOf<Long?>(null)
 
     val countClothingItems = repository.countClothingItems()
 
@@ -71,11 +71,11 @@ class ClothingItemViewModel(
         backgroundRemovingState = ApiState.Idle
     }
 
-    fun getItemToEdit(id: Int?): Flow<ClothingItem?> {
+    fun getItemToEdit(id: Long?): Flow<ClothingItem?> {
         return repository.getItemById(id)
     }
 
-    fun getItemsByIds(ids: List<Int>): Flow<List<ClothingItem>> {
+    fun getItemsByIds(ids: List<Long>): Flow<List<ClothingItem>> {
         return repository.getItemsByIds(ids)
     }
 
@@ -230,7 +230,7 @@ class ClothingItemViewModel(
     }
 
     fun updateIsFavoriteValue(
-        id: Int
+        id: Long
     ) {
         viewModelScope.launch {
             if (isFavoriteTogglingState !is ApiState.Loading) {
@@ -275,7 +275,7 @@ class ClothingItemViewModel(
     }
 
     fun deleteClothingItem(
-        id: Int
+        id: Long
     ) {
         viewModelScope.launch {
             itemDeletingState = ApiState.Loading
@@ -315,7 +315,7 @@ class ClothingItemViewModel(
 
     fun getImageWithNoBackground(
         context: Context,
-        id: Int
+        id: Long
     ) {
         viewModelScope.launch {
             backgroundRemovingState = ApiState.Loading

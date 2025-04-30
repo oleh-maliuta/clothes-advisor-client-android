@@ -15,19 +15,21 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface OutfitDao {
     @Transaction
-    suspend fun insertOutfitsWithItems(
+    suspend fun insertOutfitWithItems(
         outfit: Outfit,
-        itemIds: List<Int>
-    ) {
-        insertEntity(outfit)
+        itemIds: List<Long>
+    ): Long {
+        val outfitId = insertEntity(outfit)
 
         itemIds.forEach { itemId ->
             val crossRef = ClothingItemOutfitCross(
                 clothingItemId = itemId,
-                outfitId = outfit.id
+                outfitId = outfitId
             )
             insertCrossReference(crossRef)
         }
+
+        return outfitId
     }
 
     @Transaction
@@ -51,7 +53,7 @@ interface OutfitDao {
     @Transaction
     suspend fun updateOutfitsWithItems(
         outfit: Outfit,
-        itemIds: List<Int>
+        itemIds: List<Long>
     ) {
         deleteCrossReferencesByOutfitId(outfit.id)
         updateEntity(outfit)
@@ -66,7 +68,7 @@ interface OutfitDao {
     }
 
     @Insert
-    suspend fun insertEntity(entity: Outfit)
+    suspend fun insertEntity(entity: Outfit): Long
 
     @Insert
     suspend fun insertCrossReference(crossRef: ClothingItemOutfitCross)
@@ -75,13 +77,13 @@ interface OutfitDao {
     suspend fun updateEntity(entity: Outfit)
 
     @Query("DELETE FROM outfits WHERE id = :id")
-    suspend fun deleteOutfitById(id: Int)
+    suspend fun deleteOutfitById(id: Long)
 
     @Query("""
         DELETE FROM clothing_item_outfit_cross
         WHERE outfit_id = :id
     """)
-    suspend fun deleteCrossReferencesByOutfitId(id: Int)
+    suspend fun deleteCrossReferencesByOutfitId(id: Long)
 
     @Query("DELETE FROM outfits")
     suspend fun deleteAllRows()
@@ -100,7 +102,7 @@ interface OutfitDao {
     suspend fun getOutfitsWithClothingItemIds(): List<OutfitWithClothingItemIds>
 
     @Query("SELECT COUNT(*) FROM outfits")
-    fun countOutfits(): Flow<Int>
+    fun countOutfits(): Flow<Long>
 
     @Query("""
         SELECT 
@@ -116,7 +118,7 @@ interface OutfitDao {
         LIMIT 1
     """)
     fun getOutfitWithItemIdsById(
-        id: Int?
+        id: Long?
     ): Flow<OutfitWithClothingItemIds?>
 
     @Query("""

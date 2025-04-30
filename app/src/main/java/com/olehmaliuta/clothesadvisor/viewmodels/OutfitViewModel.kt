@@ -19,11 +19,8 @@ import com.olehmaliuta.clothesadvisor.database.entities.query.OutfitWithClothing
 import com.olehmaliuta.clothesadvisor.database.entities.query.OutfitWithClothingItemIds
 import com.olehmaliuta.clothesadvisor.database.repositories.OutfitDaoRepository
 import com.olehmaliuta.clothesadvisor.navigation.StateHandler
-import com.olehmaliuta.clothesadvisor.tools.FileTool
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.toRequestBody
 
 class OutfitViewModel(
     private val repository: OutfitDaoRepository,
@@ -51,12 +48,12 @@ class OutfitViewModel(
         .getSharedPreferences("user", Context.MODE_PRIVATE)
     private val gson = Gson()
 
-    var outfitUploadingState by mutableStateOf<ApiState<Int>>(ApiState.Idle)
+    var outfitUploadingState by mutableStateOf<ApiState<Long>>(ApiState.Idle)
         private set
     var outfitDeletingState by mutableStateOf<ApiState<Unit>>(ApiState.Idle)
         private set
 
-    var idOfOutfitToEdit = mutableStateOf<Int?>(null)
+    var idOfOutfitToEdit = mutableStateOf<Long?>(null)
 
     val countOutfits = repository.countOutfits()
 
@@ -65,7 +62,7 @@ class OutfitViewModel(
         outfitDeletingState = ApiState.Idle
     }
 
-    fun getOutfitToEdit(id: Int?): Flow<OutfitWithClothingItemIds?> {
+    fun getOutfitToEdit(id: Long?): Flow<OutfitWithClothingItemIds?> {
         return repository.getOutfitWithItemIdsById(id)
     }
 
@@ -79,7 +76,7 @@ class OutfitViewModel(
 
     fun addOutfit(
         name: String,
-        itemIds: List<Int>
+        itemIds: List<Long>
     ) {
         viewModelScope.launch {
             outfitUploadingState = ApiState.Loading
@@ -114,7 +111,7 @@ class OutfitViewModel(
                     }
                 }
 
-                repository.insertOutfitsWithItems(outfit, itemIds)
+                val newOutfitId = repository.insertOutfitWithItems(outfit, itemIds)
                 outfitUploadingState = ApiState.Success(outfit.id)
             } catch (e: Exception) {
                 outfitUploadingState = ApiState.Error("Network error: ${e.message}")
@@ -123,16 +120,19 @@ class OutfitViewModel(
     }
 
     fun updateOutfit(
-        id: Int,
+        id: Long,
         name: String,
-        itemIds: List<Int>
+        itemIds: List<Long>
     ) {
         viewModelScope.launch {
             outfitUploadingState = ApiState.Loading
 
             val token = sharedPref.getString("token", null)
             val tokenType = sharedPref.getString("token_type", null)
-            var outfit = Outfit(name = name)
+            var outfit = Outfit(
+                id = id,
+                name = name
+            )
 
             try {
                 if (token != null) {
@@ -170,7 +170,7 @@ class OutfitViewModel(
     }
 
     fun deleteOutfit(
-        id: Int
+        id: Long
     ) {
         viewModelScope.launch {
             outfitDeletingState = ApiState.Loading

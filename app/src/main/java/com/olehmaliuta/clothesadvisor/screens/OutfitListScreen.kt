@@ -144,7 +144,7 @@ fun OutfitListScreen(
 
         if (
             outfitCount != null &&
-            outfitCount != 0 &&
+            outfitCount != 0L &&
             !searchResults.isNullOrEmpty()
         ) {
             items(
@@ -162,7 +162,7 @@ fun OutfitListScreen(
             }
         }
 
-        if (outfitCount == 0) {
+        if (outfitCount == 0L) {
             item {
                 InfoMessage(
                     "You have no outfits at the moment."
@@ -170,7 +170,7 @@ fun OutfitListScreen(
             }
         }
 
-        if (outfitCount != 0 && searchResults?.isEmpty() == true) {
+        if (outfitCount != 0L && searchResults?.isEmpty() == true) {
             item {
                 InfoMessage(
                     "No outfits were found according to the parameters."
@@ -203,7 +203,7 @@ fun OutfitCard(
 
             Text(
                 text = "Item count: ${outfit.itemCount}",
-                color = if (outfit.itemCount == 0)
+                color = if (outfit.itemCount == 0L)
                     MaterialTheme.colorScheme.error else Color.Unspecified,
                 style = MaterialTheme.typography.bodyLarge
             )

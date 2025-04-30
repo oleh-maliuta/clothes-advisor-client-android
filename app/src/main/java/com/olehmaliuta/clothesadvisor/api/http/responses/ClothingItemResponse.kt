@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 import com.olehmaliuta.clothesadvisor.database.entities.ClothingItem
 
 data class ClothingItemResponse (
-    @SerializedName("id") var id: Int? = null,
+    @SerializedName("id") var id: Long? = null,
     @SerializedName("name") var name: String? = null,
     @SerializedName("category") var category: String? = null,
     @SerializedName("season") var season: String? = null,
