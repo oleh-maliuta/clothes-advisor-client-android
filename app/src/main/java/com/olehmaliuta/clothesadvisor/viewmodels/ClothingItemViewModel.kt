@@ -79,6 +79,12 @@ class ClothingItemViewModel(
         return repository.getItemsByIds(ids)
     }
 
+    fun getUniqueCategoriesByIds(
+        ids: List<Long>
+    ): Flow<List<String>> {
+        return repository.getUniqueCategoriesByIds(ids)
+    }
+
     fun searchItems(
         query: String,
         sortBy: String,

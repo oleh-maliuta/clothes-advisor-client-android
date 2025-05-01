@@ -359,7 +359,10 @@ private fun SelectItemsToOutfitDialog(
 
             val items by clothingItemViewModel
                 .searchItems(searchQuery, "name", true, emptyList(), emptyList())
-                .collectAsState(initial = emptyList())
+                .collectAsState(initial = null)
+            val selectedCategories by clothingItemViewModel
+                .getUniqueCategoriesByIds(selectedItems.toList())
+                .collectAsState(initial = null)
 
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                 BasicTextField(
@@ -393,7 +396,17 @@ private fun SelectItemsToOutfitDialog(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                if (searchQuery.isNotBlank() && items.isEmpty()) {
+                if (items == null || selectedCategories == null) {
+                    Text(
+                        text = "Loading",
+                        textAlign = TextAlign.Center,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp)
+                    )
+                } else if (searchQuery.isNotBlank() && items.isNullOrEmpty()) {
                     Text(
                         text = "Items were not found",
                         textAlign = TextAlign.Center,
@@ -404,10 +417,12 @@ private fun SelectItemsToOutfitDialog(
                             .padding(top = 8.dp)
                     )
                 } else {
-                    items.forEach { item ->
+                    items?.forEach { item ->
                         ClothingItemMiniCard(
                             item = item,
                             isChecked = selectedItems.contains(item.id),
+                            isBlocked = selectedCategories!!.contains(item.category) &&
+                                    !selectedItems.contains(item.id),
                             onClick = { onItemToggle(item.id) }
                         )
                     }
@@ -432,16 +447,24 @@ private fun SelectItemsToOutfitDialog(
 private fun ClothingItemMiniCard(
     item: ClothingItem,
     isChecked: Boolean,
+    isBlocked: Boolean,
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null
 ) {
     Card(
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(
+        colors = if (isBlocked) CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.errorContainer,
+            contentColor = MaterialTheme.colorScheme.onErrorContainer
+        ) else CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             contentColor = MaterialTheme.colorScheme.onPrimaryContainer
         ),
-        onClick = { onClick?.invoke() },
+        onClick = {
+            if (!isBlocked) {
+                onClick?.invoke()
+            }
+        },
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp),

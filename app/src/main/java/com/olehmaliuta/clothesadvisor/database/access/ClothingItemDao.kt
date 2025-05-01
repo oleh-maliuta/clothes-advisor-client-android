@@ -46,6 +46,14 @@ interface ClothingItemDao {
     @Query("SELECT * FROM clothing_items WHERE id IN (:ids)")
     fun getItemsByIds(ids: List<Long>): Flow<List<ClothingItem>>
 
+    @Query("""
+        SELECT DISTINCT category 
+        FROM clothing_items
+        WHERE id IN (:itemIds)
+        ORDER BY category ASC
+    """)
+    fun getUniqueCategoriesByIds(itemIds: List<Long>): Flow<List<String>>
+
     @RawQuery(observedEntities = [ClothingItem::class])
     fun searchAllFieldsRaw(
         query: SupportSQLiteQuery
