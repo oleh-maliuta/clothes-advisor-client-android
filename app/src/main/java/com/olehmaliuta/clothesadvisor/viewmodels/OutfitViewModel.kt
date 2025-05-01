@@ -16,7 +16,7 @@ import com.olehmaliuta.clothesadvisor.api.http.security.ApiState
 import com.olehmaliuta.clothesadvisor.api.http.services.OutfitApiService
 import com.olehmaliuta.clothesadvisor.database.entities.Outfit
 import com.olehmaliuta.clothesadvisor.database.entities.query.OutfitWithClothingItemCount
-import com.olehmaliuta.clothesadvisor.database.entities.query.OutfitWithClothingItemIds
+import com.olehmaliuta.clothesadvisor.database.entities.query.OutfitWithClothingItems
 import com.olehmaliuta.clothesadvisor.database.repositories.OutfitDaoRepository
 import com.olehmaliuta.clothesadvisor.navigation.StateHandler
 import kotlinx.coroutines.flow.Flow
@@ -62,8 +62,8 @@ class OutfitViewModel(
         outfitDeletingState = ApiState.Idle
     }
 
-    fun getOutfitToEdit(id: Long?): Flow<OutfitWithClothingItemIds?> {
-        return repository.getOutfitWithItemIdsById(id)
+    fun getOutfitToEdit(id: Long?): Flow<OutfitWithClothingItems?> {
+        return repository.getOutfitWithItemsById(id)
     }
 
     fun searchOutfits(
@@ -112,7 +112,7 @@ class OutfitViewModel(
                 }
 
                 val newOutfitId = repository.insertOutfitWithItems(outfit, itemIds)
-                outfitUploadingState = ApiState.Success(outfit.id)
+                outfitUploadingState = ApiState.Success(newOutfitId)
             } catch (e: Exception) {
                 outfitUploadingState = ApiState.Error("Network error: ${e.message}")
             }

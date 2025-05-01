@@ -14,6 +14,7 @@ import com.olehmaliuta.clothesadvisor.api.http.HttpServiceManager
 import com.olehmaliuta.clothesadvisor.api.http.responses.BaseResponse
 import com.olehmaliuta.clothesadvisor.api.http.security.ApiState
 import com.olehmaliuta.clothesadvisor.api.http.services.UserApiService
+import com.olehmaliuta.clothesadvisor.database.entities.query.OutfitWithClothingItemIds
 import com.olehmaliuta.clothesadvisor.database.repositories.ClothingItemDaoRepository
 import com.olehmaliuta.clothesadvisor.database.repositories.OutfitDaoRepository
 import com.olehmaliuta.clothesadvisor.navigation.StateHandler
@@ -110,7 +111,15 @@ class UserViewModel(
                     val clothingItems = if (!syncByServerData)
                         clothingItemDaoRepository.getAllClothingItems() else emptyList()
                     val outfits = if (!syncByServerData)
-                        outfitDaoRepository.getOutfitsWithClothingItemIds() else emptyList()
+                        outfitDaoRepository.getOutfitsWithClothingItems().map {
+                            outfitWithItems ->
+                            OutfitWithClothingItemIds(
+                                outfitWithItems.outfit.id,
+                                outfitWithItems.outfit.name,
+                                outfitWithItems.clothingItems
+                                    .map { item -> item.id }
+                            )
+                        } else emptyList()
 
                     var files: List<File> = if (!syncByServerData)
                         clothingItems.map { clothingItem ->

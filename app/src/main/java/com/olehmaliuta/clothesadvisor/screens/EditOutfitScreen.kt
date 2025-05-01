@@ -22,7 +22,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -39,8 +38,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -66,7 +63,6 @@ import com.olehmaliuta.clothesadvisor.components.ClothingItemCard
 import com.olehmaliuta.clothesadvisor.components.InfoDialog
 import com.olehmaliuta.clothesadvisor.database.entities.ClothingItem
 import com.olehmaliuta.clothesadvisor.navigation.Router
-import com.olehmaliuta.clothesadvisor.navigation.Screen
 import com.olehmaliuta.clothesadvisor.viewmodels.ClothingItemViewModel
 import com.olehmaliuta.clothesadvisor.viewmodels.OutfitViewModel
 
@@ -100,8 +96,10 @@ fun EditOutfitScreen(
 
     LaunchedEffect(currentOutfit) {
         currentOutfit?.let { outfit ->
-            name = outfit.name
-            itemIds = outfit.itemIds.toSet()
+            name = outfit.outfit.name
+            itemIds = outfit.clothingItems.map { item ->
+                item.id
+            }.toSet()
         }
     }
 
@@ -164,7 +162,7 @@ fun EditOutfitScreen(
             },
             onAccept = {
                 outfitViewModel
-                    .deleteOutfit(currentOutfit!!.id)
+                    .deleteOutfit(currentOutfit!!.outfit.id)
             },
             acceptText = "Accept",
         ) {
@@ -251,7 +249,7 @@ fun EditOutfitScreen(
                             )
                         } else {
                             outfitViewModel.updateOutfit(
-                                currentOutfit!!.id,
+                                currentOutfit!!.outfit.id,
                                 name,
                                 itemIds.toList()
                             )
@@ -332,11 +330,7 @@ fun EditOutfitScreen(
 
                 items?.forEach { item ->
                     ClothingItemCard(
-                        item = item,
-                        onClick = {
-                            clothingItemViewModel.idOfItemToEdit.value = item.id
-                            router.navigate(Screen.EditClothingItem.name)
-                        }
+                        item = item
                     )
                 }
             }

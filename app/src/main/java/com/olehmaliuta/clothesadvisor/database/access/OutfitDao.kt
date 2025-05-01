@@ -9,7 +9,7 @@ import com.olehmaliuta.clothesadvisor.api.http.responses.CombinationResponse
 import com.olehmaliuta.clothesadvisor.database.entities.ClothingItemOutfitCross
 import com.olehmaliuta.clothesadvisor.database.entities.Outfit
 import com.olehmaliuta.clothesadvisor.database.entities.query.OutfitWithClothingItemCount
-import com.olehmaliuta.clothesadvisor.database.entities.query.OutfitWithClothingItemIds
+import com.olehmaliuta.clothesadvisor.database.entities.query.OutfitWithClothingItems
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -88,38 +88,16 @@ interface OutfitDao {
     @Query("DELETE FROM outfits")
     suspend fun deleteAllRows()
 
-    @Query("""
-        SELECT 
-            o.id AS id,
-            o.name AS name,
-            (
-                SELECT JSON_GROUP_ARRAY(cioc.clothing_item_id)
-                FROM clothing_item_outfit_cross cioc
-                WHERE cioc.outfit_id = o.id
-            ) AS itemIds
-        FROM outfits o
-    """)
-    suspend fun getOutfitsWithClothingItemIds(): List<OutfitWithClothingItemIds>
+    @Query("SELECT * FROM outfits")
+    suspend fun getOutfitsWithClothingItems(): List<OutfitWithClothingItems>
+
+    @Query("SELECT * FROM outfits WHERE id = :id LIMIT 1")
+    fun getOutfitWithItemsById(
+        id: Long?
+    ): Flow<OutfitWithClothingItems?>
 
     @Query("SELECT COUNT(*) FROM outfits")
     fun countOutfits(): Flow<Long>
-
-    @Query("""
-        SELECT 
-            o.id AS id,
-            o.name AS name,
-            (
-                SELECT JSON_GROUP_ARRAY(cioc.clothing_item_id)
-                FROM clothing_item_outfit_cross cioc
-                WHERE cioc.outfit_id = o.id
-            ) AS itemIds
-        FROM outfits o
-        WHERE id = :id
-        LIMIT 1
-    """)
-    fun getOutfitWithItemIdsById(
-        id: Long?
-    ): Flow<OutfitWithClothingItemIds?>
 
     @Query("""
         SELECT 
