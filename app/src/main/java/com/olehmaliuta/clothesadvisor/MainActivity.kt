@@ -4,9 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.olehmaliuta.clothesadvisor.components.ScreenManager
-import com.olehmaliuta.clothesadvisor.navigation.NavItem
-import com.olehmaliuta.clothesadvisor.navigation.Screen
+import com.olehmaliuta.clothesadvisor.ui.components.ScreenManager
+import com.olehmaliuta.clothesadvisor.ui.navigation.NavItem
+import com.olehmaliuta.clothesadvisor.ui.navigation.Screen
 import com.olehmaliuta.clothesadvisor.ui.theme.ClothesAdvisorTheme
 
 class MainActivity : ComponentActivity() {

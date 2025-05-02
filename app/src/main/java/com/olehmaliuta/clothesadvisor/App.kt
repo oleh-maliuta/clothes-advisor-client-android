@@ -1,9 +1,9 @@
 package com.olehmaliuta.clothesadvisor
 
 import android.app.Application
-import com.olehmaliuta.clothesadvisor.database.AppDb
-import com.olehmaliuta.clothesadvisor.database.repositories.ClothingItemDaoRepository
-import com.olehmaliuta.clothesadvisor.database.repositories.OutfitDaoRepository
+import com.olehmaliuta.clothesadvisor.data.database.AppDb
+import com.olehmaliuta.clothesadvisor.data.database.repositories.ClothingItemDaoRepository
+import com.olehmaliuta.clothesadvisor.data.database.repositories.OutfitDaoRepository
 
 class App : Application() {
     val database by lazy {
