@@ -47,6 +47,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -462,7 +463,8 @@ private fun InfoMessage(
         text = text,
         textAlign = TextAlign.Center,
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .testTag("info_message_text"),
         style = TextStyle(
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,

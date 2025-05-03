@@ -7,6 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.olehmaliuta.clothesadvisor.data.database.access.ClothingItemDao
 import com.olehmaliuta.clothesadvisor.data.database.access.OutfitDao
+import com.olehmaliuta.clothesadvisor.data.database.access.StatisticsDao
 import com.olehmaliuta.clothesadvisor.data.database.entities.ClothingItem
 import com.olehmaliuta.clothesadvisor.data.database.entities.ClothingItemOutfitCross
 import com.olehmaliuta.clothesadvisor.data.database.entities.Outfit
@@ -23,6 +24,7 @@ import com.olehmaliuta.clothesadvisor.data.database.entities.Outfit
 abstract class AppDb : RoomDatabase() {
     abstract fun clothingItemDao(): ClothingItemDao
     abstract fun outfitDao(): OutfitDao
+    abstract fun statisticsDao(): StatisticsDao
 
     companion object {
         @Volatile

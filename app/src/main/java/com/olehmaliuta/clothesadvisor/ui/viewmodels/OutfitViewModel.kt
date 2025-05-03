@@ -15,7 +15,7 @@ import com.olehmaliuta.clothesadvisor.data.http.responses.BaseResponse
 import com.olehmaliuta.clothesadvisor.data.http.security.ApiState
 import com.olehmaliuta.clothesadvisor.data.http.services.OutfitApiService
 import com.olehmaliuta.clothesadvisor.data.database.entities.Outfit
-import com.olehmaliuta.clothesadvisor.data.database.entities.query.OutfitWithClothingItemCount
+import com.olehmaliuta.clothesadvisor.data.database.entities.query.OutfitWithClothingItemsCount
 import com.olehmaliuta.clothesadvisor.data.database.entities.query.OutfitWithClothingItems
 import com.olehmaliuta.clothesadvisor.data.database.repositories.OutfitDaoRepository
 import com.olehmaliuta.clothesadvisor.ui.navigation.StateHandler
@@ -68,7 +68,7 @@ class OutfitViewModel(
 
     fun searchOutfits(
         query: String
-    ): Flow<List<OutfitWithClothingItemCount>> {
+    ): Flow<List<OutfitWithClothingItemsCount>> {
         return repository.searchOutfits(
             query
         )

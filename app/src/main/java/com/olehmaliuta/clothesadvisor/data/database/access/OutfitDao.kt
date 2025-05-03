@@ -8,7 +8,7 @@ import androidx.room.Update
 import com.olehmaliuta.clothesadvisor.data.http.responses.CombinationResponse
 import com.olehmaliuta.clothesadvisor.data.database.entities.ClothingItemOutfitCross
 import com.olehmaliuta.clothesadvisor.data.database.entities.Outfit
-import com.olehmaliuta.clothesadvisor.data.database.entities.query.OutfitWithClothingItemCount
+import com.olehmaliuta.clothesadvisor.data.database.entities.query.OutfitWithClothingItemsCount
 import com.olehmaliuta.clothesadvisor.data.database.entities.query.OutfitWithClothingItems
 import kotlinx.coroutines.flow.Flow
 
@@ -118,5 +118,5 @@ interface OutfitDao {
     """)
     fun searchOutfitsWithClothingItemCount(
         query: String
-    ): Flow<List<OutfitWithClothingItemCount>>
+    ): Flow<List<OutfitWithClothingItemsCount>>
 }

@@ -4,6 +4,7 @@ import android.app.Application
 import com.olehmaliuta.clothesadvisor.data.database.AppDb
 import com.olehmaliuta.clothesadvisor.data.database.repositories.ClothingItemDaoRepository
 import com.olehmaliuta.clothesadvisor.data.database.repositories.OutfitDaoRepository
+import com.olehmaliuta.clothesadvisor.data.database.repositories.StatisticsDaoRepository
 
 class App : Application() {
     val database by lazy {
@@ -14,5 +15,8 @@ class App : Application() {
     }
     val outfitDaoRepository by lazy {
         OutfitDaoRepository(database.outfitDao())
+    }
+    val statisticsDaoRepository by lazy {
+        StatisticsDaoRepository(database.statisticsDao())
     }
 }
