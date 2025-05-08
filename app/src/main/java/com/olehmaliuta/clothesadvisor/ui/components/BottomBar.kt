@@ -15,18 +15,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination.Companion.hierarchy
-import com.olehmaliuta.clothesadvisor.ui.navigation.NavItem
 import com.olehmaliuta.clothesadvisor.ui.navigation.Router
+import com.olehmaliuta.clothesadvisor.utils.AppConstants
 
 @Composable
 fun BottomBar(
-    router: Router,
-    navItems: List<NavItem>
+    router: Router
 ) {
     NavigationBar {
         val navBackStackEntry by router.currentBackStackEntryAsState()
 
-        navItems.forEach { navItem ->
+        AppConstants.navItems.forEach { navItem ->
+            val testTagName =
+                "bottom_bar__navigation_button__${navItem.route.name}"
+
             NavigationBarItem(
                 selected = navBackStackEntry?.destination?.hierarchy?.any {
                     it.route == navItem.route.name
@@ -50,7 +52,7 @@ fun BottomBar(
                     )
                 },
                 modifier = Modifier
-                    .testTag("bottom_bar__navigation_button__${navItem.route}")
+                    .testTag(testTagName)
             )
         }
     }

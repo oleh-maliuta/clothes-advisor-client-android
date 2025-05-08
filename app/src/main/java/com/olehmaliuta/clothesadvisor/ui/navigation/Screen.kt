@@ -7,7 +7,7 @@ enum class Screen {
     OutfitList,
     EditClothingItem,
     EditOutfit,
-    Analysis,
+    Generate,
     Statistics,
     Settings
 }

@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.olehmaliuta.clothesadvisor.ui.components.PieChart
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.StatisticsViewModel
+import com.olehmaliuta.clothesadvisor.utils.roundToDecimals
 import kotlin.math.roundToInt
 
 @Composable
@@ -82,7 +83,7 @@ fun StatisticsScreen(
                 StatisticsCard(title = "Age Statistics") {
                     if (!oldestItems!!.isEmpty()) {
                         Text(
-                            text = "Oldest Items:",
+                            text = "Oldest Items (top 5):",
                             style = MaterialTheme.typography.titleMedium
                         )
                         Spacer(modifier = Modifier.height(4.dp))
@@ -101,7 +102,7 @@ fun StatisticsScreen(
                 StatisticsCard(title = "Usage in Outfits") {
                     if (!mostUsedItems!!.isEmpty()) {
                         Text(
-                            text = "Most Used Items:",
+                            text = "Most Used Items (top 10):",
                             style = MaterialTheme.typography.titleMedium
                         )
                         Spacer(modifier = Modifier.height(4.dp))
@@ -218,10 +219,4 @@ private fun InfoMessage(
         fontSize = 20.sp,
         color = MaterialTheme.colorScheme.error
     )
-}
-
-fun Float.roundToDecimals(decimals: Int): Float {
-    var multiplier = 1.0f
-    repeat(decimals) { multiplier *= 10 }
-    return (this * multiplier).roundToInt() / multiplier
 }

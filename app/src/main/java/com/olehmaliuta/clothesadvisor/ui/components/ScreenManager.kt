@@ -1,5 +1,6 @@
 package com.olehmaliuta.clothesadvisor.ui.components
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -20,6 +21,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -31,13 +33,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.olehmaliuta.clothesadvisor.App
 import com.olehmaliuta.clothesadvisor.data.http.security.AuthState
-import com.olehmaliuta.clothesadvisor.ui.navigation.NavItem
 import com.olehmaliuta.clothesadvisor.ui.navigation.Router
 import com.olehmaliuta.clothesadvisor.ui.navigation.Screen
-import com.olehmaliuta.clothesadvisor.ui.screens.AnalysisScreen
 import com.olehmaliuta.clothesadvisor.ui.screens.ClothesListScreen
 import com.olehmaliuta.clothesadvisor.ui.screens.EditClothingItemScreen
 import com.olehmaliuta.clothesadvisor.ui.screens.EditOutfitScreen
+import com.olehmaliuta.clothesadvisor.ui.screens.GeneratingScreen
 import com.olehmaliuta.clothesadvisor.ui.screens.LogInScreen
 import com.olehmaliuta.clothesadvisor.ui.screens.OutfitListScreen
 import com.olehmaliuta.clothesadvisor.ui.screens.RegistrationScreen
@@ -50,7 +51,7 @@ import com.olehmaliuta.clothesadvisor.ui.viewmodels.StatisticsViewModel
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.UserViewModel
 
 @Composable
-fun ScreenManager(navItems: List<NavItem>) {
+fun ScreenManager() {
     val context = LocalContext.current
     val application = context.applicationContext as App
     val startDestination = Screen.ClothesList.name
@@ -147,8 +148,8 @@ fun ScreenManager(navItems: List<NavItem>) {
                 outfitViewModel = outfitViewModel
             )
         },
-        Screen.Analysis to {
-            AnalysisScreen(
+        Screen.Generate to {
+            GeneratingScreen(
                 router = router,
                 authViewModel = authViewModel
             )
@@ -186,8 +187,7 @@ fun ScreenManager(navItems: List<NavItem>) {
             }
 
             BottomBar(
-                router = router,
-                navItems = navItems
+                router = router
             )
         },
         snackbarHost = {
@@ -207,7 +207,13 @@ fun ScreenManager(navItems: List<NavItem>) {
                             authViewModel = authViewModel,
                             message = authState.message
                         )
-                        else -> screen()
+                        else -> {
+                            Box(
+                                modifier = Modifier
+                                    .testTag("screen__${route.name}")
+                            )
+                            screen()
+                        }
                     }
                 }
             }

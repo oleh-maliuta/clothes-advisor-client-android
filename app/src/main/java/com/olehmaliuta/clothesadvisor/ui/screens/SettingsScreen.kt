@@ -14,6 +14,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -23,6 +24,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -139,8 +141,12 @@ private fun ContentForGuest(
 
             Spacer(modifier = Modifier.height(30.dp))
 
-            Button(
+            TextButton(
                 onClick = { router.navigate(Screen.LogIn.name) },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                ),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
@@ -149,27 +155,31 @@ private fun ContentForGuest(
                     text = "Log In",
                     style = TextStyle(
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold)
+                        fontWeight = FontWeight.Bold),
+                    modifier = Modifier
+                        .testTag("log_in__button")
                 )
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Button(
+            TextButton(
                 onClick = { router.navigate(Screen.Registration.name) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.tertiary,
                     contentColor = MaterialTheme.colorScheme.onTertiary
-                )
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
             ) {
                 Text(
                     text = "Sign Up",
                     style = TextStyle(
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold)
+                        fontWeight = FontWeight.Bold),
+                    modifier = Modifier
+                        .testTag("sign_up__button")
                 )
             }
         }

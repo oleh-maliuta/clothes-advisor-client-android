@@ -40,7 +40,7 @@ import androidx.core.content.ContextCompat
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
-import com.olehmaliuta.clothesadvisor.tools.FileTool
+import com.olehmaliuta.clothesadvisor.utils.FileTool
 
 @Composable
 fun ImagePicker(

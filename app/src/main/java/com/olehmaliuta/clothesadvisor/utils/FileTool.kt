@@ -1,4 +1,4 @@
-package com.olehmaliuta.clothesadvisor.tools
+package com.olehmaliuta.clothesadvisor.utils
 
 import android.content.Context
 import android.content.Intent

@@ -5,25 +5,26 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.olehmaliuta.clothesadvisor.data.http.security.AuthState
-import com.olehmaliuta.clothesadvisor.ui.viewmodels.AuthViewModel
 import com.olehmaliuta.clothesadvisor.ui.components.CenteredScrollContainer
 import com.olehmaliuta.clothesadvisor.ui.navigation.Router
 import com.olehmaliuta.clothesadvisor.ui.navigation.Screen
+import com.olehmaliuta.clothesadvisor.ui.viewmodels.AuthViewModel
 
 @Composable
-fun AnalysisScreen(
+fun GeneratingScreen(
     router: Router,
     authViewModel: AuthViewModel,
 ) {
@@ -42,7 +43,7 @@ fun AnalysisScreen(
 
 @Composable
 private fun ContentForUser() {
-    Text("Analysis")
+    Text("Generate")
 }
 
 @Composable
@@ -55,7 +56,7 @@ private fun ContentForGuest(
     ) {
         Column {
             Text(
-                text = "You need to log in to use the analysis feature.",
+                text = "You need to log in to use the generating feature.",
                 textAlign = TextAlign.Center,
                 style = TextStyle(
                     fontSize = 25.sp,
@@ -66,8 +67,12 @@ private fun ContentForGuest(
 
             Spacer(modifier = Modifier.height(30.dp))
 
-            Button(
+            TextButton(
                 onClick = { router.navigate(Screen.LogIn.name) },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                ),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
@@ -76,27 +81,31 @@ private fun ContentForGuest(
                     text = "Log In",
                     style = TextStyle(
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold)
+                        fontWeight = FontWeight.Bold),
+                    modifier = Modifier
+                        .testTag("log_in__button")
                 )
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Button(
+            TextButton(
                 onClick = { router.navigate(Screen.Registration.name) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.tertiary,
                     contentColor = MaterialTheme.colorScheme.onTertiary
-                )
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
             ) {
                 Text(
                     text = "Sign Up",
                     style = TextStyle(
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold)
+                        fontWeight = FontWeight.Bold),
+                    modifier = Modifier
+                        .testTag("sign_up__button")
                 )
             }
         }

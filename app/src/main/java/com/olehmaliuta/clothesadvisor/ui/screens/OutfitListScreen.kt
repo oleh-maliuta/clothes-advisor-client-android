@@ -2,9 +2,10 @@ package com.olehmaliuta.clothesadvisor.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -16,9 +17,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -33,14 +33,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.olehmaliuta.clothesadvisor.ui.components.InfoDialog
 import com.olehmaliuta.clothesadvisor.data.database.entities.query.OutfitWithClothingItemsCount
+import com.olehmaliuta.clothesadvisor.ui.components.InfoDialog
 import com.olehmaliuta.clothesadvisor.ui.navigation.Router
 import com.olehmaliuta.clothesadvisor.ui.navigation.Screen
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.OutfitViewModel
@@ -109,37 +110,6 @@ fun OutfitListScreen(
             )
 
             Spacer(modifier = Modifier.height(8.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(
-                    colors = IconButtonDefaults.iconButtonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary
-                    ),
-                    onClick = {
-                        if (outfitCount != null) {
-                            if (outfitCount!! < 50) {
-                                outfitViewModel.idOfOutfitToEdit.value = null
-                                router.navigate(Screen.EditOutfit.name)
-                            } else {
-                                okDialogTitle = "Error"
-                                okDialogMessage = "Item limit reached. " +
-                                        "Maximum 50 outfits allowed per user."
-                            }
-                        }
-                    }
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Add,
-                        contentDescription = "Add",
-                        tint = MaterialTheme.colorScheme.onPrimary
-                    )
-                }
-            }
         }
 
         if (
@@ -176,6 +146,35 @@ fun OutfitListScreen(
                     "No outfits were found according to the parameters."
                 )
             }
+        }
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        FloatingActionButton(
+            onClick = {
+                if (outfitCount != null) {
+                    if (outfitCount!! < 50) {
+                        outfitViewModel.idOfOutfitToEdit.value = null
+                        router.navigate(Screen.EditOutfit.name)
+                    } else {
+                        okDialogTitle = "Error"
+                        okDialogMessage = "Item limit reached. " +
+                                "Maximum 50 outfits allowed per user."
+                    }
+                }
+            },
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp)
+                .testTag("add_outfit_button")
+        ) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = null
+            )
         }
     }
 }

@@ -44,6 +44,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
@@ -62,7 +63,7 @@ import com.olehmaliuta.clothesadvisor.ui.components.ImagePicker
 import com.olehmaliuta.clothesadvisor.ui.components.InfoDialog
 import com.olehmaliuta.clothesadvisor.data.database.entities.ClothingItem
 import com.olehmaliuta.clothesadvisor.ui.navigation.Router
-import com.olehmaliuta.clothesadvisor.tools.FileTool
+import com.olehmaliuta.clothesadvisor.utils.FileTool
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.AuthViewModel
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.ClothingItemViewModel
 import java.text.SimpleDateFormat
@@ -649,7 +650,9 @@ fun EditClothingItemScreen(
                     ),
                     onClick = {
                         router.navigateBack()
-                    }
+                    },
+                    modifier = Modifier
+                        .testTag("cancel_button")
                 ) {
                     Text("Cancel")
                 }

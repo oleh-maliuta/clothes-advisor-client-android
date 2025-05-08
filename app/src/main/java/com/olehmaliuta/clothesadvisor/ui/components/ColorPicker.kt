@@ -66,7 +66,6 @@ fun ColorPicker(
 
     var isPipetteMenuOpen by remember { mutableStateOf(false) }
     var pipetteColor by remember { mutableStateOf(Color.Black) }
-    var imageRequest by remember { mutableStateOf<ImageRequest?>(null) }
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
     var imageSize by remember { mutableStateOf(IntSize.Zero) }
     var touchPosition by remember { mutableStateOf(Offset.Zero) }
@@ -100,9 +99,9 @@ fun ColorPicker(
                 .allowHardware(false)
                 .target { drawable ->
                     val bitmapDrawable = drawable as? BitmapDrawable
-                    bitmap = bitmapDrawable?.bitmap?.copy(Bitmap.Config.ARGB_8888, true)
-                }
-                .build()
+                    bitmap = bitmapDrawable?.bitmap
+                        ?.copy(Bitmap.Config.ARGB_8888, true)
+                }.build()
             val imageLoader = ImageLoader.Builder(context).build()
             imageLoader.execute(request)
         }

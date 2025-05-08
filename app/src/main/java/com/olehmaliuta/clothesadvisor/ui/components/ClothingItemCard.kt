@@ -42,7 +42,7 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.olehmaliuta.clothesadvisor.data.database.entities.ClothingItem
-import com.olehmaliuta.clothesadvisor.tools.FileTool
+import com.olehmaliuta.clothesadvisor.utils.FileTool
 import java.io.File
 
 @Composable

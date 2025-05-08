@@ -48,7 +48,9 @@ fun PieChart(
         ) {
             Canvas(modifier = Modifier.fillMaxSize()) {
                 val diameter = size.minDimension
-                val sweepAngles = data.values.map { it * 360f / total }
+                val sweepAngles = data.values.map {
+                    it * 360f / total
+                }
 
                 sweepAngles.forEachIndexed { index, angle ->
                     drawArc(
@@ -71,10 +73,13 @@ fun PieChart(
         ) {
             data.keys.forEachIndexed { index, label ->
                 Row(
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp, vertical = 4.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    val boxSize = with(LocalDensity.current) { 15.sp.toDp() }
+                    val boxSize = with(LocalDensity.current) {
+                        15.sp.toDp()
+                    }
 
                     Box(
                         modifier = Modifier

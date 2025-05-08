@@ -51,6 +51,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -297,7 +298,9 @@ fun EditOutfitScreen(
                     ),
                     onClick = {
                         router.navigateBack()
-                    }
+                    },
+                    modifier = Modifier
+                        .testTag("cancel_button")
                 ) {
                     Text("Cancel")
                 }

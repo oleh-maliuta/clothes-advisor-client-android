@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -29,6 +30,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -223,37 +225,14 @@ fun ClothesListScreen(
             )
 
             Spacer(modifier = Modifier.height(8.dp))
+        }
 
+        item {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(
-                    colors = IconButtonDefaults.iconButtonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary
-                    ),
-                    onClick = {
-                        if (itemCount != null) {
-                            if (itemCount!! < 100) {
-                                clothingItemViewModel.idOfItemToEdit.value = null
-                                router.navigate(Screen.EditClothingItem.name)
-                            } else {
-                                okDialogTitle = "Error"
-                                okDialogMessage = "Item limit reached. " +
-                                        "Maximum 100 clothing items allowed per user."
-                            }
-                        }
-                    }
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Add,
-                        contentDescription = "Add",
-                        tint = MaterialTheme.colorScheme.onPrimary
-                    )
-                }
-
                 Row {
                     var sortExpanded by remember { mutableStateOf(false) }
 
@@ -362,6 +341,35 @@ fun ClothesListScreen(
             }
         }
     }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        FloatingActionButton(
+            onClick = {
+                if (itemCount != null) {
+                    if (itemCount!! < 100) {
+                        clothingItemViewModel.idOfItemToEdit.value = null
+                        router.navigate(Screen.EditClothingItem.name)
+                    } else {
+                        okDialogTitle = "Error"
+                        okDialogMessage = "Item limit reached. " +
+                                "Maximum 100 clothing items allowed per user."
+                    }
+                }
+            },
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp)
+                .testTag("add_item_button")
+        ) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = null
+            )
+        }
+    }
 }
 
 private data class FilterOption(
@@ -463,8 +471,7 @@ private fun InfoMessage(
         text = text,
         textAlign = TextAlign.Center,
         modifier = Modifier
-            .fillMaxWidth()
-            .testTag("info_message_text"),
+            .fillMaxWidth(),
         style = TextStyle(
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
