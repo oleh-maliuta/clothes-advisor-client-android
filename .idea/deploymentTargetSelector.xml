@@ -13,7 +13,7 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="MainUiTest">
+      <SelectionState runConfigName="End2EndTesting">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

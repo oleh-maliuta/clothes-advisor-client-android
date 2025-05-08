@@ -150,14 +150,13 @@ private fun ContentForGuest(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
+                    .testTag("log_in__button")
             ) {
                 Text(
                     text = "Log In",
                     style = TextStyle(
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold),
-                    modifier = Modifier
-                        .testTag("log_in__button")
+                        fontWeight = FontWeight.Bold)
                 )
             }
 
@@ -171,15 +170,14 @@ private fun ContentForGuest(
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp),
+                    .height(50.dp)
+                    .testTag("sign_up__button"),
             ) {
                 Text(
                     text = "Sign Up",
                     style = TextStyle(
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold),
-                    modifier = Modifier
-                        .testTag("sign_up__button")
+                        fontWeight = FontWeight.Bold)
                 )
             }
         }

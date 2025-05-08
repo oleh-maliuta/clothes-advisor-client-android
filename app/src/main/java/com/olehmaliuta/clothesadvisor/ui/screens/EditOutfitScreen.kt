@@ -195,7 +195,8 @@ fun EditOutfitScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 8.dp)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
+                .testTag("main_content_container"),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
