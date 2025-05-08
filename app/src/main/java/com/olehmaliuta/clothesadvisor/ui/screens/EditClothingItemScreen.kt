@@ -535,9 +535,8 @@ fun EditClothingItemScreen(
 
             DatePicker(
                 selectedDate = purchaseDate,
-                onDateChanged = { newDate -> purchaseDate = newDate },
+                onDateSelected = { newDate -> purchaseDate = newDate },
                 label = "Purchase date",
-                dateFormat = "yyyy-MM-dd",
                 modifier = Modifier.fillMaxWidth()
             )
 
