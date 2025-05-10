@@ -330,7 +330,7 @@ class ClothingItemViewModel(
             val tokenType = sharedPref.getString("token_type", null)
 
             try {
-                val file = FileTool.downloadFileByUrl(
+                val file = HttpServiceManager.downloadFileByUrl(
                     context,
                     HttpServiceManager.BASE_URL +
                             "clothing-items/$id/preview-remove-background",

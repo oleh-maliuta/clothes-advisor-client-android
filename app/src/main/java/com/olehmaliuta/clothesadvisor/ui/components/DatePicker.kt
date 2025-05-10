@@ -32,10 +32,10 @@ import java.util.Locale
 @Composable
 fun DatePicker(
     selectedDate: Date?,
-    onDateSelected: (Date?) -> Unit,  // Changed to accept null
+    onDateSelected: (Date?) -> Unit,
     modifier: Modifier = Modifier,
     label: String = "Select date",
-    showClearButton: Boolean = true  // Optional parameter to show/hide clear button
+    showClearButton: Boolean = true
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
 
@@ -116,7 +116,6 @@ fun DatePicker(
             day
         )
 
-        // Add a neutral button to explicitly set null
         datePickerDialog.setButton(DatePickerDialog.BUTTON_NEUTRAL, "Clear") { _, _ ->
             onDateSelected(null)
             showDatePicker = false

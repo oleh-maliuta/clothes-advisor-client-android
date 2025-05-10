@@ -21,7 +21,6 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
@@ -30,6 +29,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -543,20 +543,21 @@ fun EditClothingItemScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             Row(
-                modifier = Modifier.clickable {
-                    isFavorite = !isFavorite
-                }
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Checkbox(
+                Switch(
                     checked = isFavorite,
-                    onCheckedChange = null,
+                    onCheckedChange = { isFavorite = !isFavorite },
                     modifier = Modifier.semantics {
                         this.contentDescription =
                             if (isFavorite) "Checked" else "Unchecked"
                     }
                 )
-                Spacer(Modifier.width(8.dp))
-                Text("Is favorite")
+                Spacer(Modifier.width(12.dp))
+                Text(
+                    text = "Is favorite",
+                    fontSize = 17.sp
+                )
             }
 
             Spacer(modifier = Modifier.height(8.dp))

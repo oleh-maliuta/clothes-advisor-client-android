@@ -131,7 +131,7 @@ class UserViewModel(
                                 FileTool.persistUriPermission(context, uri)
                                 FileTool.getFileFromUri(context, uri)
                             } else {
-                                FileTool.downloadFileByUrl(
+                                HttpServiceManager.downloadFileByUrl(
                                     context,
                                     clothingItem.filename.replace(
                                         "://localhost", "://10.0.2.2"))

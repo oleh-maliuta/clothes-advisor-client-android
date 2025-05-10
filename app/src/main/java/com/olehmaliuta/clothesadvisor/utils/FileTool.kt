@@ -37,53 +37,6 @@ object FileTool {
         }
     }
 
-    suspend fun downloadFileByUrl(
-        context: Context,
-        url: String,
-        authToken: String? = null
-    ): File? {
-        return withContext(Dispatchers.IO) {
-            try {
-                val client = OkHttpClient()
-                val request = if (authToken != null)
-                    Request.Builder()
-                        .url(url)
-                        .header("Authorization", authToken)
-                        .build() else
-                    Request.Builder()
-                        .url(url)
-                        .build()
-
-                client.newCall(request).execute().use { response ->
-                    if (!response.isSuccessful) return@withContext null
-                    val fileName = getFileNameFromResponse(url, response)
-                        ?: "download_${System.currentTimeMillis()}"
-                    val file = File.createTempFile(
-                        "temp_${System.currentTimeMillis()}_",
-                        getFileExtension(fileName),
-                        context.cacheDir
-                    )
-
-                    response.body?.byteStream()?.use { inputStream ->
-                        file.outputStream().use { outputStream ->
-                            inputStream.copyTo(outputStream)
-                        }
-                    }
-
-                    val finalFile = File(file.parent, fileName)
-                    if (file.renameTo(finalFile)) {
-                        finalFile
-                    } else {
-                        file
-                    }
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                null
-            }
-        }
-    }
-
     fun prepareFilePart(partName: String, file: File): MultipartBody.Part {
         val requestFile = file.asRequestBody(
             "multipart/form-data".toMediaTypeOrNull()
@@ -110,26 +63,5 @@ object FileTool {
             uri,
             Intent.FLAG_GRANT_READ_URI_PERMISSION
         )
-    }
-
-    private fun getFileNameFromResponse(url: String, response: Response): String? {
-        val contentDisposition = response.header("Content-Disposition")
-        if (!contentDisposition.isNullOrBlank()) {
-            val filenameRegex = "filename=\"?([^\"]+)\"?".toRegex()
-            val matchResult = filenameRegex.find(contentDisposition)
-            if (matchResult != null) {
-                return matchResult.groupValues[1]
-            }
-        }
-
-        return url.substringAfterLast('/').takeIf { it.isNotBlank() }
-    }
-
-    private fun getFileExtension(fileName: String): String {
-        return if (fileName.contains('.')) {
-            ".${fileName.substringAfterLast('.')}"
-        } else {
-            ""
-        }
     }
 }

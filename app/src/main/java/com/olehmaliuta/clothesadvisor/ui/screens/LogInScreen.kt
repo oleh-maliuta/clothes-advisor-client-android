@@ -12,9 +12,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -199,20 +199,21 @@ fun LogInScreen(
             Spacer(Modifier.height(2.dp))
 
             Row(
-                modifier = Modifier.clickable {
-                    syncByServerData = !syncByServerData
-                }
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Checkbox(
+                Switch(
                     checked = syncByServerData,
-                    onCheckedChange = null,
+                    onCheckedChange =  { syncByServerData = !syncByServerData },
                     modifier = Modifier.semantics {
                         this.contentDescription =
                             if (syncByServerData) "Checked" else "Unchecked"
                     }
                 )
-                Spacer(Modifier.width(8.dp))
-                Text("Sync. by the server data")
+                Spacer(Modifier.width(12.dp))
+                Text(
+                    text = "Sync. by the server data",
+                    fontSize = 17.sp
+                )
             }
 
             Spacer(Modifier.height(2.dp))
