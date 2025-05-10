@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.sp
 import com.olehmaliuta.clothesadvisor.ui.components.PieChart
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.StatisticsViewModel
 import com.olehmaliuta.clothesadvisor.utils.roundToDecimals
-import kotlin.math.roundToInt
 
 @Composable
 fun StatisticsScreen(
@@ -91,7 +90,7 @@ fun StatisticsScreen(
                             KeyValueRow(item.name, item.purchaseDate ?: "Unknown")
                         }
                     } else {
-                        InfoMessage("No items")
+                        InfoMessage("No items with a specified purchase date")
                     }
                 }
             }
@@ -110,7 +109,7 @@ fun StatisticsScreen(
                             KeyValueRow(item.name, "${item.usageCount} outfits")
                         }
                     } else {
-                        InfoMessage("No items")
+                        InfoMessage("No items used")
                     }
                 }
             }

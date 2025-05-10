@@ -59,6 +59,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.olehmaliuta.clothesadvisor.R
 import com.olehmaliuta.clothesadvisor.data.http.security.ApiState
+import com.olehmaliuta.clothesadvisor.types.FilterOption
 import com.olehmaliuta.clothesadvisor.ui.components.AcceptCancelDialog
 import com.olehmaliuta.clothesadvisor.ui.components.ClothingItemCard
 import com.olehmaliuta.clothesadvisor.ui.components.InfoDialog
@@ -371,12 +372,6 @@ fun ClothesListScreen(
         }
     }
 }
-
-private data class FilterOption(
-    val value: String,
-    var displayName: String,
-    var isSelected: Boolean = false
-)
 
 @Composable
 private fun FilterMenu(

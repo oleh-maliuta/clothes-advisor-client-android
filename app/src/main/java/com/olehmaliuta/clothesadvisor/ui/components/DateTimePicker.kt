@@ -79,7 +79,9 @@ fun DateTimePicker(
                 )
             }
 
-            HorizontalDivider()
+            HorizontalDivider(
+                thickness = 3.dp,
+            )
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,

@@ -1,6 +1,5 @@
 package com.olehmaliuta.clothesadvisor.ui.screens
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
@@ -128,12 +127,11 @@ fun EditClothingItemScreen(
     var material by remember { mutableStateOf("") }
     var brand by remember { mutableStateOf("") }
     var price by remember { mutableStateOf<Double?>(null) }
-    var purchaseDate by remember { mutableStateOf<Date?>(null)
-    }
+    var purchaseDate by remember { mutableStateOf<Date?>(null) }
     var isFavorite by remember { mutableStateOf(false) }
 
-    var isSeasonDropMenuOpened by remember { mutableStateOf(false) }
-    var isCategoryDropMenuOpened by remember { mutableStateOf(false) }
+    var isSeasonDropMenuOpen by remember { mutableStateOf(false) }
+    var isCategoryDropMenuOpen by remember { mutableStateOf(false) }
     var okDialogTitle by remember { mutableStateOf("") }
     var okDialogMessage by remember { mutableStateOf<String?>(null) }
     var isDeleteAcceptDialogOpen by remember { mutableStateOf(false) }
@@ -431,22 +429,22 @@ fun EditClothingItemScreen(
                             LaunchedEffect(interactionSource) {
                                 interactionSource.interactions.collect {
                                     if (it is PressInteraction.Release) {
-                                        isCategoryDropMenuOpened = true
+                                        isCategoryDropMenuOpen = true
                                     }
                                 }
                             }
                         }
                 )
                 DropdownMenu(
-                    expanded = isCategoryDropMenuOpened,
-                    onDismissRequest = { isCategoryDropMenuOpened = false }
+                    expanded = isCategoryDropMenuOpen,
+                    onDismissRequest = { isCategoryDropMenuOpen = false }
                 ) {
                     categories.forEach { categoryOption ->
                         DropdownMenuItem(
                             text = { Text(categoryOption.value) },
                             onClick = {
                                 category = categoryOption.key
-                                isCategoryDropMenuOpened = false
+                                isCategoryDropMenuOpen = false
                             }
                         )
                     }
@@ -471,22 +469,22 @@ fun EditClothingItemScreen(
                             LaunchedEffect(interactionSource) {
                                 interactionSource.interactions.collect {
                                     if (it is PressInteraction.Release) {
-                                        isSeasonDropMenuOpened = true
+                                        isSeasonDropMenuOpen = true
                                     }
                                 }
                             }
                         }
                 )
                 DropdownMenu(
-                    expanded = isSeasonDropMenuOpened,
-                    onDismissRequest = { isSeasonDropMenuOpened = false }
+                    expanded = isSeasonDropMenuOpen,
+                    onDismissRequest = { isSeasonDropMenuOpen = false }
                 ) {
                     seasons.forEach { seasonOption ->
                         DropdownMenuItem(
                             text = { Text(seasonOption.value) },
                             onClick = {
                                 season = seasonOption.key
-                                isSeasonDropMenuOpened = false
+                                isSeasonDropMenuOpen = false
                             }
                         )
                     }
