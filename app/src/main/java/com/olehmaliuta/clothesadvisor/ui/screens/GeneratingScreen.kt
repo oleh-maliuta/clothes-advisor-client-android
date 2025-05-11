@@ -61,8 +61,8 @@ import com.olehmaliuta.clothesadvisor.types.PaletteInfo
 import com.olehmaliuta.clothesadvisor.ui.components.CenteredScrollContainer
 import com.olehmaliuta.clothesadvisor.ui.components.ColorPicker
 import com.olehmaliuta.clothesadvisor.ui.components.DateTimePicker
-import com.olehmaliuta.clothesadvisor.ui.navigation.Router
-import com.olehmaliuta.clothesadvisor.ui.navigation.Screen
+import com.olehmaliuta.clothesadvisor.navigation.Router
+import com.olehmaliuta.clothesadvisor.navigation.Screen
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.AuthViewModel
 import com.olehmaliuta.clothesadvisor.utils.AppConstants
 import java.util.Date

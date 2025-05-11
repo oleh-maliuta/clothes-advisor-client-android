@@ -2,8 +2,8 @@ package com.olehmaliuta.clothesadvisor.utils
 
 import com.olehmaliuta.clothesadvisor.R
 import com.olehmaliuta.clothesadvisor.types.PaletteInfo
-import com.olehmaliuta.clothesadvisor.ui.navigation.NavItem
-import com.olehmaliuta.clothesadvisor.ui.navigation.Screen
+import com.olehmaliuta.clothesadvisor.navigation.NavItem
+import com.olehmaliuta.clothesadvisor.navigation.Screen
 
 object AppConstants {
     val navItems = listOf<NavItem>(

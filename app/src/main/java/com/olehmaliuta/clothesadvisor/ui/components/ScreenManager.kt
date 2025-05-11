@@ -33,8 +33,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.olehmaliuta.clothesadvisor.App
 import com.olehmaliuta.clothesadvisor.data.http.security.AuthState
-import com.olehmaliuta.clothesadvisor.ui.navigation.Router
-import com.olehmaliuta.clothesadvisor.ui.navigation.Screen
+import com.olehmaliuta.clothesadvisor.navigation.Router
+import com.olehmaliuta.clothesadvisor.navigation.Screen
+import com.olehmaliuta.clothesadvisor.snackbar.SnackbarHandler
 import com.olehmaliuta.clothesadvisor.ui.screens.ClothesListScreen
 import com.olehmaliuta.clothesadvisor.ui.screens.EditClothingItemScreen
 import com.olehmaliuta.clothesadvisor.ui.screens.EditOutfitScreen
@@ -104,9 +105,6 @@ fun ScreenManager() {
         )
     }
 
-    // SNACK BAR
-    val snackBarHostState = remember { SnackbarHostState() }
-
     // SIMPLE VARIABLES
     val authState = authViewModel.authState.value
     val screens = mapOf<Screen, @Composable () -> Unit>(
@@ -175,7 +173,7 @@ fun ScreenManager() {
         }
     }
 
-    // IMPLEMENTATION
+    // SCREEN SYSTEM
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
@@ -190,9 +188,7 @@ fun ScreenManager() {
                 router = router
             )
         },
-        snackbarHost = {
-            SnackbarHost(snackBarHostState)
-        }
+        snackbarHost = { SnackbarHandler() }
     ) { paddingValues ->
         NavHost(
             navController = navController,

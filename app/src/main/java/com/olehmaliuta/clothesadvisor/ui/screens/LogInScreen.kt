@@ -1,6 +1,5 @@
 package com.olehmaliuta.clothesadvisor.ui.screens
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -41,8 +40,8 @@ import com.olehmaliuta.clothesadvisor.ui.viewmodels.UserViewModel
 import com.olehmaliuta.clothesadvisor.ui.components.AcceptCancelDialog
 import com.olehmaliuta.clothesadvisor.ui.components.CenteredScrollContainer
 import com.olehmaliuta.clothesadvisor.ui.components.InfoDialog
-import com.olehmaliuta.clothesadvisor.ui.navigation.Router
-import com.olehmaliuta.clothesadvisor.ui.navigation.Screen
+import com.olehmaliuta.clothesadvisor.navigation.Router
+import com.olehmaliuta.clothesadvisor.navigation.Screen
 
 @Composable
 fun LogInScreen(

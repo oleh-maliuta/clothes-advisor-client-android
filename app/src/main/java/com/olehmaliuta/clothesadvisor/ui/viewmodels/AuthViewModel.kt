@@ -13,6 +13,7 @@ import com.olehmaliuta.clothesadvisor.data.http.security.AuthState
 import com.olehmaliuta.clothesadvisor.data.http.services.UserApiService
 import com.olehmaliuta.clothesadvisor.data.database.repositories.ClothingItemDaoRepository
 import com.olehmaliuta.clothesadvisor.data.database.repositories.OutfitDaoRepository
+import com.olehmaliuta.clothesadvisor.snackbar.SnackbarManager
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -41,12 +42,15 @@ class AuthViewModel(
     }
 
     private val service = HttpServiceManager.buildService(UserApiService::class.java)
+    private val snackbarManager = SnackbarManager.getInstance()
     private val sharedPref = context.getSharedPreferences("user", Context.MODE_PRIVATE)
+
     var authState = mutableStateOf<AuthState>(AuthState.Loading)
 
     fun profile() {
         viewModelScope.launch {
             authState.value = AuthState.Loading
+
             try {
                 val token = sharedPref.getString("token", null)
                 val tokenType = sharedPref.getString("token_type", null)
@@ -113,6 +117,10 @@ class AuthViewModel(
                         AuthState.Authenticated(profileBody?.data)
                 } else if (profileResponse.code() == 401) {
                     logOut()
+                    snackbarManager.queueMessage(
+                        SnackbarManager.SnackbarMessage(
+                            "Your session has expired. Please log in again to continue.")
+                    )
                 } else {
                     val errorBody = Gson().fromJson(
                         profileResponse.errorBody()?.string(),

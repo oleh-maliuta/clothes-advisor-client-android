@@ -18,7 +18,7 @@ import com.olehmaliuta.clothesadvisor.data.database.entities.Outfit
 import com.olehmaliuta.clothesadvisor.data.database.entities.query.OutfitWithClothingItemsCount
 import com.olehmaliuta.clothesadvisor.data.database.entities.query.OutfitWithClothingItems
 import com.olehmaliuta.clothesadvisor.data.database.repositories.OutfitDaoRepository
-import com.olehmaliuta.clothesadvisor.ui.navigation.StateHandler
+import com.olehmaliuta.clothesadvisor.navigation.StateHandler
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 

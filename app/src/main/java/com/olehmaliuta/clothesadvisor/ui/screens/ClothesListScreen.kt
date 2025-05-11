@@ -63,8 +63,8 @@ import com.olehmaliuta.clothesadvisor.types.FilterOption
 import com.olehmaliuta.clothesadvisor.ui.components.AcceptCancelDialog
 import com.olehmaliuta.clothesadvisor.ui.components.ClothingItemCard
 import com.olehmaliuta.clothesadvisor.ui.components.InfoDialog
-import com.olehmaliuta.clothesadvisor.ui.navigation.Router
-import com.olehmaliuta.clothesadvisor.ui.navigation.Screen
+import com.olehmaliuta.clothesadvisor.navigation.Router
+import com.olehmaliuta.clothesadvisor.navigation.Screen
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.ClothingItemViewModel
 
 @Composable
