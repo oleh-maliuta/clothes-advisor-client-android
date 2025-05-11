@@ -169,7 +169,7 @@ fun EditClothingItemScreen(
     LaunchedEffect(clothingItemViewModel.itemUploadingState) {
         when (val apiState = clothingItemViewModel.itemUploadingState) {
             is ApiState.Success -> {
-                router.navigateBack()
+                clothingItemViewModel.idOfItemToEdit.value = apiState.data
             }
             is ApiState.Error -> {
                 okDialogTitle = "Error"

@@ -9,8 +9,8 @@ class ClothingItemDaoRepository(
 ) {
     suspend fun insertEntity(
         item: ClothingItem
-    ) {
-        dao.insertEntity(item)
+    ): Long {
+        return dao.insertEntity(item)
     }
 
     suspend fun insertEntities(

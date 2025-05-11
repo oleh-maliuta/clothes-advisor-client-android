@@ -49,7 +49,7 @@ class ClothingItemViewModel(
         .getSharedPreferences("user", Context.MODE_PRIVATE)
     private val gson = Gson()
 
-    var itemUploadingState by mutableStateOf<ApiState<Unit>>(ApiState.Idle)
+    var itemUploadingState by mutableStateOf<ApiState<Long>>(ApiState.Idle)
         private set
     var itemDeletingState by mutableStateOf<ApiState<Unit>>(ApiState.Idle)
         private set
@@ -157,8 +157,8 @@ class ClothingItemViewModel(
                     }
                 }
 
-                repository.insertEntity(currentItem)
-                itemUploadingState = ApiState.Success(Unit)
+                val newItemId = repository.insertEntity(currentItem)
+                itemUploadingState = ApiState.Success(newItemId)
             } catch (e: Exception) {
                 itemUploadingState = ApiState.Error("Network error: ${e.message}")
             } finally {
@@ -226,7 +226,7 @@ class ClothingItemViewModel(
                 }
 
                 repository.updateEntity(currentItem)
-                itemUploadingState = ApiState.Success(Unit)
+                itemUploadingState = ApiState.Success(currentItem.id)
             } catch (e: Exception) {
                 itemUploadingState = ApiState.Error("Network error: ${e.message}")
             } finally {

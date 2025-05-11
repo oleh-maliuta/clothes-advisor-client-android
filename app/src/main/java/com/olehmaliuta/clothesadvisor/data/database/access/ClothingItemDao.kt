@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ClothingItemDao {
     @Insert
-    suspend fun insertEntity(entity: ClothingItem)
+    suspend fun insertEntity(entity: ClothingItem): Long
 
     @Insert
     suspend fun insertEntities(entities: List<ClothingItem>)

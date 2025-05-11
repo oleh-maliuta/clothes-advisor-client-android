@@ -104,6 +104,8 @@ class UserViewModel(
         viewModelScope.launch {
             logInState = ApiState.Loading
 
+            var files = emptyList<File>()
+
             try {
                 val logInResponse = service.logIn(email, password)
 
@@ -121,8 +123,8 @@ class UserViewModel(
                             )
                         } else emptyList()
 
-                    var files: List<File> = if (!syncByServerData)
-                        clothingItems.map { clothingItem ->
+                    if (!syncByServerData) {
+                        files = clothingItems.map { clothingItem ->
                             val file = if (
                                 clothingItem.filename.startsWith("file://") ||
                                 clothingItem.filename.startsWith("content://")
@@ -145,7 +147,8 @@ class UserViewModel(
                                             clothingItem.filename)
                                 return@launch
                             }
-                        } else emptyList()
+                        }
+                    }
 
                     val multipartFiles = if (!syncByServerData)
                         FileTool.filesToMultipartBodyFiles(
@@ -195,8 +198,6 @@ class UserViewModel(
                             BaseResponse::class.java)
                         logInState = ApiState.Error(errorBody.detail)
                     }
-
-                    files.forEach { f -> f.delete() }
                 } else {
                     val errorBody = gson.fromJson(
                         logInResponse.errorBody()?.string(),
@@ -205,6 +206,8 @@ class UserViewModel(
                 }
             } catch (e: Exception) {
                 logInState = ApiState.Error("Network error: ${e.message}")
+            } finally {
+                files.forEach { f -> f.delete() }
             }
         }
     }
