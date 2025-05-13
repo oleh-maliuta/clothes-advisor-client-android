@@ -6,8 +6,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -20,18 +22,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.olehmaliuta.clothesadvisor.R
 import com.olehmaliuta.clothesadvisor.data.http.security.ApiState
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.UserViewModel
 import com.olehmaliuta.clothesadvisor.ui.components.CenteredScrollContainer
 import com.olehmaliuta.clothesadvisor.ui.components.InfoDialog
 import com.olehmaliuta.clothesadvisor.navigation.Router
 import com.olehmaliuta.clothesadvisor.navigation.Screen
+import com.olehmaliuta.clothesadvisor.utils.LocaleConstants
+import java.util.Locale
 
 @Composable
 fun RegistrationScreen(
@@ -70,7 +77,9 @@ fun RegistrationScreen(
     }
 
     InfoDialog(
-        title = if (success) "Success" else "Error",
+        title = if (success)
+            stringResource(R.string.registration__success_message_title) else
+                stringResource(R.string.registration__error_message_title),
         content = dialogMessage,
         onConfirm = {
             dialogMessage = null
@@ -96,10 +105,11 @@ fun RegistrationScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text(
-                text = "Create Account",
-                style = TextStyle(
-                    fontSize = 30.sp,
-                    fontWeight = FontWeight.Bold),
+                text = stringResource(R.string.registration__header),
+                textAlign = TextAlign.Center,
+                fontSize = 30.sp,
+                fontWeight = FontWeight.Bold,
+                lineHeight = 32.sp,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
@@ -107,7 +117,9 @@ fun RegistrationScreen(
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Email") },
+                label = {
+                    Text(stringResource(R.string.registration__email_input))
+                },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
@@ -116,7 +128,9 @@ fun RegistrationScreen(
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Password") },
+                label = {
+                    Text(stringResource(R.string.registration__password_input))
+                },
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 modifier = Modifier.fillMaxWidth(),
@@ -126,7 +140,9 @@ fun RegistrationScreen(
             OutlinedTextField(
                 value = confirmPassword,
                 onValueChange = { confirmPassword = it },
-                label = { Text("Confirm Password") },
+                label = {
+                    Text(stringResource(R.string.registration__confirm_password_input))
+                },
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 modifier = Modifier.fillMaxWidth(),
@@ -134,7 +150,11 @@ fun RegistrationScreen(
                 isError = !passwordsMatch && confirmPassword.isNotBlank(),
                 supportingText = {
                     if (!passwordsMatch && confirmPassword.isNotBlank()) {
-                        Text("Passwords don't match")
+                        Text(
+                            text = stringResource(
+                                R.string.registration__passwords_don_t_match_message
+                            )
+                        )
                     }
                 }
             )
@@ -143,22 +163,28 @@ fun RegistrationScreen(
                 onClick = {
                     userViewModel.register(
                         email = email,
-                        password = password
+                        password = password,
+                        locale = LocaleConstants.getSecondLangCodeByFirst(
+                            Locale.getDefault().language) ?: "en"
                 )},
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp),
                 enabled = isFormValid
             ) {
-                Text(
-                    text = if (
-                        userViewModel.registrationState == ApiState.Loading)
-                        "..." else "Register",
-                    style = TextStyle(
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 1.sp)
-                )
+                if (userViewModel.registrationState is ApiState.Loading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(30.dp)
+                    )
+                } else {
+                    Text(
+                        text = stringResource(R.string.registration__apply_button),
+                        style = TextStyle(
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 1.sp)
+                    )
+                }
             }
         }
     }

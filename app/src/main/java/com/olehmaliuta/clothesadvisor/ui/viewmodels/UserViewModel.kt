@@ -19,6 +19,7 @@ import com.olehmaliuta.clothesadvisor.data.database.repositories.ClothingItemDao
 import com.olehmaliuta.clothesadvisor.data.database.repositories.OutfitDaoRepository
 import com.olehmaliuta.clothesadvisor.navigation.StateHandler
 import com.olehmaliuta.clothesadvisor.utils.FileTool
+import com.olehmaliuta.clothesadvisor.utils.LocaleConstants
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -82,12 +83,15 @@ class UserViewModel(
                 val response = service.register(email, password, locale)
 
                 if (response.isSuccessful) {
-                    registrationState = ApiState.Success(response.body()?.detail)
+                    registrationState = ApiState.Success(
+                        LocaleConstants.getString(
+                            response.body()?.detail.toString()))
                 } else {
                     val errorBody = gson.fromJson(
                         response.errorBody()?.string(),
                         BaseResponse::class.java)
-                    registrationState = ApiState.Error(errorBody.detail)
+                    registrationState = ApiState.Error(
+                        LocaleConstants.getString(errorBody.detail.toString()))
                 }
             } catch (e: Exception) {
                 registrationState = ApiState.Error("Network error: ${e.message}")

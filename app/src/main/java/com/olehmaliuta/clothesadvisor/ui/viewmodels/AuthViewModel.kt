@@ -14,9 +14,11 @@ import com.olehmaliuta.clothesadvisor.data.http.services.UserApiService
 import com.olehmaliuta.clothesadvisor.data.database.repositories.ClothingItemDaoRepository
 import com.olehmaliuta.clothesadvisor.data.database.repositories.OutfitDaoRepository
 import com.olehmaliuta.clothesadvisor.snackbar.SnackbarManager
+import com.olehmaliuta.clothesadvisor.utils.LocaleConstants
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
+import okio.IOException
 
 class AuthViewModel(
     private val clothingItemDaoRepository: ClothingItemDaoRepository,
@@ -47,7 +49,10 @@ class AuthViewModel(
 
     var authState = mutableStateOf<AuthState>(AuthState.Loading)
 
-    fun profile() {
+    fun profile(
+        sessionExpiredMessage: String,
+        ioErrorMessage: String
+    ) {
         viewModelScope.launch {
             authState.value = AuthState.Loading
 
@@ -108,7 +113,8 @@ class AuthViewModel(
                                 synchronizeResponse.errorBody()?.string(),
                                 BaseResponse::class.java)
                             authState.value = AuthState.Error(
-                                errorBody.detail.toString())
+                                LocaleConstants.getString(
+                                    errorBody.detail.toString()))
                             return@launch
                         }
                     }
@@ -118,8 +124,7 @@ class AuthViewModel(
                 } else if (profileResponse.code() == 401) {
                     logOut()
                     snackbarManager.queueMessage(
-                        SnackbarManager.SnackbarMessage(
-                            "Your session has expired. Please log in again to continue.")
+                        SnackbarManager.SnackbarMessage(sessionExpiredMessage)
                     )
                 } else {
                     val errorBody = Gson().fromJson(
@@ -128,8 +133,10 @@ class AuthViewModel(
                     authState.value = AuthState.Error(
                         errorBody.detail.toString())
                 }
+            } catch (_: IOException) {
+                authState.value = AuthState.Error(ioErrorMessage)
             } catch (e: Exception) {
-                authState.value = AuthState.Error("Network error: ${e.message}")
+                authState.value = AuthState.Error("Error: ${e.message}")
             }
         }
     }

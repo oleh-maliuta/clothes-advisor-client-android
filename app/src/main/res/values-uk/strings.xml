@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">ClothesAdvisor</string>
+
+    <!-- Error Display -->
+    <string name="error__io_message">
+        Помилка мережі - перевірте підключення до Інтернету
+    </string>
+    <string name="error__session_expired_message">
+        Ваш сеанс закінчився. Будь ласка, увійдіть знову, щоб продовжити.
+    </string>
+    <string name="error__try_again_button">Cпробувати ще раз</string>
+    <string name="error__enter_as_guest_button">Увійти як гість</string>
+
+    <!-- Info Dialog -->
+    <string name="info_dialog__ok_button">ОК</string>
+
+    <!-- Bottom bar -->
+    <string name="bottom_bar__clothes__label">Одяг</string>
+    <string name="bottom_bar__outfits__label">Набори</string>
+    <string name="bottom_bar__generate__label">Генерація</string>
+    <string name="bottom_bar__statistics__label">Статистика</string>
+    <string name="bottom_bar__settings__label">Налаштування</string>
+
+    <!-- Registration page -->
+    <string name="registration__header">Зареєструватися</string>
+    <string name="registration__email_input">Електронна пошта</string>
+    <string name="registration__password_input">Пароль</string>
+    <string name="registration__confirm_password_input">Підтвердження пароля</string>
+    <string name="registration__apply_button">Реєстрація</string>
+    <string name="registration__passwords_don_t_match_message">Паролі не збігаються</string>
+    <string name="registration__success_message_title">Успішно</string>
+    <string name="registration__error_message_title">Помилка</string>
+</resources>

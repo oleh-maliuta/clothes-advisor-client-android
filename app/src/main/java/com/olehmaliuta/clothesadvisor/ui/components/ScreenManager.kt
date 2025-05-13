@@ -2,18 +2,15 @@ package com.olehmaliuta.clothesadvisor.ui.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -22,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -32,6 +30,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.olehmaliuta.clothesadvisor.App
+import com.olehmaliuta.clothesadvisor.R
 import com.olehmaliuta.clothesadvisor.data.http.security.AuthState
 import com.olehmaliuta.clothesadvisor.navigation.Router
 import com.olehmaliuta.clothesadvisor.navigation.Screen
@@ -167,9 +166,17 @@ fun ScreenManager() {
     )
 
     // SIDE EFFECTS
+    val sessionExpiredMessage = stringResource(
+        R.string.error__session_expired_message)
+    val ioErrorMessage = stringResource(
+        R.string.error__io_message)
+
     LaunchedEffect(Unit) {
         navController.addOnDestinationChangedListener { _, _, _ ->
-            authViewModel.profile()
+            authViewModel.profile(
+                sessionExpiredMessage = sessionExpiredMessage,
+                ioErrorMessage = ioErrorMessage
+            )
         }
     }
 
@@ -223,13 +230,7 @@ private fun LoadingDisplay() {
         modifier = Modifier
             .padding(horizontal = 10.dp)
     ) {
-        Text(
-            text = "Loading...",
-            textAlign = TextAlign.Justify,
-            style = TextStyle(
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold),
-        )
+        CircularProgressIndicator()
     }
 }
 
@@ -243,63 +244,63 @@ private fun ErrorDisplay(
             .padding(horizontal = 10.dp)
     ) {
         Column {
+            val sessionExpiredMessage = stringResource(
+                R.string.error__session_expired_message)
+            val ioErrorMessage = stringResource(
+                R.string.error__io_message)
+
             Text(
                 text = message,
-                textAlign = TextAlign.Justify,
-                style = TextStyle(
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold),
+                textAlign = TextAlign.Center,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                lineHeight = 26.sp,
+                modifier = Modifier
+                    .fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             TextButton(
-                onClick = { authViewModel.profile() },
-                shape = RoundedCornerShape(8.dp),
-                contentPadding = PaddingValues(0.dp),
+                onClick = {
+                    authViewModel.profile(
+                        sessionExpiredMessage = sessionExpiredMessage,
+                        ioErrorMessage = ioErrorMessage
+                    )
+                },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(32.dp)
+                    .height(50.dp)
             ) {
                 Text(
-                    text = "Try again",
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .padding(0.dp),
+                    text = stringResource(R.string.error__try_again_button),
                     style = TextStyle(
-                        fontSize = 14.sp,
-                        lineHeight = 16.sp
-                    )
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold)
                 )
             }
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             TextButton(
                 onClick = { authViewModel.logOut() },
-                shape = RoundedCornerShape(8.dp),
-                contentPadding = PaddingValues(0.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(32.dp)
+                    .height(50.dp)
             ) {
                 Text(
-                    text = "Enter as a guest",
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .padding(0.dp),
+                    text = stringResource(R.string.error__enter_as_guest_button),
                     style = TextStyle(
-                        fontSize = 14.sp,
-                        lineHeight = 16.sp
-                    )
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold)
                 )
             }
         }

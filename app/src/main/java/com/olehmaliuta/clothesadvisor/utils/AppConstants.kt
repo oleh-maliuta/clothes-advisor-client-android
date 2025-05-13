@@ -9,27 +9,27 @@ object AppConstants {
     val navItems = listOf<NavItem>(
         NavItem(
             route = Screen.ClothesList,
-            label = "Clothes",
+            labelId = R.string.bottom_bar__clothes__label,
             iconId = R.drawable.cloth
         ),
         NavItem(
             route = Screen.OutfitList,
-            label = "Outfits",
+            labelId = R.string.bottom_bar__outfits__label,
             iconId = R.drawable.outfit
         ),
         NavItem(
             route = Screen.Generate,
-            label = "Generate",
+            labelId = R.string.bottom_bar__generate__label,
             iconId = R.drawable.generate
         ),
         NavItem(
             route = Screen.Statistics,
-            label = "Statistics",
+            labelId = R.string.bottom_bar__statistics__label,
             iconId = R.drawable.statistics
         ),
         NavItem(
             route = Screen.Settings,
-            label = "Settings",
+            labelId = R.string.bottom_bar__settings__label,
             iconId = R.drawable.settings
         ),
     )

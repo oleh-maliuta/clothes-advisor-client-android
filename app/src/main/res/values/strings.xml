@@ -1,3 +1,33 @@
 <resources>
     <string name="app_name">ClothesAdvisor</string>
+
+    <!-- Error Display -->
+    <string name="error__io_message">
+        Network error - please check the Internet connection
+    </string>
+    <string name="error__session_expired_message">
+        Your session has expired. Please log in again to continue.
+    </string>
+    <string name="error__try_again_button">Try again</string>
+    <string name="error__enter_as_guest_button">Enter as Guest</string>
+
+    <!-- Info Dialog -->
+    <string name="info_dialog__ok_button">OK</string>
+    
+    <!-- Bottom Bar -->
+    <string name="bottom_bar__clothes__label">Clothes</string>
+    <string name="bottom_bar__outfits__label">Outfits</string>
+    <string name="bottom_bar__generate__label">Generate</string>
+    <string name="bottom_bar__statistics__label">Statistics</string>
+    <string name="bottom_bar__settings__label">Settings</string>
+
+    <!-- Registration Page -->
+    <string name="registration__header">Sign up</string>
+    <string name="registration__email_input">Email</string>
+    <string name="registration__password_input">Password</string>
+    <string name="registration__confirm_password_input">Confirm Password</string>
+    <string name="registration__apply_button">Register</string>
+    <string name="registration__passwords_don_t_match_message">Passwords don\'t match</string>
+    <string name="registration__success_message_title">Success</string>
+    <string name="registration__error_message_title">Error</string>
 </resources>
