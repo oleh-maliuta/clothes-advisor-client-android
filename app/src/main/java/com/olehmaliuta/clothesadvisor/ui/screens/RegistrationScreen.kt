@@ -165,7 +165,7 @@ fun RegistrationScreen(
                         email = email,
                         password = password,
                         locale = LocaleConstants.getSecondLangCodeByFirst(
-                            Locale.getDefault().language) ?: "en"
+                            Locale.getDefault().language)
                 )},
                 modifier = Modifier
                     .fillMaxWidth()

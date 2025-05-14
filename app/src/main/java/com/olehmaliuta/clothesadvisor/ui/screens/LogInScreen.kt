@@ -8,9 +8,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Switch
@@ -26,15 +28,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.olehmaliuta.clothesadvisor.R
 import com.olehmaliuta.clothesadvisor.data.http.security.ApiState
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.UserViewModel
 import com.olehmaliuta.clothesadvisor.ui.components.AcceptCancelDialog
@@ -42,6 +45,8 @@ import com.olehmaliuta.clothesadvisor.ui.components.CenteredScrollContainer
 import com.olehmaliuta.clothesadvisor.ui.components.InfoDialog
 import com.olehmaliuta.clothesadvisor.navigation.Router
 import com.olehmaliuta.clothesadvisor.navigation.Screen
+import com.olehmaliuta.clothesadvisor.utils.LocaleConstants
+import java.util.Locale
 
 @Composable
 fun LogInScreen(
@@ -66,6 +71,9 @@ fun LogInScreen(
         }
     }
 
+    val errorMessageTitle = stringResource(R.string.registration__error_message_title)
+    val forgotPasswordEmailIsSentTitle = stringResource(R.string.authorization__forgot_password_email_is_sent_title)
+
     LaunchedEffect(userViewModel.logInState) {
         when (val apiState = userViewModel.logInState) {
             is ApiState.Success -> {
@@ -75,7 +83,7 @@ fun LogInScreen(
                 )
             }
             is ApiState.Error -> {
-                okDialogTitle = "Error"
+                okDialogTitle = errorMessageTitle
                 okDialogMessage = apiState.message
             }
             else -> {}
@@ -86,12 +94,12 @@ fun LogInScreen(
         when (val apiState = userViewModel.forgotPasswordState) {
             is ApiState.Success -> {
                 isForgotPasswordDialogOpen = false
-                okDialogTitle = "Email is sent"
+                okDialogTitle = forgotPasswordEmailIsSentTitle
                 okDialogMessage = apiState.data
             }
             is ApiState.Error -> {
                 isForgotPasswordDialogOpen = false
-                okDialogTitle = "Error"
+                okDialogTitle = errorMessageTitle
                 okDialogMessage = apiState.message
             }
             else -> {}
@@ -108,27 +116,25 @@ fun LogInScreen(
 
     AcceptCancelDialog(
         isOpen = isForgotPasswordDialogOpen,
-        title = "Forgot password?",
+        title = stringResource(R.string.authorization__forgot_password_title),
         onDismissRequest = {
             isForgotPasswordDialogOpen = false
         },
         onAccept = {
             userViewModel.forgotPassword(
-                email = emailToRestorePassword
+                email = emailToRestorePassword,
+                locale = LocaleConstants.getSecondLangCodeByFirst(
+                    Locale.getDefault().language)
             )
         },
-        acceptText = "Send mail",
+        acceptText = stringResource(R.string.authorization__forgot_password_apply_button),
         acceptEnabled =
             userViewModel.forgotPasswordState !is ApiState.Loading &&
             emailToRestorePassword.isNotBlank()
     ) {
         Column {
             Text(
-                text =
-                    "Enter email address of your account to" +
-                            " send an email to give you a" +
-                            " permission to reset the password.",
-                textAlign = TextAlign.Justify
+                text = stringResource(R.string.authorization__forgot_password_description),
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -136,7 +142,7 @@ fun LogInScreen(
             OutlinedTextField(
                 value = emailToRestorePassword,
                 onValueChange = { emailToRestorePassword = it },
-                label = { Text("Email") },
+                label = { Text(stringResource(R.string.authorization__email_input)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
@@ -156,7 +162,7 @@ fun LogInScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text(
-                text = "Log in",
+                text = stringResource(R.string.authorization__header),
                 style = TextStyle(
                     fontSize = 30.sp,
                     fontWeight = FontWeight.Bold),
@@ -167,7 +173,7 @@ fun LogInScreen(
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Email") },
+                label = { Text(stringResource(R.string.authorization__email_input)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
@@ -176,7 +182,7 @@ fun LogInScreen(
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Password") },
+                label = { Text(stringResource(R.string.authorization__password_input)) },
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 modifier = Modifier.fillMaxWidth(),
@@ -187,7 +193,7 @@ fun LogInScreen(
                         modifier = Modifier.padding(end = 4.dp)
                     ) {
                         Text(
-                            "Forgot?",
+                            stringResource(R.string.authorization__forgot_password_hint),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.primary
                         )
@@ -210,7 +216,7 @@ fun LogInScreen(
                 )
                 Spacer(Modifier.width(12.dp))
                 Text(
-                    text = "Sync. by the server data",
+                    text = stringResource(R.string.authorization__sync_by_the_server_data_switch),
                     fontSize = 17.sp
                 )
             }
@@ -230,15 +236,19 @@ fun LogInScreen(
                     .height(52.dp),
                 enabled = isFormValid
             ) {
-                Text(
-                    text = if (
-                        userViewModel.logInState == ApiState.Loading)
-                        "..." else "Log in",
-                    style = TextStyle(
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 1.sp)
-                )
+                if (userViewModel.logInState is ApiState.Loading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(30.dp)
+                    )
+                } else {
+                    Text(
+                        text = stringResource(R.string.authorization__apply_button),
+                        style = TextStyle(
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 1.sp)
+                    )
+                }
             }
         }
     }

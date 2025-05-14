@@ -30,4 +30,21 @@
     <string name="registration__passwords_don_t_match_message">Паролі не збігаються</string>
     <string name="registration__success_message_title">Успішно</string>
     <string name="registration__error_message_title">Помилка</string>
+
+    <!-- Authorization Page -->
+    <string name="authorization__header">Aвторизуватися</string>
+    <string name="authorization__email_input">Електронна пошта</string>
+    <string name="authorization__password_input">Пароль</string>
+    <string name="authorization__sync_by_the_server_data_switch">Синхрон. за даними сервера</string>
+    <string name="authorization__apply_button">Aвторизуватися</string>
+    <string name="authorization__success_message_title">Успішно</string>
+    <string name="authorization__error_message_title">Помилка</string>
+    <string name="authorization__forgot_password_hint">Забули?</string>
+    <string name="authorization__forgot_password_title">Забули пароль?</string>
+    <string name="authorization__forgot_password_description">
+        Введіть адресу електронної пошти свого облікового запису, щоб ви отримали електронний лист із дозволом на перезапис пароля.
+    </string>
+    <string name="authorization__forgot_password_apply_button">Надіслати лист</string>
+    <string name="authorization__forgot_password_email_is_sent_title">Лист надіслано</string>
+    <string name="authorization__image_not_found_message">Зображення елемента одягу не знайдено!\nНазва одягу: %s\nШлях до файлу: %s</string>
 </resources>

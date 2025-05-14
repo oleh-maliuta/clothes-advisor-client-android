@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
+import com.olehmaliuta.clothesadvisor.R
 import com.olehmaliuta.clothesadvisor.data.http.HttpServiceManager
 import com.olehmaliuta.clothesadvisor.data.http.responses.BaseResponse
 import com.olehmaliuta.clothesadvisor.data.http.security.ApiState
@@ -54,7 +55,7 @@ class UserViewModel(
 
     var registrationState by mutableStateOf<ApiState<String?>>(ApiState.Idle)
         private set
-    var logInState by mutableStateOf<ApiState<String?>>(ApiState.Idle)
+    var logInState by mutableStateOf<ApiState<Unit>>(ApiState.Idle)
         private set
     var forgotPasswordState by mutableStateOf<ApiState<String?>>(ApiState.Idle)
         private set
@@ -147,8 +148,12 @@ class UserViewModel(
                                 file
                             } else {
                                 logInState = ApiState.Error(
-                                    "Image were not found by the path: " +
-                                            clothingItem.filename)
+                                    context.getString(
+                                        R.string.authorization__image_not_found_message,
+                                        clothingItem.name,
+                                        clothingItem.filename
+                                    )
+                                )
                                 return@launch
                             }
                         }
@@ -195,18 +200,20 @@ class UserViewModel(
                                 synchronizedBody?.synchronizedAt)
                         }
 
-                        logInState = ApiState.Success(logInBody?.detail)
+                        logInState = ApiState.Success(Unit)
                     } else {
                         val errorBody = gson.fromJson(
                             synchronizeResponse.errorBody()?.string(),
                             BaseResponse::class.java)
-                        logInState = ApiState.Error(errorBody.detail)
+                        logInState = ApiState.Error(
+                            LocaleConstants.getString(errorBody.detail.toString()))
                     }
                 } else {
                     val errorBody = gson.fromJson(
                         logInResponse.errorBody()?.string(),
                         BaseResponse::class.java)
-                    logInState = ApiState.Error(errorBody.detail)
+                    logInState = ApiState.Error(
+                        LocaleConstants.getString(errorBody.detail.toString()))
                 }
             } catch (e: Exception) {
                 logInState = ApiState.Error("Network error: ${e.message}")
@@ -227,13 +234,15 @@ class UserViewModel(
                 val response = service.forgotPassword(email, locale)
 
                 if (response.isSuccessful) {
-                    forgotPasswordState = ApiState.Success(response.body()?.detail)
+                    forgotPasswordState = ApiState.Success(
+                        LocaleConstants.getString(response.body()?.detail.toString()))
                     return@launch
                 } else {
                     val errorBody = gson.fromJson(
                         response.errorBody()?.string(),
                         BaseResponse::class.java)
-                    forgotPasswordState = ApiState.Error(errorBody.detail)
+                    forgotPasswordState = ApiState.Error(
+                        LocaleConstants.getString(errorBody.detail.toString()))
                 }
             } catch (e: Exception) {
                 forgotPasswordState = ApiState.Error("Network error: ${e.message}")

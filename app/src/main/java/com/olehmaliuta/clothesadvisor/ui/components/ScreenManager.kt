@@ -166,16 +166,10 @@ fun ScreenManager() {
     )
 
     // SIDE EFFECTS
-    val sessionExpiredMessage = stringResource(
-        R.string.error__session_expired_message)
-    val ioErrorMessage = stringResource(
-        R.string.error__io_message)
-
     LaunchedEffect(Unit) {
         navController.addOnDestinationChangedListener { _, _, _ ->
             authViewModel.profile(
-                sessionExpiredMessage = sessionExpiredMessage,
-                ioErrorMessage = ioErrorMessage
+                context = context
             )
         }
     }
@@ -239,16 +233,13 @@ private fun ErrorDisplay(
     authViewModel: AuthViewModel,
     message: String
 ) {
+    val context = LocalContext.current
+
     CenteredScrollContainer(
         modifier = Modifier
             .padding(horizontal = 10.dp)
     ) {
         Column {
-            val sessionExpiredMessage = stringResource(
-                R.string.error__session_expired_message)
-            val ioErrorMessage = stringResource(
-                R.string.error__io_message)
-
             Text(
                 text = message,
                 textAlign = TextAlign.Center,
@@ -264,8 +255,7 @@ private fun ErrorDisplay(
             TextButton(
                 onClick = {
                     authViewModel.profile(
-                        sessionExpiredMessage = sessionExpiredMessage,
-                        ioErrorMessage = ioErrorMessage
+                        context = context
                     )
                 },
                 colors = ButtonDefaults.buttonColors(

@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
+import com.olehmaliuta.clothesadvisor.R
 import com.olehmaliuta.clothesadvisor.data.http.HttpServiceManager
 import com.olehmaliuta.clothesadvisor.data.http.responses.BaseResponse
 import com.olehmaliuta.clothesadvisor.data.http.security.AuthState
@@ -50,8 +51,7 @@ class AuthViewModel(
     var authState = mutableStateOf<AuthState>(AuthState.Loading)
 
     fun profile(
-        sessionExpiredMessage: String,
-        ioErrorMessage: String
+        context: Context
     ) {
         viewModelScope.launch {
             authState.value = AuthState.Loading
@@ -124,7 +124,9 @@ class AuthViewModel(
                 } else if (profileResponse.code() == 401) {
                     logOut()
                     snackbarManager.queueMessage(
-                        SnackbarManager.SnackbarMessage(sessionExpiredMessage)
+                        SnackbarManager.SnackbarMessage(
+                            context.getString(R.string.error__session_expired_message)
+                        )
                     )
                 } else {
                     val errorBody = Gson().fromJson(
@@ -134,7 +136,9 @@ class AuthViewModel(
                         errorBody.detail.toString())
                 }
             } catch (_: IOException) {
-                authState.value = AuthState.Error(ioErrorMessage)
+                authState.value = AuthState.Error(
+                    context.getString(R.string.error__io_message)
+                )
             } catch (e: Exception) {
                 authState.value = AuthState.Error("Error: ${e.message}")
             }

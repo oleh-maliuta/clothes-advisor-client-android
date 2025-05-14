@@ -30,4 +30,21 @@
     <string name="registration__passwords_don_t_match_message">Passwords don\'t match</string>
     <string name="registration__success_message_title">Success</string>
     <string name="registration__error_message_title">Error</string>
+
+    <!-- Authorization Page -->
+    <string name="authorization__header">Log in</string>
+    <string name="authorization__email_input">Email</string>
+    <string name="authorization__password_input">Password</string>
+    <string name="authorization__sync_by_the_server_data_switch">Sync. by the server data</string>
+    <string name="authorization__apply_button">Log in</string>
+    <string name="authorization__success_message_title">Success</string>
+    <string name="authorization__error_message_title">Error</string>
+    <string name="authorization__forgot_password_hint">Forgot?</string>
+    <string name="authorization__forgot_password_title">Forgot password?</string>
+    <string name="authorization__forgot_password_description">
+        Enter email address of your account to send an email to give you a permission to reset the password.
+    </string>
+    <string name="authorization__forgot_password_apply_button">Send mail</string>
+    <string name="authorization__forgot_password_email_is_sent_title">Email is sent</string>
+    <string name="authorization__image_not_found_message">Clothing item image were not found!\nItem name: %s\nFile path: %s</string>
 </resources>
