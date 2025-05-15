@@ -20,11 +20,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.olehmaliuta.clothesadvisor.R
 import com.olehmaliuta.clothesadvisor.ui.components.PieChart
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.StatisticsViewModel
+import com.olehmaliuta.clothesadvisor.utils.AppConstants
 import com.olehmaliuta.clothesadvisor.utils.roundToDecimals
 
 @Composable
@@ -50,27 +53,38 @@ fun StatisticsScreen(
     ) {
         item {
             if (totalItemsCount != null) {
-                StatisticsCard(title = "Overall Statistics") {
-                    KeyValueRow("Total Items", totalItemsCount.toString())
+                StatisticsCard(
+                    title = stringResource(R.string.statistics__overall__title)
+                ) {
+                    KeyValueRow(
+                        stringResource(R.string.statistics__overall__total__label),
+                        totalItemsCount.toString()
+                    )
 
                     if (totalItemsCount != 0L) {
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "Items by Season:",
+                            text = stringResource(R.string.statistics__overall__season__label),
                             style = MaterialTheme.typography.titleMedium
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         itemsCountPerSeason?.forEach { (season, count) ->
-                            KeyValueRow(season, count.toString())
+                            KeyValueRow(
+                                stringResource(AppConstants.seasons.getValue(season)),
+                                count.toString()
+                            )
                         }
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "Items by Category:",
+                            text = stringResource(R.string.statistics__overall__category__label),
                             style = MaterialTheme.typography.titleMedium
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         itemsCountPerCategory?.forEach { (category, count) ->
-                            KeyValueRow(category, count.toString())
+                            KeyValueRow(
+                                stringResource(AppConstants.categories.getValue(category)),
+                                count.toString()
+                            )
                         }
                     }
                 }
@@ -79,10 +93,12 @@ fun StatisticsScreen(
 
         item {
             if (oldestItems != null) {
-                StatisticsCard(title = "Age Statistics") {
+                StatisticsCard(
+                    title = stringResource(R.string.statistics__age__title)
+                ) {
                     if (!oldestItems!!.isEmpty()) {
                         Text(
-                            text = "Oldest Items (top 5):",
+                            text = stringResource(R.string.statistics__age__oldest__label),
                             style = MaterialTheme.typography.titleMedium
                         )
                         Spacer(modifier = Modifier.height(4.dp))
@@ -90,7 +106,7 @@ fun StatisticsScreen(
                             KeyValueRow(item.name, item.purchaseDate ?: "Unknown")
                         }
                     } else {
-                        InfoMessage("No items with a specified purchase date")
+                        InfoMessage(stringResource(R.string.statistics__age__empty))
                     }
                 }
             }
@@ -98,18 +114,24 @@ fun StatisticsScreen(
 
         item {
             if (mostUsedItems != null) {
-                StatisticsCard(title = "Usage in Outfits") {
+                StatisticsCard(
+                    title = stringResource(R.string.statistics__usage__title)
+                ) {
                     if (!mostUsedItems!!.isEmpty()) {
+                        val dataUnitString = stringResource(R.string.statistics__usage__unit)
+
                         Text(
-                            text = "Most Used Items (top 10):",
+                            text = stringResource(R.string.statistics__usage__most_used__label),
                             style = MaterialTheme.typography.titleMedium
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         mostUsedItems?.forEach { item ->
-                            KeyValueRow(item.name, "${item.usageCount} outfits")
+                            KeyValueRow(
+                                item.name,
+                                "${item.usageCount} $dataUnitString")
                         }
                     } else {
-                        InfoMessage("No items used")
+                        InfoMessage(stringResource(R.string.statistics__usage__empty))
                     }
                 }
             }
@@ -117,16 +139,20 @@ fun StatisticsScreen(
 
         item {
             if (favoriteItemsPercentage != null) {
-                StatisticsCard(title = "Favorite Items") {
+                StatisticsCard(
+                    title = stringResource(R.string.statistics__favorites__title)
+                ) {
                     if (
                         favoriteItemsPercentage!!.favoritePercentage != 0f &&
                         favoriteItemsPercentage!!.nonFavoritePercentage != 0f
                         ) {
                         PieChart(
                             data = mapOf(
-                                "Favorite" to favoriteItemsPercentage!!
+                                stringResource(R.string.statistics__favorites__chart__favorite)
+                                        to favoriteItemsPercentage!!
                                     .favoritePercentage,
-                                "Regular" to favoriteItemsPercentage!!
+                                stringResource(R.string.statistics__favorites__chart__regular)
+                                        to favoriteItemsPercentage!!
                                     .nonFavoritePercentage
                             ),
                             colors = listOf(
@@ -138,17 +164,17 @@ fun StatisticsScreen(
                         Spacer(modifier = Modifier.height(16.dp))
 
                         KeyValueRow(
-                            "Favorite Items",
+                            stringResource(R.string.statistics__favorites__text__favorite),
                             "${favoriteItemsPercentage!!
                                 .favoritePercentage.roundToDecimals(3)}%"
                         )
                         KeyValueRow(
-                            "Regular Items",
+                            stringResource(R.string.statistics__favorites__text__regular),
                             "${favoriteItemsPercentage!!
                                 .nonFavoritePercentage.roundToDecimals(3)}%"
                         )
                     } else {
-                        InfoMessage("No items")
+                        InfoMessage(stringResource(R.string.statistics__favorites__empty))
                     }
                 }
             }

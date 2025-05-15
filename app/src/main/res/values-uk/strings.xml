@@ -1,6 +1,43 @@
 <resources>
     <string name="app_name">ClothesAdvisor</string>
 
+    <!-- Seasons -->
+    <string name="seasons__spring">весна</string>
+    <string name="seasons__summer">літо</string>
+    <string name="seasons__autumn">осінь</string>
+    <string name="seasons__winter">зима</string>
+
+    <!-- Categories -->
+    <string name="categories__t_shirt">футболка</string>
+    <string name="categories__pants">штани</string>
+    <string name="categories__jacket">куртка</string>
+    <string name="categories__dress">сукня</string>
+    <string name="categories__skirt">спідниця</string>
+    <string name="categories__shorts">шорти</string>
+    <string name="categories__hoodie">толстовка</string>
+    <string name="categories__sweater">светр</string>
+    <string name="categories__coat">пальто</string>
+    <string name="categories__blouse">блузка</string>
+    <string name="categories__shoes">туфлі</string>
+    <string name="categories__accessories">аксесуари</string>
+    <string name="categories__boots">чоботи</string>
+    <string name="categories__sneakers">кросівки</string>
+    <string name="categories__sandals">сандалі</string>
+    <string name="categories__hat">капелюх</string>
+    <string name="categories__scarf">шарф</string>
+    <string name="categories__gloves">рукавички</string>
+    <string name="categories__socks">шкарпетки</string>
+    <string name="categories__underwear">нижня білизна</string>
+    <string name="categories__swimwear">купальник</string>
+    <string name="categories__belt">ремінь</string>
+    <string name="categories__bag">сумка</string>
+    <string name="categories__watch">годинник</string>
+    <string name="categories__jeans">джинси</string>
+    <string name="categories__leggings">леггінси</string>
+    <string name="categories__tank_top">майка</string>
+    <string name="categories__overalls">комбінезон</string>
+    <string name="categories__beanie">шапка</string>
+
     <!-- Error Display -->
     <string name="error__io_message">
         Помилка мережі - перевірте підключення до Інтернету
@@ -66,4 +103,23 @@
     <string name="settings__guest__title">Вам потрібно авторизуватися, щоб побачити меню налаштувань.</string>
     <string name="settings__guest__log_in_button">Aвторизуватися</string>
     <string name="settings__guest__sign_up_button">Зареєструватися</string>
+
+    <!-- Statistics Page -->
+    <string name="statistics__overall__title">Загальна статистика</string>
+    <string name="statistics__overall__total__label">Всього речей</string>
+    <string name="statistics__overall__season__label">Речей за сезон</string>
+    <string name="statistics__overall__category__label">Речей за категорію</string>
+    <string name="statistics__age__title">Вікова статистика</string>
+    <string name="statistics__age__oldest__label">Найстаріші речі (топ-5)</string>
+    <string name="statistics__age__empty">Немає речей із зазначеною датою покупки</string>
+    <string name="statistics__usage__title">Використання в наборах</string>
+    <string name="statistics__usage__most_used__label">Найбільш використовувані речі (топ-10)</string>
+    <string name="statistics__usage__unit">наборів</string>
+    <string name="statistics__usage__empty">Немає використаних речей</string>
+    <string name="statistics__favorites__title">Улюблені речі</string>
+    <string name="statistics__favorites__chart__favorite">Улюблені</string>
+    <string name="statistics__favorites__chart__regular">Звичайні</string>
+    <string name="statistics__favorites__text__favorite">Улюблені речі</string>
+    <string name="statistics__favorites__text__regular">Звичайні речі</string>
+    <string name="statistics__favorites__empty">Немає речей</string>
 </resources>

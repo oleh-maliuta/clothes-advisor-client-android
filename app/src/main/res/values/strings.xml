@@ -1,6 +1,43 @@
 <resources>
     <string name="app_name">ClothesAdvisor</string>
 
+    <!-- Seasons -->
+    <string name="seasons__spring">Spring</string>
+    <string name="seasons__summer">Summer</string>
+    <string name="seasons__autumn">Autumn</string>
+    <string name="seasons__winter">Winter</string>
+
+    <!-- Categories -->
+    <string name="categories__t_shirt">t-shirt</string>
+    <string name="categories__pants">pants</string>
+    <string name="categories__jacket">jacket</string>
+    <string name="categories__dress">dress</string>
+    <string name="categories__skirt">skirt</string>
+    <string name="categories__shorts">shorts</string>
+    <string name="categories__hoodie">hoodie</string>
+    <string name="categories__sweater">sweater</string>
+    <string name="categories__coat">coat</string>
+    <string name="categories__blouse">blouse</string>
+    <string name="categories__shoes">shoes</string>
+    <string name="categories__accessories">accessories</string>
+    <string name="categories__boots">boots</string>
+    <string name="categories__sneakers">sneakers</string>
+    <string name="categories__sandals">sandals</string>
+    <string name="categories__hat">hat</string>
+    <string name="categories__scarf">scarf</string>
+    <string name="categories__gloves">gloves</string>
+    <string name="categories__socks">socks</string>
+    <string name="categories__underwear">underwear</string>
+    <string name="categories__swimwear">swimwear</string>
+    <string name="categories__belt">belt</string>
+    <string name="categories__bag">bag</string>
+    <string name="categories__watch">watch</string>
+    <string name="categories__jeans">jeans</string>
+    <string name="categories__leggings">leggings</string>
+    <string name="categories__tank_top">tank top</string>
+    <string name="categories__overalls">overalls</string>
+    <string name="categories__beanie">beanie</string>
+
     <!-- Error Display -->
     <string name="error__io_message">
         Network error - please check the Internet connection
@@ -66,4 +103,23 @@
     <string name="settings__guest__title">You need to log in to see the settings menu.</string>
     <string name="settings__guest__log_in_button">Log in</string>
     <string name="settings__guest__sign_up_button">Sign up</string>
+
+    <!-- Statistics Page -->
+    <string name="statistics__overall__title">Overall Statistics</string>
+    <string name="statistics__overall__total__label">Total Items</string>
+    <string name="statistics__overall__season__label">Items by Season</string>
+    <string name="statistics__overall__category__label">Items by Category</string>
+    <string name="statistics__age__title">Age Statistics</string>
+    <string name="statistics__age__oldest__label">Oldest Items (top 5)</string>
+    <string name="statistics__age__empty">No items with a specified purchase date</string>
+    <string name="statistics__usage__title">Usage in Outfits</string>
+    <string name="statistics__usage__most_used__label">Most Used Items (top 10)</string>
+    <string name="statistics__usage__unit">outfits</string>
+    <string name="statistics__usage__empty">No items used</string>
+    <string name="statistics__favorites__title">Favorite Items</string>
+    <string name="statistics__favorites__chart__favorite">Favorite</string>
+    <string name="statistics__favorites__chart__regular">Regular</string>
+    <string name="statistics__favorites__text__favorite">Favorite Items</string>
+    <string name="statistics__favorites__text__regular">Regular Items</string>
+    <string name="statistics__favorites__empty">No items</string>
 </resources>

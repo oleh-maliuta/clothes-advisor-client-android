@@ -12,7 +12,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class End2EndTesting {
+class NavigationTesting {
     @get:Rule
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 

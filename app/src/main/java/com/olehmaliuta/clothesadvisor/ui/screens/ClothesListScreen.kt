@@ -126,7 +126,7 @@ fun ClothesListScreen(
             FilterOption("watch", "watch"),
             FilterOption("jeans", "jeans"),
             FilterOption("leggings", "leggings"),
-            FilterOption("tank_top", "tank_top"),
+            FilterOption("tank_top", "tank top"),
             FilterOption("overalls", "overalls"),
             FilterOption("beanie", "beanie"),
         ))

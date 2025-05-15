@@ -33,6 +33,43 @@ object AppConstants {
             iconId = R.drawable.settings
         ),
     )
+    val seasons = mapOf<String, Int>(
+        "spring" to R.string.seasons__spring,
+        "summer" to R.string.seasons__summer,
+        "autumn" to R.string.seasons__autumn,
+        "winter" to R.string.seasons__winter,
+    )
+    val categories = mapOf<String, Int>(
+        "tshirt" to R.string.categories__t_shirt,
+        "pants" to R.string.categories__pants,
+        "jacket" to R.string.categories__jacket,
+        "dress" to R.string.categories__dress,
+        "skirt" to R.string.categories__skirt,
+        "shorts" to R.string.categories__shorts,
+        "hoodie" to R.string.categories__hoodie,
+        "sweater" to R.string.categories__sweater,
+        "coat" to R.string.categories__coat,
+        "blouse" to R.string.categories__blouse,
+        "shoes" to R.string.categories__shoes,
+        "accessories" to R.string.categories__accessories,
+        "boots" to R.string.categories__boots,
+        "sneakers" to R.string.categories__sneakers,
+        "sandals" to R.string.categories__sandals,
+        "hat" to R.string.categories__hat,
+        "scarf" to R.string.categories__scarf,
+        "gloves" to R.string.categories__gloves,
+        "socks" to R.string.categories__socks,
+        "underwear" to R.string.categories__underwear,
+        "swimwear" to R.string.categories__swimwear,
+        "belt" to R.string.categories__belt,
+        "bag" to R.string.categories__bag,
+        "watch" to R.string.categories__watch,
+        "jeans" to R.string.categories__jeans,
+        "leggings" to R.string.categories__leggings,
+        "tank_top" to R.string.categories__tank_top,
+        "overalls" to R.string.categories__overalls,
+        "beanie" to R.string.categories__beanie,
+    )
     val palettes = mapOf<String, PaletteInfo>(
         "monochromatic" to PaletteInfo(
             name = "Monochromatic",
