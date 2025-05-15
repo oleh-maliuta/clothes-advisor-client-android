@@ -6,12 +6,15 @@ object LocaleConstants {
     private const val DEFAULT_LANG = "en"
 
     private val strings = mapOf<String, Map<String, String>>(
-        // http (authorization)
         "Not authenticated" to mapOf(
             "uk" to "Не автентифіковано"
         ),
-
-        // http - /register
+        "Internal server error" to mapOf(
+            "uk" to "Внутрішня помилка сервера"
+        ),
+        "Database error" to mapOf(
+            "uk" to "Помилка бази даних"
+        ),
         "Register successful. Please verify your email" to mapOf(
             "uk" to "Реєстрація успішна. Підтвердьте свою електронну адресу"
         ),
@@ -21,21 +24,29 @@ object LocaleConstants {
         "Email is already taken" to mapOf(
             "uk" to "Електронна пошта вже зайнята"
         ),
-
-        // http - /login_with_email
         "User not found or incorrect password" to mapOf(
             "uk" to "Користувача не знайдено або неправильний пароль"
         ),
         "Email not verified" to mapOf(
             "uk" to "Електронна адреса не підтверджена"
         ),
-
-        // http - /forgot-password
         "Password reset email sent successfully." to mapOf(
             "uk" to "Електронний лист для зміни пароля успішно надіслано."
         ),
         "User not found" to mapOf(
             "uk" to "Користувача не знайдено"
+        ),
+        "Incorrect password" to mapOf(
+            "uk" to "Невірний пароль"
+        ),
+        "Email successfully updated. Please verify new email" to mapOf(
+            "uk" to "Електронну адресу успішно оновлено. Підтвердьте нову електронну адресу"
+        ),
+        "Incorrect old password" to mapOf(
+            "uk" to "Неправильний старий пароль"
+        ),
+        "Password successfully updated" to mapOf(
+            "uk" to "Пароль успішно оновлено"
         ),
     )
 
@@ -53,7 +64,7 @@ object LocaleConstants {
             return value
         }
 
-        return strings[value]?.get(language).toString()
+        return strings[value]?.get(language) ?: value
     }
 
     fun getSecondLangCodeByFirst(

@@ -31,7 +31,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -163,9 +162,8 @@ fun LogInScreen(
         ) {
             Text(
                 text = stringResource(R.string.authorization__header),
-                style = TextStyle(
-                    fontSize = 30.sp,
-                    fontWeight = FontWeight.Bold),
+                fontSize = 30.sp,
+                fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
@@ -243,10 +241,9 @@ fun LogInScreen(
                 } else {
                     Text(
                         text = stringResource(R.string.authorization__apply_button),
-                        style = TextStyle(
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 1.sp)
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 1.sp
                     )
                 }
             }

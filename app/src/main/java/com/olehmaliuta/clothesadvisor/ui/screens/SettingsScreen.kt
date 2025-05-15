@@ -6,11 +6,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -25,13 +27,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.olehmaliuta.clothesadvisor.R
 import com.olehmaliuta.clothesadvisor.data.http.security.ApiState
 import com.olehmaliuta.clothesadvisor.data.http.security.AuthState
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.AuthViewModel
@@ -40,6 +43,8 @@ import com.olehmaliuta.clothesadvisor.ui.components.CenteredScrollContainer
 import com.olehmaliuta.clothesadvisor.ui.components.InfoDialog
 import com.olehmaliuta.clothesadvisor.navigation.Router
 import com.olehmaliuta.clothesadvisor.navigation.Screen
+import com.olehmaliuta.clothesadvisor.utils.LocaleConstants
+import java.util.Locale
 
 @Composable
 fun SettingsScreen(
@@ -130,13 +135,12 @@ private fun ContentForGuest(
     ) {
         Column {
             Text(
-                text = "You need to log in to see the settings menu.",
+                text = stringResource(R.string.settings__guest__title),
                 textAlign = TextAlign.Center,
-                style = TextStyle(
-                    fontSize = 25.sp,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 1.sp,
-                    lineHeight = 35.sp)
+                fontSize = 23.sp,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 1.sp,
+                lineHeight = 30.sp
             )
 
             Spacer(modifier = Modifier.height(30.dp))
@@ -153,10 +157,9 @@ private fun ContentForGuest(
                     .testTag("log_in__button")
             ) {
                 Text(
-                    text = "Log In",
-                    style = TextStyle(
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold)
+                    text = stringResource(R.string.settings__guest__log_in_button),
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
                 )
             }
 
@@ -174,10 +177,9 @@ private fun ContentForGuest(
                     .testTag("sign_up__button"),
             ) {
                 Text(
-                    text = "Sign Up",
-                    style = TextStyle(
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold)
+                    text = stringResource(R.string.settings__guest__sign_up_button),
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
                 )
             }
         }
@@ -195,30 +197,25 @@ private fun UserAccountSection(
             .fillMaxWidth()
     ) {
         Text(
-            text = "Account",
-            style = TextStyle(
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                letterSpacing = 1.sp,
-                lineHeight = 35.sp)
+            text = stringResource(R.string.settings__account__title),
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            letterSpacing = 1.sp,
+            lineHeight = 35.sp
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
         Text(
-            text = "Logged in as:",
-            style = TextStyle(
-                fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
-            )
+            text = stringResource(R.string.settings__account__label),
+            fontSize = 16.sp,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
         )
 
         Text(
             text = currentUser?.email ?: "Unknown",
-            style = TextStyle(
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Medium
-            ),
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Medium,
             modifier = Modifier.padding(top = 4.dp)
         )
 
@@ -232,11 +229,10 @@ private fun UserAccountSection(
                 .height(40.dp)
         ) {
             Text(
-                text = "Log Out",
-                style = TextStyle(
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 1.sp)
+                text = stringResource(R.string.settings__account__log_out_button),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 1.sp
             )
         }
     }
@@ -260,14 +256,17 @@ private fun ChangeEmailForm(
         }
     }
 
+    val successMessageTitle = stringResource(R.string.settings__success_message_title)
+    val errorMessageTitle = stringResource(R.string.settings__error_message_title)
+
     LaunchedEffect(userViewModel.changeEmailState) {
         when (val apiState = userViewModel.changeEmailState) {
             is ApiState.Success -> {
-                okDialogTitle.value = "Success"
+                okDialogTitle.value = successMessageTitle
                 okDialogMessage.value = apiState.data
             }
             is ApiState.Error -> {
-                okDialogTitle.value = "Error"
+                okDialogTitle.value = errorMessageTitle
                 okDialogMessage.value = apiState.message
             }
             else -> {}
@@ -279,12 +278,11 @@ private fun ChangeEmailForm(
             .fillMaxWidth(),
     ) {
         Text(
-            text = "Change email address",
-            style = TextStyle(
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                letterSpacing = 1.sp,
-                lineHeight = 35.sp)
+            text = stringResource(R.string.settings__change_email__title),
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            letterSpacing = 1.sp,
+            lineHeight = 35.sp
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -292,7 +290,7 @@ private fun ChangeEmailForm(
         OutlinedTextField(
             value = newEmail,
             onValueChange = { newEmail = it },
-            label = { Text("New Email") },
+            label = { Text(stringResource(R.string.settings__change_email__new_email_input)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             modifier = Modifier
                 .fillMaxWidth(),
@@ -305,7 +303,7 @@ private fun ChangeEmailForm(
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Password") },
+            label = { Text(stringResource(R.string.settings__change_email__password_input)) },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             modifier = Modifier.fillMaxWidth()
@@ -317,20 +315,27 @@ private fun ChangeEmailForm(
             onClick = {
                 userViewModel.changeEmail(
                     newEmail,
-                    password
+                    password,
+                    locale = LocaleConstants.getSecondLangCodeByFirst(
+                        Locale.getDefault().language)
                 )
             },
             modifier = Modifier
                 .height(40.dp),
             enabled = isFormValid
         ) {
-            Text(
-                text = "Apply",
-                style = TextStyle(
-                    fontSize = 16.sp,
+            if (userViewModel.changeEmailState is ApiState.Loading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(20.dp)
+                )
+            } else {
+                Text(
+                    text = stringResource(R.string.settings__change_email__apply_button),
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    letterSpacing = 1.sp)
-            )
+                    letterSpacing = 1.sp
+                )
+            }
         }
     }
 }
@@ -358,14 +363,17 @@ private fun ChangePasswordForm(
         }
     }
 
+    val successMessageTitle = stringResource(R.string.settings__success_message_title)
+    val errorMessageTitle = stringResource(R.string.settings__error_message_title)
+
     LaunchedEffect(userViewModel.changePasswordState) {
         when (val apiState = userViewModel.changePasswordState) {
             is ApiState.Success -> {
-                okDialogTitle.value = "Success"
+                okDialogTitle.value = successMessageTitle
                 okDialogMessage.value = apiState.data
             }
             is ApiState.Error -> {
-                okDialogTitle.value = "Error"
+                okDialogTitle.value = errorMessageTitle
                 okDialogMessage.value = apiState.message
             }
             else -> {}
@@ -377,12 +385,11 @@ private fun ChangePasswordForm(
             .fillMaxWidth(),
     ) {
         Text(
-            text = "Change password",
-            style = TextStyle(
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                letterSpacing = 1.sp,
-                lineHeight = 35.sp)
+            text = stringResource(R.string.settings__change_password__title),
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            letterSpacing = 1.sp,
+            lineHeight = 35.sp
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -390,7 +397,7 @@ private fun ChangePasswordForm(
         OutlinedTextField(
             value = oldPassword,
             onValueChange = { oldPassword = it },
-            label = { Text("Old Password") },
+            label = { Text(stringResource(R.string.settings__change_password__old_password_input)) },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             modifier = Modifier.fillMaxWidth()
@@ -401,7 +408,7 @@ private fun ChangePasswordForm(
         OutlinedTextField(
             value = newPassword,
             onValueChange = { newPassword = it },
-            label = { Text("New Password") },
+            label = { Text(stringResource(R.string.settings__change_password__new_password_input)) },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             modifier = Modifier.fillMaxWidth()
@@ -412,7 +419,7 @@ private fun ChangePasswordForm(
         OutlinedTextField(
             value = confirmNewPassword,
             onValueChange = { confirmNewPassword = it },
-            label = { Text("Confirm New Password") },
+            label = { Text(stringResource(R.string.settings__change_password__confirm_new_password_input)) },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             modifier = Modifier.fillMaxWidth()
@@ -431,13 +438,18 @@ private fun ChangePasswordForm(
                 .height(40.dp),
             enabled = isFormValid
         ) {
-            Text(
-                text = "Apply",
-                style = TextStyle(
-                    fontSize = 16.sp,
+            if (userViewModel.changePasswordState is ApiState.Loading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(20.dp)
+                )
+            } else {
+                Text(
+                    text = stringResource(R.string.settings__change_password__apply_button),
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    letterSpacing = 1.sp)
-            )
+                    letterSpacing = 1.sp
+                )
+            }
         }
     }
 }

@@ -303,11 +303,10 @@ private fun ContentForGuest(
             Text(
                 text = "You need to log in to use the generating feature.",
                 textAlign = TextAlign.Center,
-                style = TextStyle(
-                    fontSize = 25.sp,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 1.sp,
-                    lineHeight = 35.sp)
+                fontSize = 23.sp,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 1.sp,
+                lineHeight = 30.sp
             )
 
             Spacer(modifier = Modifier.height(30.dp))

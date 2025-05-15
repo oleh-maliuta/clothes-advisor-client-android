@@ -270,13 +270,15 @@ class UserViewModel(
                 )
 
                 if (response.isSuccessful) {
-                    changeEmailState = ApiState.Success(response.body()?.detail)
+                    changeEmailState = ApiState.Success(
+                        LocaleConstants.getString(response.body()?.detail.toString()))
                     return@launch
                 } else {
                     val errorBody = gson.fromJson(
                         response.errorBody()?.string(),
                         BaseResponse::class.java)
-                    changeEmailState = ApiState.Error(errorBody.detail)
+                    changeEmailState = ApiState.Error(
+                        LocaleConstants.getString(errorBody.detail.toString()))
                 }
             } catch (e: Exception) {
                 changeEmailState = ApiState.Error("Network error: ${e.message}")
@@ -302,13 +304,15 @@ class UserViewModel(
                 )
 
                 if (response.isSuccessful) {
-                    changePasswordState = ApiState.Success(response.body()?.detail)
+                    changePasswordState = ApiState.Success(
+                        LocaleConstants.getString(response.body()?.detail.toString()))
                     return@launch
                 } else {
                     val errorBody = gson.fromJson(
                         response.errorBody()?.string(),
                         BaseResponse::class.java)
-                    changePasswordState = ApiState.Error(errorBody.detail)
+                    changePasswordState = ApiState.Error(
+                        LocaleConstants.getString(errorBody.detail.toString()))
                 }
             } catch (e: Exception) {
                 changePasswordState = ApiState.Error("Network error: ${e.message}")
