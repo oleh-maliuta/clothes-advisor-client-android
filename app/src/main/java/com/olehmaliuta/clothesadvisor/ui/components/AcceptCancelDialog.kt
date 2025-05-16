@@ -6,6 +6,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import com.olehmaliuta.clothesadvisor.R
 
 @Composable
 fun AcceptCancelDialog(
@@ -13,8 +15,8 @@ fun AcceptCancelDialog(
     title: String,
     onDismissRequest: () -> Unit,
     onAccept: () -> Unit,
-    acceptText: String = "Accept",
-    cancelText: String = "Cancel",
+    acceptText: String = stringResource(R.string.accept_cancel_dialog__accept_button),
+    cancelText: String = stringResource(R.string.accept_cancel_dialog__cancel_button),
     acceptEnabled: Boolean = true,
     content: @Composable () -> Unit
 ) {

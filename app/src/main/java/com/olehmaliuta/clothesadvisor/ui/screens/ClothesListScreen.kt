@@ -51,6 +51,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -89,6 +90,8 @@ fun ClothesListScreen(
     var okDialogTitle by remember { mutableStateOf("") }
     var okDialogMessage by remember { mutableStateOf<String?>(null) }
     var isFilterDialogOpen by remember { mutableStateOf(false) }
+
+    val errorMessageTitle = stringResource(R.string.clothes_list__error_message_title)
 
     var selectedSeasons by remember {
         mutableStateOf(listOf(
@@ -135,7 +138,7 @@ fun ClothesListScreen(
     LaunchedEffect(clothingItemViewModel.isFavoriteTogglingState) {
         when (val apiState = clothingItemViewModel.isFavoriteTogglingState) {
             is ApiState.Error -> {
-                okDialogTitle = "Error"
+                okDialogTitle = errorMessageTitle
                 okDialogMessage = apiState.message
             }
             else -> {}
@@ -204,7 +207,7 @@ fun ClothesListScreen(
                         color = MaterialTheme.colorScheme.surfaceVariant,
                         shape = RoundedCornerShape(28.dp))
                     .clip(RoundedCornerShape(28.dp)),
-                placeholder = { Text("Search") },
+                placeholder = { Text(stringResource(R.string.clothes_list__search)) },
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Search
                 ),
@@ -347,6 +350,8 @@ fun ClothesListScreen(
         modifier = Modifier
             .fillMaxSize()
     ) {
+        val itemLimitMessage = stringResource(R.string.clothes_list__item_limit_reached_message)
+
         FloatingActionButton(
             onClick = {
                 if (itemCount != null) {
@@ -354,9 +359,8 @@ fun ClothesListScreen(
                         clothingItemViewModel.idOfItemToEdit.value = null
                         router.navigate(Screen.EditClothingItem.name)
                     } else {
-                        okDialogTitle = "Error"
-                        okDialogMessage = "Item limit reached. " +
-                                "Maximum 100 clothing items allowed per user."
+                        okDialogTitle = errorMessageTitle
+                        okDialogMessage = itemLimitMessage
                     }
                 }
             },

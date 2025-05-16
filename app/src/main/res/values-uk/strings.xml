@@ -51,6 +51,10 @@
     <!-- Info Dialog -->
     <string name="info_dialog__ok_button">ОК</string>
 
+    <!-- Accept/Cancel Dialog -->
+    <string name="accept_cancel_dialog__accept_button">Прийняти</string>
+    <string name="accept_cancel_dialog__cancel_button">Скасувати</string>
+
     <!-- Bottom bar -->
     <string name="bottom_bar__clothes__label">Одяг</string>
     <string name="bottom_bar__outfits__label">Набори</string>
@@ -122,4 +126,11 @@
     <string name="statistics__favorites__text__favorite">Улюблені речі</string>
     <string name="statistics__favorites__text__regular">Звичайні речі</string>
     <string name="statistics__favorites__empty">Немає речей</string>
+
+    <!-- Clothes List Page -->
+    <string name="clothes_list__search">Пошук</string>
+    <string name="clothes_list__error_message_title">Помилка</string>
+    <string name="clothes_list__item_limit_reached_message">
+        Досягнуто ліміту по кількості елементів. Дозволено максимально 100 одиниць одягу на одного користувача.
+    </string>
 </resources>

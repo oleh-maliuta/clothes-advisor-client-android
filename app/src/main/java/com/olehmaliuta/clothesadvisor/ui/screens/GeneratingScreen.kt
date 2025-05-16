@@ -63,7 +63,10 @@ import com.olehmaliuta.clothesadvisor.ui.components.ColorPicker
 import com.olehmaliuta.clothesadvisor.ui.components.DateTimePicker
 import com.olehmaliuta.clothesadvisor.navigation.Router
 import com.olehmaliuta.clothesadvisor.navigation.Screen
+import com.olehmaliuta.clothesadvisor.types.LocationInfo
+import com.olehmaliuta.clothesadvisor.ui.components.CitySearchInput
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.AuthViewModel
+import com.olehmaliuta.clothesadvisor.ui.viewmodels.RecommendationViewModel
 import com.olehmaliuta.clothesadvisor.utils.AppConstants
 import java.util.Date
 
@@ -71,10 +74,13 @@ import java.util.Date
 fun GeneratingScreen(
     router: Router,
     authViewModel: AuthViewModel,
+    recommendationViewModel: RecommendationViewModel
 ) {
     when (authViewModel.authState.value) {
         is AuthState.Authenticated -> {
-            ContentForUser()
+            ContentForUser(
+                recommendationViewModel = recommendationViewModel
+            )
         }
         AuthState.Unauthenticated -> {
             ContentForGuest(
@@ -86,8 +92,12 @@ fun GeneratingScreen(
 }
 
 @Composable
-private fun ContentForUser() {
-    var location by remember { mutableStateOf<String?>(null) }
+private fun ContentForUser(
+    recommendationViewModel: RecommendationViewModel
+) {
+    var useCurrentLocation by remember { mutableStateOf(true) }
+    var location by remember { mutableStateOf<LocationInfo?>(null) }
+    var locationInputValue by remember { mutableStateOf("") }
     var dateAndTime by remember { mutableStateOf<Date>(Date()) }
     var mainColor by remember { mutableStateOf(Color.Black) }
     var palettes by remember { mutableStateOf(emptySet<String>()) }
@@ -113,13 +123,11 @@ private fun ContentForUser() {
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Switch(
-                checked = location == null,
-                onCheckedChange = {
-                    location = if (location == null) "" else null
-                },
+                checked = useCurrentLocation,
+                onCheckedChange = { useCurrentLocation = !useCurrentLocation },
                 modifier = Modifier.semantics {
                     this.contentDescription =
-                        if (location == null) "Checked" else "Unchecked"
+                        if (useCurrentLocation) "Checked" else "Unchecked"
                 }
             )
             Spacer(Modifier.width(12.dp))
@@ -129,15 +137,15 @@ private fun ContentForUser() {
             )
         }
 
-        OutlinedTextField(
-            value = location ?: "",
-            onValueChange = {
-                location = it
-            },
-            label = { Text("Enter the city name (English)") },
-            singleLine = true,
-            enabled = location != null,
-            modifier = Modifier.fillMaxWidth()
+        Spacer(modifier = Modifier.height(10.dp))
+
+        CitySearchInput(
+            query = locationInputValue,
+            value = location,
+            viewModel = recommendationViewModel,
+            isEnabled = !useCurrentLocation,
+            onQueryChange = { locationInputValue = it },
+            onLocationSelect = { location = it }
         )
 
         Spacer(modifier = Modifier.height(30.dp))

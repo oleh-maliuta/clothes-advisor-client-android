@@ -47,6 +47,7 @@ import com.olehmaliuta.clothesadvisor.ui.screens.StatisticsScreen
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.AuthViewModel
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.ClothingItemViewModel
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.OutfitViewModel
+import com.olehmaliuta.clothesadvisor.ui.viewmodels.RecommendationViewModel
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.StatisticsViewModel
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.UserViewModel
 
@@ -88,6 +89,9 @@ fun ScreenManager() {
             repository = application.statisticsDaoRepository
         )
     )
+    val recommendationViewModel: RecommendationViewModel = viewModel(
+        factory = RecommendationViewModel.Factory()
+    )
 
     // NAVIGATION
     val navController = rememberNavController()
@@ -99,7 +103,8 @@ fun ScreenManager() {
                 userViewModel,
                 clothingItemViewModel,
                 outfitViewModel,
-                statisticsViewModel
+                statisticsViewModel,
+                recommendationViewModel
             )
         )
     }
@@ -148,7 +153,8 @@ fun ScreenManager() {
         Screen.Generate to {
             GeneratingScreen(
                 router = router,
-                authViewModel = authViewModel
+                authViewModel = authViewModel,
+                recommendationViewModel = recommendationViewModel
             )
         },
         Screen.Statistics to {

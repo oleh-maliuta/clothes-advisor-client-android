@@ -50,6 +50,10 @@
 
     <!-- Info Dialog -->
     <string name="info_dialog__ok_button">OK</string>
+
+    <!-- Accept/Cancel Dialog -->
+    <string name="accept_cancel_dialog__accept_button">Accept</string>
+    <string name="accept_cancel_dialog__cancel_button">Cancel</string>
     
     <!-- Bottom Bar -->
     <string name="bottom_bar__clothes__label">Clothes</string>
@@ -122,4 +126,11 @@
     <string name="statistics__favorites__text__favorite">Favorite Items</string>
     <string name="statistics__favorites__text__regular">Regular Items</string>
     <string name="statistics__favorites__empty">No items</string>
+
+    <!-- Clothes List Page -->
+    <string name="clothes_list__search">Search</string>
+    <string name="clothes_list__error_message_title">Error</string>
+    <string name="clothes_list__item_limit_reached_message">
+        Item count limit reached. Maximum 100 clothing items allowed per user.
+    </string>
 </resources>
