@@ -67,6 +67,7 @@ import com.olehmaliuta.clothesadvisor.ui.components.InfoDialog
 import com.olehmaliuta.clothesadvisor.navigation.Router
 import com.olehmaliuta.clothesadvisor.navigation.Screen
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.ClothingItemViewModel
+import com.olehmaliuta.clothesadvisor.utils.AppConstants
 
 @Composable
 fun ClothesListScreen(
@@ -76,7 +77,9 @@ fun ClothesListScreen(
     var searchInputValue by remember { mutableStateOf("") }
 
     var searchQuery by remember { mutableStateOf("") }
-    var sortBy by remember { mutableStateOf(Pair<String, String>("name", "name")) }
+    var sortBy by remember { mutableStateOf(Pair<String, Int>(
+        "name", R.string.clothes_list__sort_option__name
+    )) }
     var ascSort by remember { mutableStateOf(true) }
     var categoryFilter by remember { mutableStateOf(emptyList<String>()) }
     var seasonFilter by remember { mutableStateOf(emptyList<String>()) }
@@ -84,7 +87,7 @@ fun ClothesListScreen(
     val itemCount by clothingItemViewModel.countClothingItems
         .collectAsState(initial = null)
     val searchResults by clothingItemViewModel
-        .searchItems(searchQuery, sortBy.second, ascSort, categoryFilter, seasonFilter)
+        .searchItems(searchQuery, sortBy.first, ascSort, categoryFilter, seasonFilter)
         .collectAsState(initial = null)
 
     var okDialogTitle by remember { mutableStateOf("") }
@@ -94,45 +97,14 @@ fun ClothesListScreen(
     val errorMessageTitle = stringResource(R.string.clothes_list__error_message_title)
 
     var selectedSeasons by remember {
-        mutableStateOf(listOf(
-            FilterOption("winter", "Winter"),
-            FilterOption("spring", "Spring"),
-            FilterOption("summer", "Summer"),
-            FilterOption("autumn", "Autumn")
-        ))
+        mutableStateOf(AppConstants.seasons.map { seasonEntry ->
+            FilterOption(seasonEntry.key, seasonEntry.value)
+        })
     }
     var selectedCategories by remember {
-        mutableStateOf(listOf(
-            FilterOption("tshirt", "t-shirt"),
-            FilterOption("pants", "pants"),
-            FilterOption("jacket", "jacket"),
-            FilterOption("dress", "dress"),
-            FilterOption("skirt", "skirt"),
-            FilterOption("shorts", "shorts"),
-            FilterOption("hoodie", "hoodie"),
-            FilterOption("sweater", "sweater"),
-            FilterOption("coat", "coat"),
-            FilterOption("blouse", "blouse"),
-            FilterOption("shoes", "shoes"),
-            FilterOption("accessories", "accessories"),
-            FilterOption("boots", "boots"),
-            FilterOption("sneakers", "sneakers"),
-            FilterOption("sandals", "sandals"),
-            FilterOption("hat", "hat"),
-            FilterOption("scarf", "scarf"),
-            FilterOption("gloves", "gloves"),
-            FilterOption("socks", "socks"),
-            FilterOption("underwear", "underwear"),
-            FilterOption("swimwear", "swimwear"),
-            FilterOption("belt", "belt"),
-            FilterOption("bag", "bag"),
-            FilterOption("watch", "watch"),
-            FilterOption("jeans", "jeans"),
-            FilterOption("leggings", "leggings"),
-            FilterOption("tank_top", "tank top"),
-            FilterOption("overalls", "overalls"),
-            FilterOption("beanie", "beanie"),
-        ))
+        mutableStateOf(AppConstants.categories.map { categoryEntry ->
+            FilterOption(categoryEntry.key, categoryEntry.value)
+        })
     }
 
     LaunchedEffect(clothingItemViewModel.isFavoriteTogglingState) {
@@ -155,7 +127,7 @@ fun ClothesListScreen(
 
     AcceptCancelDialog(
         isOpen = isFilterDialogOpen,
-        title = "Filters",
+        title = stringResource(R.string.clothes_list__filters__title),
         onDismissRequest = { isFilterDialogOpen = false },
         onAccept = {
             seasonFilter = selectedSeasons
@@ -165,8 +137,7 @@ fun ClothesListScreen(
                 .filter { it.isSelected }
                 .map { it.value }
             isFilterDialogOpen = false
-        },
-        acceptText = "Apply",
+        }
     ) {
         FilterMenu(
             categories = selectedCategories,
@@ -175,7 +146,7 @@ fun ClothesListScreen(
                 selectedSeasons = selectedSeasons.toMutableList().apply {
                     this[idx] = FilterOption(
                         this[idx].value,
-                        this[idx].displayName,
+                        this[idx].displayNameId,
                         !this[idx].isSelected
                     )
                 }
@@ -184,7 +155,7 @@ fun ClothesListScreen(
                 selectedCategories = selectedCategories.toMutableList().apply {
                     this[idx] = FilterOption(
                         this[idx].value,
-                        this[idx].displayName,
+                        this[idx].displayNameId,
                         !this[idx].isSelected
                     )
                 }
@@ -247,7 +218,12 @@ fun ClothesListScreen(
                                 end = 3.dp),
                             onClick = { sortExpanded = true }
                         ) {
-                            Text("Sort by: ${sortBy.first}")
+                            Text(
+                                text = stringResource(
+                                    R.string.clothes_list__sort_by,
+                                    stringResource(sortBy.second)
+                                )
+                            )
                             Icon(
                                 imageVector = Icons.Default.ArrowDropDown,
                                 contentDescription = "Sort options"
@@ -258,16 +234,32 @@ fun ClothesListScreen(
                             onDismissRequest = { sortExpanded = false }
                         ) {
                             DropdownMenuItem(
-                                text = { Text("name") },
+                                text = {
+                                    Text(
+                                        text = stringResource(
+                                            R.string.clothes_list__sort_option__name)
+                                    )
+                                },
                                 onClick = {
-                                    sortBy = Pair("name", "name")
+                                    sortBy = Pair(
+                                        "name",
+                                        R.string.clothes_list__sort_option__name
+                                    )
                                     sortExpanded = false
                                 }
                             )
                             DropdownMenuItem(
-                                text = { Text("purchase date") },
+                                text = {
+                                    Text(
+                                        text = stringResource(
+                                            R.string.clothes_list__sort_option__purchase_date)
+                                    )
+                                },
                                 onClick = {
-                                    sortBy = Pair("purchase date", "purchase_date")
+                                    sortBy = Pair(
+                                        "purchase_date",
+                                        R.string.clothes_list__sort_option__purchase_date
+                                    )
                                     sortExpanded = false
                                 }
                             )
@@ -332,7 +324,7 @@ fun ClothesListScreen(
         if (itemCount == 0L) {
             item {
                 InfoMessage(
-                    "You have no clothing items at the moment."
+                    stringResource(R.string.clothes_list__info__no_items)
                 )
             }
         }
@@ -340,7 +332,7 @@ fun ClothesListScreen(
         if (itemCount != 0L && searchResults?.isEmpty() == true) {
             item {
                 InfoMessage(
-                    "No items were found according to the parameters."
+                    stringResource(R.string.clothes_list__info__no_items_found)
                 )
             }
         }
@@ -350,12 +342,14 @@ fun ClothesListScreen(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        val itemLimitMessage = stringResource(R.string.clothes_list__item_limit_reached_message)
+        val itemLimitMessage = stringResource(
+            R.string.clothes_list__item_limit_reached_message,
+            AppConstants.MAX_CLOTHING_ITEMS)
 
         FloatingActionButton(
             onClick = {
                 if (itemCount != null) {
-                    if (itemCount!! < 100) {
+                    if (itemCount!! < AppConstants.MAX_CLOTHING_ITEMS) {
                         clothingItemViewModel.idOfItemToEdit.value = null
                         router.navigate(Screen.EditClothingItem.name)
                     } else {
@@ -391,7 +385,7 @@ private fun FilterMenu(
             .fillMaxWidth()
     ) {
         Text(
-            text = "Seasons",
+            text = stringResource(R.string.clothes_list__filters__seasons__title),
             textAlign = TextAlign.Center,
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
@@ -416,7 +410,7 @@ private fun FilterMenu(
                     )
                     Spacer(Modifier.width(8.dp))
                     Text(
-                        text = option.displayName,
+                        text = stringResource(option.displayNameId),
                         fontSize = 16.sp
                     )
                 }
@@ -426,7 +420,7 @@ private fun FilterMenu(
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "Categories",
+            text = stringResource(R.string.clothes_list__filters__categories__title),
             textAlign = TextAlign.Center,
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
@@ -451,7 +445,7 @@ private fun FilterMenu(
                     )
                     Spacer(Modifier.width(8.dp))
                     Text(
-                        text = option.displayName,
+                        text = stringResource(option.displayNameId),
                         fontSize = 16.sp
                     )
                 }

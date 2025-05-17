@@ -74,6 +74,12 @@
     <string name="bottom_bar__statistics__label">Statistics</string>
     <string name="bottom_bar__settings__label">Settings</string>
 
+    <!-- Clothes Item Card -->
+    <string name="clothing_item_card__material">Material: %s</string>
+    <string name="clothing_item_card__brand">Brand: %s</string>
+    <string name="clothing_item_card__price">Price: %s</string>
+    <string name="clothing_item_card__purchase_date">Purchase date: %s</string>
+
     <!-- Registration Page -->
     <string name="registration__header">Sign up</string>
     <string name="registration__email_input">Email</string>
@@ -141,8 +147,16 @@
 
     <!-- Clothes List Page -->
     <string name="clothes_list__search">Search</string>
+    <string name="clothes_list__sort_by">Sort by: %s</string>
+    <string name="clothes_list__sort_option__name">name</string>
+    <string name="clothes_list__sort_option__purchase_date">purchase date</string>
+    <string name="clothes_list__filters__title">Filters</string>
+    <string name="clothes_list__filters__seasons__title">Seasons</string>
+    <string name="clothes_list__filters__categories__title">Categories</string>
+    <string name="clothes_list__info__no_items">You have no clothing items at the moment.</string>
+    <string name="clothes_list__info__no_items_found">No items were found according to the parameters.</string>
     <string name="clothes_list__error_message_title">Error</string>
     <string name="clothes_list__item_limit_reached_message">
-        Item count limit reached. Maximum 100 clothing items allowed per user.
+        Item count limit reached. Maximum %d clothing items allowed per user.
     </string>
 </resources>

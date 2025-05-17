@@ -74,6 +74,12 @@
     <string name="bottom_bar__statistics__label">Статистика</string>
     <string name="bottom_bar__settings__label">Налаштування</string>
 
+    <!-- Clothes Item Card -->
+    <string name="clothing_item_card__material">Матеріал: %s</string>
+    <string name="clothing_item_card__brand">Бренд: %s</string>
+    <string name="clothing_item_card__price">Ціна: %s</string>
+    <string name="clothing_item_card__purchase_date">Дата покупки: %s</string>
+
     <!-- Registration page -->
     <string name="registration__header">Реєстрація</string>
     <string name="registration__email_input">Електронна пошта</string>
@@ -141,8 +147,16 @@
 
     <!-- Clothes List Page -->
     <string name="clothes_list__search">Пошук</string>
+    <string name="clothes_list__sort_by">Сортувати за: %s</string>
+    <string name="clothes_list__sort_option__name">назвою</string>
+    <string name="clothes_list__sort_option__purchase_date">датою покупки</string>
+    <string name="clothes_list__filters__title">Фільтри</string>
+    <string name="clothes_list__filters__seasons__title">Сезони</string>
+    <string name="clothes_list__filters__categories__title">Категорії</string>
+    <string name="clothes_list__info__no_items">На даний момент у вас немає предметів одягу.</string>
+    <string name="clothes_list__info__no_items_found">Жодної речі не було знайдено за даними параметрами.</string>
     <string name="clothes_list__error_message_title">Помилка</string>
     <string name="clothes_list__item_limit_reached_message">
-        Досягнуто ліміту по кількості елементів. Дозволено максимально 100 одиниць одягу на одного користувача.
+        Досягнуто ліміту по кількості елементів. Дозволено максимально %d одиниць одягу на одного користувача.
     </string>
 </resources>

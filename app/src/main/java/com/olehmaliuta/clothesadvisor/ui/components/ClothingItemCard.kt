@@ -33,6 +33,7 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,7 +42,9 @@ import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.request.CachePolicy
 import coil.request.ImageRequest
+import com.olehmaliuta.clothesadvisor.R
 import com.olehmaliuta.clothesadvisor.data.database.entities.ClothingItem
+import com.olehmaliuta.clothesadvisor.utils.AppConstants
 import com.olehmaliuta.clothesadvisor.utils.FileTool
 import java.io.File
 
@@ -200,7 +203,7 @@ fun ClothingItemCard(
                     }
 
                     Text(
-                        text = item.category,
+                        text = stringResource(AppConstants.categories.getValue(item.category)),
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.primary
                     )
@@ -209,7 +212,7 @@ fun ClothingItemCard(
                         fontSize = 14.sp
                     )
                     Text(
-                        text = item.season,
+                        text = stringResource(AppConstants.seasons.getValue(item.season)),
                         fontSize = 14.sp
                     )
                     Text(
@@ -239,27 +242,35 @@ fun ClothingItemCard(
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = "Material: ${item.material}",
+                    text = stringResource(
+                        R.string.clothing_item_card__material,
+                        item.material),
                     fontSize = 14.sp
                 )
 
                 item.brand?.let { brand ->
                     Text(
-                        text = "Brand: $brand",
+                        text = stringResource(
+                            R.string.clothing_item_card__brand,
+                            brand),
                         fontSize = 14.sp
                     )
                 }
 
                 item.price?.let { price ->
                     Text(
-                        text = "Price: ${"%.2f".format(price)}",
+                        text = stringResource(
+                            R.string.clothing_item_card__price,
+                            "%.2f".format(price)),
                         fontSize = 14.sp
                     )
                 }
 
                 item.purchaseDate?.let { purchaseDate ->
                     Text(
-                        text = "Purchase date: $purchaseDate",
+                        text = stringResource(
+                            R.string.clothing_item_card__purchase_date,
+                            purchaseDate),
                         fontSize = 14.sp
                     )
                 }
