@@ -34,7 +34,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -49,6 +48,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
@@ -64,7 +64,7 @@ import com.olehmaliuta.clothesadvisor.ui.components.DateTimePicker
 import com.olehmaliuta.clothesadvisor.navigation.Router
 import com.olehmaliuta.clothesadvisor.navigation.Screen
 import com.olehmaliuta.clothesadvisor.types.LocationInfo
-import com.olehmaliuta.clothesadvisor.ui.components.CitySearchInput
+import com.olehmaliuta.clothesadvisor.ui.components.LocationSearchInput
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.AuthViewModel
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.RecommendationViewModel
 import com.olehmaliuta.clothesadvisor.utils.AppConstants
@@ -106,12 +106,6 @@ private fun ContentForUser(
 
     var isEventTypeDropMenuOpen by remember { mutableStateOf(false) }
 
-    val eventTypes = mapOf(
-        "e1" to "Event1",
-        "e2" to "Event2",
-        "e3" to "Event3",
-    )
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -139,7 +133,7 @@ private fun ContentForUser(
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        CitySearchInput(
+        LocationSearchInput(
             query = locationInputValue,
             value = location,
             viewModel = recommendationViewModel,
@@ -204,7 +198,9 @@ private fun ContentForUser(
                     .fillMaxWidth()
             ) {
                 Text(
-                    text = eventType?.let { eventTypes[eventType] } ?: "-",
+                    text = eventType?.let {
+                        stringResource(AppConstants.events.getValue(it))
+                    } ?: "-",
                     modifier = Modifier
                         .weight(1f)
                         .padding(horizontal = 12.dp, vertical = 16.dp),
@@ -237,11 +233,11 @@ private fun ContentForUser(
                 expanded = isEventTypeDropMenuOpen,
                 onDismissRequest = { isEventTypeDropMenuOpen = false }
             ) {
-                eventTypes.forEach { categoryOption ->
+                AppConstants.events.forEach { eventOption ->
                     DropdownMenuItem(
-                        text = { Text(categoryOption.value) },
+                        text = { Text(stringResource(eventOption.value)) },
                         onClick = {
-                            eventType = categoryOption.key
+                            eventType = eventOption.key
                             isEventTypeDropMenuOpen = false
                         }
                     )

@@ -37,6 +37,18 @@
     <string name="categories__tank_top">tank top</string>
     <string name="categories__overalls">overalls</string>
     <string name="categories__beanie">beanie</string>
+    
+    <!-- Events -->
+    <string name="events__casual_walk">casual walk</string>
+    <string name="events__picnic">picnic</string>
+    <string name="events__date">date</string>
+    <string name="events__work_meeting">work meeting</string>
+    <string name="events__hiking">hiking</string>
+    <string name="events__beach_party">beach party</string>
+    <string name="events__gym">gym</string>
+    <string name="events__formal_event">formal event</string>
+    <string name="events__home_relax">home relax</string>
+    <string name="events__sport_training">sport training</string>
 
     <!-- Error Display -->
     <string name="error__io_message">

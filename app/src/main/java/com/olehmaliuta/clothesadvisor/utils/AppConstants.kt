@@ -6,6 +6,9 @@ import com.olehmaliuta.clothesadvisor.navigation.NavItem
 import com.olehmaliuta.clothesadvisor.navigation.Screen
 
 object AppConstants {
+    const val MAX_CLOTHING_ITEMS = 100
+    const val MAX_OUTFITS = 50
+
     val navItems = listOf<NavItem>(
         NavItem(
             route = Screen.ClothesList,
@@ -69,6 +72,18 @@ object AppConstants {
         "tank_top" to R.string.categories__tank_top,
         "overalls" to R.string.categories__overalls,
         "beanie" to R.string.categories__beanie,
+    )
+    val events = mapOf<String, Int>(
+        "casual_walk" to R.string.events__casual_walk,
+        "picnic" to R.string.events__picnic,
+        "date" to R.string.events__date,
+        "work_meeting" to R.string.events__work_meeting,
+        "hiking" to R.string.events__hiking,
+        "beach_party" to R.string.events__beach_party,
+        "gym" to R.string.events__gym,
+        "formal_event" to R.string.events__formal_event,
+        "home_relax" to R.string.events__home_relax,
+        "sport_training" to R.string.events__sport_training,
     )
     val palettes = mapOf<String, PaletteInfo>(
         "monochromatic" to PaletteInfo(

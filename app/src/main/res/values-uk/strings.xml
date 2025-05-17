@@ -38,6 +38,18 @@
     <string name="categories__overalls">комбінезон</string>
     <string name="categories__beanie">шапка</string>
 
+    <!-- Events -->
+    <string name="events__casual_walk">звичайна прогулянка</string>
+    <string name="events__picnic">пікнік</string>
+    <string name="events__date">побачення</string>
+    <string name="events__work_meeting">робоча зустріч</string>
+    <string name="events__hiking">похід</string>
+    <string name="events__beach_party">пляжна вечірка</string>
+    <string name="events__gym">спортзал</string>
+    <string name="events__formal_event">офіційна подія</string>
+    <string name="events__home_relax">відпочинок вдома</string>
+    <string name="events__sport_training">спортивні тренування</string>
+
     <!-- Error Display -->
     <string name="error__io_message">
         Помилка мережі - перевірте підключення до Інтернету

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -34,7 +35,7 @@ import com.olehmaliuta.clothesadvisor.ui.viewmodels.RecommendationViewModel
 import kotlinx.coroutines.delay
 
 @Composable
-fun CitySearchInput(
+fun LocationSearchInput(
     query: String,
     value: LocationInfo?,
     viewModel: RecommendationViewModel,
@@ -75,7 +76,7 @@ fun CitySearchInput(
                     )
             ) {
                 Text(
-                    text = "City not selected",
+                    text = "Location not selected",
                     color = MaterialTheme.colorScheme.onErrorContainer,
                     modifier = Modifier
                         .padding(vertical = 5.dp, horizontal = 7.dp)
@@ -127,7 +128,7 @@ fun CitySearchInput(
     OutlinedTextField(
         value = query,
         onValueChange = { onQueryChange(it) },
-        label = { Text("Search and select a city") },
+        label = { Text("Search and select a location") },
         singleLine = true,
         enabled = isEnabled,
         modifier = Modifier.fillMaxWidth()
@@ -138,7 +139,10 @@ fun CitySearchInput(
 
         Column {
             if (viewModel.locationSearchingState is ApiState.Loading) {
-                CircularProgressIndicator()
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .size(30.dp)
+                )
             } else if (viewModel.locationSearchingState is ApiState.Error) {
                 Text(
                     text = error,
