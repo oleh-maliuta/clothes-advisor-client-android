@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
@@ -44,14 +45,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
+import com.olehmaliuta.clothesadvisor.R
 import com.olehmaliuta.clothesadvisor.data.http.security.ApiState
 import com.olehmaliuta.clothesadvisor.data.http.security.AuthState
 import com.olehmaliuta.clothesadvisor.ui.components.AcceptCancelDialog
@@ -65,6 +67,7 @@ import com.olehmaliuta.clothesadvisor.navigation.Router
 import com.olehmaliuta.clothesadvisor.utils.FileTool
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.AuthViewModel
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.ClothingItemViewModel
+import com.olehmaliuta.clothesadvisor.utils.AppConstants
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -76,44 +79,6 @@ fun EditClothingItemScreen(
     clothingItemViewModel: ClothingItemViewModel
 ) {
     val context = LocalContext.current
-
-    val seasons = mapOf(
-        "spring" to "Spring",
-        "summer" to "Summer",
-        "autumn" to "Autumn",
-        "winter" to "Winter",
-    )
-    var categories = mapOf(
-        "tshirt" to "t-shirt",
-        "pants" to "pants",
-        "jacket" to "jacket",
-        "dress" to "dress",
-        "skirt" to "skirt",
-        "shorts" to "shorts",
-        "hoodie" to "hoodie",
-        "sweater" to "sweater",
-        "coat" to "coat",
-        "blouse" to "blouse",
-        "shoes" to "shoes",
-        "accessories" to "accessories",
-        "boots" to "boots",
-        "sneakers" to "sneakers",
-        "sandals" to "sandals",
-        "hat" to "hat",
-        "scarf" to "scarf",
-        "gloves" to "gloves",
-        "socks" to "socks",
-        "underwear" to "underwear",
-        "swimwear" to "swimwear",
-        "belt" to "belt",
-        "bag" to "bag",
-        "watch" to "watch",
-        "jeans" to "jeans",
-        "leggings" to "leggings",
-        "tank_top" to "tank top",
-        "overalls" to "overalls",
-        "beanie" to "beanie",
-    )
 
     val currentItem by clothingItemViewModel
         .getItemToEdit(clothingItemViewModel.idOfItemToEdit.value)
@@ -148,6 +113,8 @@ fun EditClothingItemScreen(
             clothingItemViewModel.itemUploadingState !is ApiState.Loading &&
             clothingItemViewModel.itemDeletingState !is ApiState.Loading
 
+    val errorMessageTitle = stringResource(R.string.edit_clothing_item__error_message_title)
+
     LaunchedEffect(currentItem) {
         currentItem?.let { item ->
             val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
@@ -172,7 +139,7 @@ fun EditClothingItemScreen(
                 clothingItemViewModel.idOfItemToEdit.value = apiState.data
             }
             is ApiState.Error -> {
-                okDialogTitle = "Error"
+                okDialogTitle = errorMessageTitle
                 okDialogMessage = apiState.message
             }
             else -> {}
@@ -185,7 +152,7 @@ fun EditClothingItemScreen(
                 router.navigateBack()
             }
             is ApiState.Error -> {
-                okDialogTitle = "Error"
+                okDialogTitle = errorMessageTitle
                 okDialogMessage = apiState.message
             }
             else -> {}
@@ -198,7 +165,7 @@ fun EditClothingItemScreen(
                 imageUri = apiState.data.toUri().toString()
             }
             is ApiState.Error -> {
-                okDialogTitle = "Error"
+                okDialogTitle = errorMessageTitle
                 okDialogMessage = apiState.message
             }
             else -> {}
@@ -216,7 +183,8 @@ fun EditClothingItemScreen(
     if (currentItem != null) {
         AcceptCancelDialog(
             isOpen = isDeleteAcceptDialogOpen,
-            title = "Delete the clothing item",
+            title = stringResource(
+                R.string.edit_clothing_item__delete_item_message_title),
             onDismissRequest = {
                 isDeleteAcceptDialogOpen = false
             },
@@ -224,10 +192,10 @@ fun EditClothingItemScreen(
                 clothingItemViewModel
                     .deleteClothingItem(currentItem!!.id)
             },
-            acceptText = "Accept",
         ) {
             Text(
-                text = "Are you sure you want to delete the item?",
+                text = stringResource(
+                    R.string.edit_clothing_item__delete_item_message_description),
                 textAlign = TextAlign.Justify
             )
         }
@@ -238,16 +206,9 @@ fun EditClothingItemScreen(
         currentItem == null
         ) {
         Spacer(modifier = Modifier.height(10.dp))
-        Text(
-            text = "Loading...",
-            textAlign = TextAlign.Center,
+        CircularProgressIndicator(
             modifier = Modifier
-                .fillMaxWidth(),
-            style = TextStyle(
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Bold,
-                letterSpacing = 1.sp,
-                lineHeight = 30.sp)
+                .size(40.dp)
         )
     } else {
         Column(
@@ -260,7 +221,8 @@ fun EditClothingItemScreen(
         ) {
             Text(
                 text = if (currentItem == null)
-                    "Add New Item" else "Edit Item",
+                    stringResource(R.string.edit_clothing_item__new__title) else
+                        stringResource(R.string.edit_clothing_item__edit__title),
                 textAlign = TextAlign.Center,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
@@ -272,7 +234,7 @@ fun EditClothingItemScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Image",
+                text = stringResource(R.string.edit_clothing_item__image__title),
                 textAlign = TextAlign.Center,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
@@ -294,14 +256,19 @@ fun EditClothingItemScreen(
                         !is ApiState.Success
                 ) {
                 Button(
-                    modifier = Modifier
-                        .fillMaxWidth(),
                     onClick = {
                         imageUri = currentItem!!.filename
                     },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth(),
                 ) {
                     Text(
-                        text = "Return the original",
+                        text = stringResource(
+                            R.string.edit_clothing_item__image__return_the_original),
                     )
                 }
             }
@@ -330,7 +297,8 @@ fun EditClothingItemScreen(
                                             !is ApiState.Loading,
                         ) {
                             Text(
-                                text = "Remove background",
+                                text = stringResource(
+                                    R.string.edit_clothing_item__image__remove_background),
                             )
                         }
                     }
@@ -352,7 +320,8 @@ fun EditClothingItemScreen(
                                         !is ApiState.Loading,
                     ) {
                         Text(
-                            text = "Remove background (Cancel)",
+                            text = stringResource(
+                                R.string.edit_clothing_item__image__remove_background_cancel),
                         )
                     }
                 }
@@ -365,7 +334,7 @@ fun EditClothingItemScreen(
             )
 
             Text(
-                text = "Main Color",
+                text = stringResource(R.string.edit_clothing_item__color__title),
                 textAlign = TextAlign.Center,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
@@ -387,7 +356,7 @@ fun EditClothingItemScreen(
             )
 
             Text(
-                text = "Text Info",
+                text = stringResource(R.string.edit_clothing_item__text__title),
                 textAlign = TextAlign.Center,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
@@ -400,22 +369,22 @@ fun EditClothingItemScreen(
                         name = it
                     }
                 },
-                label = { Text("Name*") },
+                label = { Text(stringResource(R.string.edit_clothing_item__text__name__label)) },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
                 isError = !isNameValid,
                 supportingText = {
                     if (!isNameValid) {
-                        Text("Name is required")
+                        Text(stringResource(R.string.edit_clothing_item__text__name__not_valid))
                     }
                 }
             )
 
             Box(modifier = Modifier.fillMaxWidth()) {
                 OutlinedTextField(
-                    value = categories[category] ?: "",
+                    value = stringResource(AppConstants.categories.getValue(category)),
                     onValueChange = {},
-                    label = { Text("Category") },
+                    label = { Text(stringResource(R.string.edit_clothing_item__text__category__label)) },
                     modifier = Modifier.fillMaxWidth(),
                     readOnly = true,
                     trailingIcon = {
@@ -439,9 +408,9 @@ fun EditClothingItemScreen(
                     expanded = isCategoryDropMenuOpen,
                     onDismissRequest = { isCategoryDropMenuOpen = false }
                 ) {
-                    categories.forEach { categoryOption ->
+                    AppConstants.categories.forEach { categoryOption ->
                         DropdownMenuItem(
-                            text = { Text(categoryOption.value) },
+                            text = { Text(stringResource(categoryOption.value)) },
                             onClick = {
                                 category = categoryOption.key
                                 isCategoryDropMenuOpen = false
@@ -453,9 +422,9 @@ fun EditClothingItemScreen(
 
             Box(modifier = Modifier.fillMaxWidth()) {
                 OutlinedTextField(
-                    value = seasons[season] ?: "",
+                    value = stringResource(AppConstants.seasons.getValue(season)),
                     onValueChange = {},
-                    label = { Text("Season") },
+                    label = { Text(stringResource(R.string.statistics__overall__season__label)) },
                     modifier = Modifier.fillMaxWidth(),
                     readOnly = true,
                     trailingIcon = {
@@ -479,9 +448,9 @@ fun EditClothingItemScreen(
                     expanded = isSeasonDropMenuOpen,
                     onDismissRequest = { isSeasonDropMenuOpen = false }
                 ) {
-                    seasons.forEach { seasonOption ->
+                    AppConstants.seasons.forEach { seasonOption ->
                         DropdownMenuItem(
-                            text = { Text(seasonOption.value) },
+                            text = { Text(stringResource(seasonOption.value)) },
                             onClick = {
                                 season = seasonOption.key
                                 isSeasonDropMenuOpen = false
@@ -498,13 +467,13 @@ fun EditClothingItemScreen(
                         material = it
                     }
                 },
-                label = { Text("Material*") },
+                label = { Text(stringResource(R.string.edit_clothing_item__text__material__label)) },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
                 isError = !isMaterialValid,
                 supportingText = {
                     if (!isMaterialValid) {
-                        Text("Material is required")
+                        Text(stringResource(R.string.edit_clothing_item__text__material__not_valid))
                     }
                 }
             )
@@ -516,7 +485,7 @@ fun EditClothingItemScreen(
                         brand = it
                     }
                 },
-                label = { Text("Brand") },
+                label = { Text(stringResource(R.string.edit_clothing_item__text__brand__label)) },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -524,7 +493,7 @@ fun EditClothingItemScreen(
             FloatingPointNumberInput(
                 value = price,
                 onValueChange = { price = it },
-                label = "Price",
+                label = stringResource(R.string.edit_clothing_item__text__price__label),
                 modifier = Modifier
                     .fillMaxWidth()
             )
@@ -534,7 +503,7 @@ fun EditClothingItemScreen(
             DatePicker(
                 selectedDate = purchaseDate,
                 onDateSelected = { newDate -> purchaseDate = newDate },
-                label = "Purchase date",
+                label = stringResource(R.string.edit_clothing_item__text__purchase_date__label),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -553,7 +522,7 @@ fun EditClothingItemScreen(
                 )
                 Spacer(Modifier.width(12.dp))
                 Text(
-                    text = "Is favorite",
+                    text = stringResource(R.string.edit_clothing_item__text__is_favorite__label),
                     fontSize = 17.sp
                 )
             }
@@ -609,10 +578,18 @@ fun EditClothingItemScreen(
                     },
                     enabled = isFormValid
                 ) {
-                    Text(
-                        text = if (currentItem == null)
-                            "Add Item" else "Save Changes"
-                    )
+                    if (clothingItemViewModel.itemUploadingState is ApiState.Loading) {
+                        CircularProgressIndicator(
+                            strokeWidth = 3.dp,
+                            modifier = Modifier.size(25.dp)
+                        )
+                    } else {
+                        Text(
+                            text = if (currentItem == null)
+                                stringResource(R.string.edit_clothing_item__add_button) else
+                                stringResource(R.string.edit_clothing_item__save_button)
+                        )
+                    }
                 }
 
                 if (currentItem != null) {
@@ -653,7 +630,7 @@ fun EditClothingItemScreen(
                     modifier = Modifier
                         .testTag("cancel_button")
                 ) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.edit_clothing_item__cancel_button))
                 }
             }
 

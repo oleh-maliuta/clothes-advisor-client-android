@@ -41,6 +41,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
@@ -109,7 +110,7 @@ fun ColorPicker(
 
     AcceptCancelDialog(
         isOpen = isPipetteMenuOpen,
-        title = "Pick a color",
+        title = stringResource(R.string.color_picker__picking__title),
         onDismissRequest = { isPipetteMenuOpen = false },
         onAccept = {
             red = pipetteColor.red
@@ -118,7 +119,6 @@ fun ColorPicker(
             updateColor()
             isPipetteMenuOpen = false
         },
-        acceptText = "Apply"
     ) {
         Column(
             modifier = Modifier
@@ -224,12 +224,12 @@ fun ColorPicker(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "Tap on the image to pick a color",
+                    text = stringResource(R.string.color_picker__picking__instruction),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             } else {
-                Text("No image available for color picking")
+                Text(stringResource(R.string.color_picker__picking__not_available))
             }
         }
     }

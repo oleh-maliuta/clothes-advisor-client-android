@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
+import com.olehmaliuta.clothesadvisor.R
 import com.olehmaliuta.clothesadvisor.data.http.HttpServiceManager
 import com.olehmaliuta.clothesadvisor.data.http.responses.BaseResponse
 import com.olehmaliuta.clothesadvisor.data.http.security.ApiState
@@ -17,6 +18,7 @@ import com.olehmaliuta.clothesadvisor.data.database.entities.ClothingItem
 import com.olehmaliuta.clothesadvisor.data.database.repositories.ClothingItemDaoRepository
 import com.olehmaliuta.clothesadvisor.navigation.StateHandler
 import com.olehmaliuta.clothesadvisor.utils.FileTool
+import com.olehmaliuta.clothesadvisor.utils.LocaleConstants
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -152,7 +154,8 @@ class ClothingItemViewModel(
                         val errorBody = gson.fromJson(
                             response.errorBody()?.string(),
                             BaseResponse::class.java)
-                        itemUploadingState = ApiState.Error(errorBody.detail)
+                        itemUploadingState = ApiState.Error(
+                            LocaleConstants.getString(errorBody.detail.toString()))
                         return@launch
                     }
                 }
@@ -220,7 +223,8 @@ class ClothingItemViewModel(
                         val errorBody = gson.fromJson(
                             response.errorBody()?.string(),
                             BaseResponse::class.java)
-                        itemUploadingState = ApiState.Error(errorBody.detail)
+                        itemUploadingState = ApiState.Error(
+                            LocaleConstants.getString(errorBody.detail.toString()))
                         return@launch
                     }
                 }
@@ -264,7 +268,8 @@ class ClothingItemViewModel(
                             val errorBody = gson.fromJson(
                                 response.errorBody()?.string(),
                                 BaseResponse::class.java)
-                            isFavoriteTogglingState = ApiState.Error(errorBody.detail)
+                            isFavoriteTogglingState = ApiState.Error(
+                                LocaleConstants.getString(errorBody.detail.toString()))
                         }
                         return@launch
                     }
@@ -306,7 +311,8 @@ class ClothingItemViewModel(
                         val errorBody = gson.fromJson(
                             response.errorBody()?.string(),
                             BaseResponse::class.java)
-                        itemDeletingState = ApiState.Error(errorBody.detail)
+                        itemDeletingState = ApiState.Error(
+                            LocaleConstants.getString(errorBody.detail.toString()))
                         return@launch
                     }
                 }
@@ -337,14 +343,15 @@ class ClothingItemViewModel(
                     "${tokenType ?: "bearer"} $token"
                 )
 
-                if (file != null) {
-                    backgroundRemovingState = ApiState.Success(file)
+                backgroundRemovingState = if (file != null) {
+                    ApiState.Success(file)
                 } else {
-                    itemDeletingState = ApiState.Error(
-                        "Could not remove the background.")
+                    ApiState.Error(
+                        context.getString(
+                            R.string.edit_clothing_item__failed_to_remove_bg))
                 }
             } catch (e: Exception) {
-                itemDeletingState = ApiState.Error("Network error: ${e.message}")
+                backgroundRemovingState = ApiState.Error("Network error: ${e.message}")
             }
         }
     }

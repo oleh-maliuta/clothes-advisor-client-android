@@ -23,7 +23,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.olehmaliuta.clothesadvisor.R
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -34,7 +36,7 @@ fun DatePicker(
     selectedDate: Date?,
     onDateSelected: (Date?) -> Unit,
     modifier: Modifier = Modifier,
-    label: String = "Select date",
+    label: String = stringResource(R.string.date_picker__default_label),
     showClearButton: Boolean = true
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
@@ -61,7 +63,8 @@ fun DatePicker(
                 .fillMaxWidth()
         ) {
             Text(
-                text = selectedDate?.let { dateFormatter.format(it) } ?: "Not selected",
+                text = selectedDate?.let { dateFormatter.format(it) }
+                    ?: stringResource(R.string.date_picker__not_selected),
                 modifier = Modifier
                     .weight(1f)
                     .clickable { showDatePicker = true }
@@ -116,12 +119,18 @@ fun DatePicker(
             day
         )
 
-        datePickerDialog.setButton(DatePickerDialog.BUTTON_NEUTRAL, "Clear") { _, _ ->
+        datePickerDialog.setButton(
+            DatePickerDialog.BUTTON_NEUTRAL,
+            stringResource(R.string.date_picker__clear)
+        ) { _, _ ->
             onDateSelected(null)
             showDatePicker = false
         }
 
-        datePickerDialog.setButton(DatePickerDialog.BUTTON_NEGATIVE, "Cancel") { _, _ ->
+        datePickerDialog.setButton(
+            DatePickerDialog.BUTTON_NEGATIVE,
+            stringResource(R.string.date_picker__cancel)
+        ) { _, _ ->
             showDatePicker = false
         }
 

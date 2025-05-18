@@ -74,11 +74,26 @@
     <string name="bottom_bar__statistics__label">Статистика</string>
     <string name="bottom_bar__settings__label">Налаштування</string>
 
-    <!-- Clothes Item Card -->
+    <!-- Clothing Item Card -->
     <string name="clothing_item_card__material">Матеріал: %s</string>
     <string name="clothing_item_card__brand">Бренд: %s</string>
     <string name="clothing_item_card__price">Ціна: %s</string>
     <string name="clothing_item_card__purchase_date">Дата покупки: %s</string>
+
+    <!-- Color Picker -->
+    <string name="color_picker__picking__title">Виберіть колір</string>
+    <string name="color_picker__picking__instruction">Натисніть на зображення, щоб вибрати колір</string>
+    <string name="color_picker__picking__not_available">Немає зображення для вибору кольору.</string>
+
+    <!-- Date picker -->
+    <string name="date_picker__default_label">Виберіть дату</string>
+    <string name="date_picker__not_selected">Не вказано</string>
+    <string name="date_picker__clear">Прибрати</string>
+    <string name="date_picker__cancel">Скасувати</string>
+
+    <!-- Image Picker -->
+    <string name="image_picker__select_image">Натисніть, щоб вибрати зображення</string>
+    <string name="image_picker__permission_required">Потрібен дозвіл для доступу до зображень</string>
 
     <!-- Registration page -->
     <string name="registration__header">Реєстрація</string>
@@ -159,4 +174,31 @@
     <string name="clothes_list__item_limit_reached_message">
         Досягнуто ліміту по кількості елементів. Дозволено максимально %d одиниць одягу на одного користувача.
     </string>
+
+    <!-- Edit Clothing Item Page -->
+    <string name="edit_clothing_item__new__title">Додавання нового елементу</string>
+    <string name="edit_clothing_item__edit__title">Редагування елементу</string>
+    <string name="edit_clothing_item__image__title">Зображення</string>
+    <string name="edit_clothing_item__image__return_the_original">Повернути оригінал</string>
+    <string name="edit_clothing_item__image__remove_background">Видалити фон</string>
+    <string name="edit_clothing_item__image__remove_background_cancel">Видалити фон (Скасувати)</string>
+    <string name="edit_clothing_item__color__title">Основний колір</string>
+    <string name="edit_clothing_item__text__title">Текстова інформація</string>
+    <string name="edit_clothing_item__text__name__label">Назва*</string>
+    <string name="edit_clothing_item__text__name__not_valid">Необхідно вказати назву</string>
+    <string name="edit_clothing_item__text__category__label">Категорія</string>
+    <string name="edit_clothing_item__text__season__label">Сезон</string>
+    <string name="edit_clothing_item__text__material__label">Матеріал*</string>
+    <string name="edit_clothing_item__text__material__not_valid">Необхідно вказати матеріал</string>
+    <string name="edit_clothing_item__text__brand__label">Бренд</string>
+    <string name="edit_clothing_item__text__price__label">Ціна</string>
+    <string name="edit_clothing_item__text__purchase_date__label">Дата покупки</string>
+    <string name="edit_clothing_item__text__is_favorite__label">Улюблений</string>
+    <string name="edit_clothing_item__add_button">Додати</string>
+    <string name="edit_clothing_item__save_button">Зберегти</string>
+    <string name="edit_clothing_item__cancel_button">Скасувати</string>
+    <string name="edit_clothing_item__error_message_title">Помилка</string>
+    <string name="edit_clothing_item__delete_item_message_title">Видалити елемент одягу</string>
+    <string name="edit_clothing_item__delete_item_message_description">Ви впевнені, що бажаєте видалити цей елемент?</string>
+    <string name="edit_clothing_item__failed_to_remove_bg">Не вдалося видалити фон.</string>
 </resources>

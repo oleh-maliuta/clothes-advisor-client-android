@@ -74,11 +74,26 @@
     <string name="bottom_bar__statistics__label">Statistics</string>
     <string name="bottom_bar__settings__label">Settings</string>
 
-    <!-- Clothes Item Card -->
+    <!-- Clothing Item Card -->
     <string name="clothing_item_card__material">Material: %s</string>
     <string name="clothing_item_card__brand">Brand: %s</string>
     <string name="clothing_item_card__price">Price: %s</string>
     <string name="clothing_item_card__purchase_date">Purchase date: %s</string>
+
+    <!-- Color Picker -->
+    <string name="color_picker__picking__title">Pick a color</string>
+    <string name="color_picker__picking__instruction">Tap on the image to pick a color</string>
+    <string name="color_picker__picking__not_available">No image available for color picking.</string>
+
+    <!-- Date picker -->
+    <string name="date_picker__default_label">Select date</string>
+    <string name="date_picker__not_selected">Not selected</string>
+    <string name="date_picker__clear">Clear</string>
+    <string name="date_picker__cancel">Cancel</string>
+
+    <!-- Image Picker -->
+    <string name="image_picker__select_image">Tap to select image</string>
+    <string name="image_picker__permission_required">Permission needed to access images</string>
 
     <!-- Registration Page -->
     <string name="registration__header">Sign up</string>
@@ -159,4 +174,31 @@
     <string name="clothes_list__item_limit_reached_message">
         Item count limit reached. Maximum %d clothing items allowed per user.
     </string>
+
+    <!-- Edit Clothing Item Page -->
+    <string name="edit_clothing_item__new__title">Add New Item</string>
+    <string name="edit_clothing_item__edit__title">Edit Item</string>
+    <string name="edit_clothing_item__image__title">Image</string>
+    <string name="edit_clothing_item__image__return_the_original">Return the original</string>
+    <string name="edit_clothing_item__image__remove_background">Remove background</string>
+    <string name="edit_clothing_item__image__remove_background_cancel">Remove background (Cancel)</string>
+    <string name="edit_clothing_item__color__title">Main color</string>
+    <string name="edit_clothing_item__text__title">Text Info</string>
+    <string name="edit_clothing_item__text__name__label">Name*</string>
+    <string name="edit_clothing_item__text__name__not_valid">Name is required</string>
+    <string name="edit_clothing_item__text__category__label">Category</string>
+    <string name="edit_clothing_item__text__season__label">Season</string>
+    <string name="edit_clothing_item__text__material__label">Material*</string>
+    <string name="edit_clothing_item__text__material__not_valid">Material is required</string>
+    <string name="edit_clothing_item__text__brand__label">Brand</string>
+    <string name="edit_clothing_item__text__price__label">Price</string>
+    <string name="edit_clothing_item__text__purchase_date__label">Purchase date</string>
+    <string name="edit_clothing_item__text__is_favorite__label">Is Favorite</string>
+    <string name="edit_clothing_item__add_button">Add</string>
+    <string name="edit_clothing_item__save_button">Save</string>
+    <string name="edit_clothing_item__cancel_button">Cancel</string>
+    <string name="edit_clothing_item__error_message_title">Error</string>
+    <string name="edit_clothing_item__delete_item_message_title">Delete the clothing item</string>
+    <string name="edit_clothing_item__delete_item_message_description">Are you sure you want to delete the item?</string>
+    <string name="edit_clothing_item__failed_to_remove_bg">Could not remove the background.</string>
 </resources>

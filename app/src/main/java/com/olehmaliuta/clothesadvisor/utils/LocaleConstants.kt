@@ -48,6 +48,21 @@ object LocaleConstants {
         "Password successfully updated" to mapOf(
             "uk" to "Пароль успішно оновлено"
         ),
+        "Item limit reached. Maximum 100 clothing items allowed per user." to mapOf(
+            "uk" to "Обмеження кількості елементів. Максимально 100 елементів одягу дозволено на одного користувача."
+        ),
+        "Invalid color values" to mapOf(
+            "uk" to "Недійсні значення кольору"
+        ),
+        "Clothing item added successfully." to mapOf(
+            "uk" to "Елемент одягу було успішно додано."
+        ),
+        "Clothing item updated successfully." to mapOf(
+            "uk" to "Елемент одягу було успішно оновлено."
+        ),
+        "Clothing item not found" to mapOf(
+            "uk" to "Елемент одягу не знайдено"
+        ),
     )
 
     private val langCodeKeyAlternatives = listOf<Pair<String, String>>(

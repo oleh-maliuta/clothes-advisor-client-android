@@ -35,11 +35,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
+import com.olehmaliuta.clothesadvisor.R
 import com.olehmaliuta.clothesadvisor.utils.FileTool
 
 @Composable
@@ -129,14 +131,14 @@ fun ImagePicker(
                         contentDescription = "Add image",
                         modifier = Modifier.size(48.dp)
                     )
-                    Text("Tap to select image")
+                    Text(stringResource(R.string.image_picker__select_image))
                 }
             }
         }
 
         if (!hasPermission) {
             Text(
-                text = "Permission needed to access images",
+                text = stringResource(R.string.image_picker__permission_required),
                 color = MaterialTheme.colorScheme.error,
                 modifier = Modifier.padding(top = 8.dp)
             )
