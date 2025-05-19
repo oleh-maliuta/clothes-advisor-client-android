@@ -63,11 +63,11 @@ import com.olehmaliuta.clothesadvisor.ui.components.ColorPicker
 import com.olehmaliuta.clothesadvisor.ui.components.DateTimePicker
 import com.olehmaliuta.clothesadvisor.navigation.Router
 import com.olehmaliuta.clothesadvisor.navigation.Screen
-import com.olehmaliuta.clothesadvisor.types.LocationInfo
-import com.olehmaliuta.clothesadvisor.ui.components.LocationSearchInput
+import com.olehmaliuta.clothesadvisor.ui.components.OsmLocationPickerDialog
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.AuthViewModel
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.RecommendationViewModel
 import com.olehmaliuta.clothesadvisor.utils.AppConstants
+import org.osmdroid.util.GeoPoint
 import java.util.Date
 
 @Composable
@@ -96,8 +96,8 @@ private fun ContentForUser(
     recommendationViewModel: RecommendationViewModel
 ) {
     var useCurrentLocation by remember { mutableStateOf(true) }
-    var location by remember { mutableStateOf<LocationInfo?>(null) }
-    var locationInputValue by remember { mutableStateOf("") }
+    var location by remember { mutableStateOf<GeoPoint?>(null) }
+    var address by remember { mutableStateOf<String?>(null) }
     var dateAndTime by remember { mutableStateOf<Date>(Date()) }
     var mainColor by remember { mutableStateOf(Color.Black) }
     var palettes by remember { mutableStateOf(emptySet<String>()) }
@@ -105,6 +105,17 @@ private fun ContentForUser(
     var considerFavorites by remember { mutableStateOf(true) }
 
     var isEventTypeDropMenuOpen by remember { mutableStateOf(false) }
+    var isLocationPickerOpen by remember { mutableStateOf(false) }
+
+    OsmLocationPickerDialog(
+        isOpen = isLocationPickerOpen,
+        onLocationSelected = { geoPoint, selectedAddress ->
+            location = geoPoint
+            address = selectedAddress
+            isLocationPickerOpen = false
+        },
+        onDismiss = { isLocationPickerOpen = false }
+    )
 
     Column(
         modifier = Modifier
@@ -131,16 +142,50 @@ private fun ContentForUser(
             )
         }
 
-        Spacer(modifier = Modifier.height(10.dp))
+        if (!useCurrentLocation) {
+            Spacer(modifier = Modifier.height(10.dp))
 
-        LocationSearchInput(
-            query = locationInputValue,
-            value = location,
-            viewModel = recommendationViewModel,
-            isEnabled = !useCurrentLocation,
-            onQueryChange = { locationInputValue = it },
-            onLocationSelect = { location = it }
-        )
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .padding(8.dp),
+            ) {
+                Button(
+                    onClick = { isLocationPickerOpen = true },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Select Location")
+                }
+
+                if (location != null) {
+                    Spacer(Modifier.height(16.dp))
+
+                    Text(
+                        text = "Latitude: ${location!!.latitude}",
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Text(
+                        text = "Longitude: ${location!!.longitude}",
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    address?.let {
+                        Spacer(Modifier.height(8.dp))
+
+                        Text(
+                            text = "Address: $it",
+                            textAlign = TextAlign.Center,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
+        }
 
         Spacer(modifier = Modifier.height(30.dp))
 

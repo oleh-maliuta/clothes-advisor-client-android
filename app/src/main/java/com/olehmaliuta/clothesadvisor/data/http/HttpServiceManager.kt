@@ -1,23 +1,18 @@
 package com.olehmaliuta.clothesadvisor.data.http
 
 import android.content.Context
-import com.olehmaliuta.clothesadvisor.types.LocationInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
-import org.json.JSONArray
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
-import java.util.Locale
-
 
 object HttpServiceManager {
     const val BASE_URL = "http://10.0.2.2:8000/"
-    const val NOMINATIM_SEARCH_URL = "https://nominatim.openstreetmap.org/search"
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
@@ -75,56 +70,6 @@ object HttpServiceManager {
                 } else {
                     file
                 }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
-    }
-
-    suspend fun searchLocations(
-        query: String,
-        limit: Int
-    ): List<LocationInfo>? = withContext(Dispatchers.IO) {
-        try {
-            val request = Request.Builder()
-                .url(
-                    NOMINATIM_SEARCH_URL +
-                            "?q=$query" +
-                            "&format=json" +
-                            "&featureType=city" +
-                            "&addressdetails=1" +
-                            "&namedetails=1" +
-                            "&limit=$limit")
-                .addHeader("Accept-Language", Locale.getDefault().language)
-                .addHeader("User-Agent", "ClothesAdvisor/1.0")
-                .build()
-
-            client.newCall(request).execute().use { response ->
-                if (!response.isSuccessful) return@withContext null
-
-                val jsonArray = JSONArray(response.body?.string() ?: "[]")
-                val suggestions = mutableListOf<LocationInfo>()
-
-                for (i in 0 until jsonArray.length()) {
-                    val item = jsonArray.getJSONObject(i)
-                    val localLocationName = item.getString("name")
-                    val engLocationName = try {
-                        item.getJSONObject("namedetails").getString("name:en")
-                    } catch (_: Exception) {
-                        continue
-                    }
-
-                    suggestions.add(
-                        LocationInfo(
-                            nameEng = engLocationName,
-                            nameLocal = localLocationName,
-                            country = item.getJSONObject("address").getString("country")
-                        )
-                    )
-                }
-
-                suggestions
             }
         } catch (e: Exception) {
             e.printStackTrace()
