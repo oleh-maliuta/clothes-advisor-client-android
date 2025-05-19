@@ -50,6 +50,16 @@
     <string name="events__home_relax">home relax</string>
     <string name="events__sport_training">sport training</string>
 
+    <!-- Permissions -->
+    <string name="permissions__read_media_images__title">Media Image Access Permission Needed</string>
+    <string name="permissions__read_media_images__permanent">You have permanently denied media image access permission. Please enable it in the app settings.</string>
+    <string name="permissions__read_external_storage__title">External Storage Access Permission Needed</string>
+    <string name="permissions__read_external_storage__permanent">You have permanently denied external storage access permission. Please enable it in the app settings.</string>
+    <string name="permissions__reason__select_images">It is required to be able to select the images on the device.</string>
+    <string name="permissions__permanent__required">Permission Required</string>
+    <string name="permissions__try_again_button">Try again</string>
+    <string name="permissions__open_settings_button">Open Settings</string>
+
     <!-- Error Display -->
     <string name="error__io_message">
         Network error - please check the Internet connection

@@ -111,7 +111,7 @@ fun ColorPicker(
     AcceptCancelDialog(
         isOpen = isPipetteMenuOpen,
         title = stringResource(R.string.color_picker__picking__title),
-        onDismissRequest = { isPipetteMenuOpen = false },
+        onDismiss = { isPipetteMenuOpen = false },
         onAccept = {
             red = pipetteColor.red
             green = pipetteColor.green
@@ -234,7 +234,9 @@ fun ColorPicker(
         }
     }
 
-    Column(modifier = modifier) {
+    Column(
+        modifier = modifier
+    ) {
         Row {
             if (imageUri != null) {
                 IconButton(

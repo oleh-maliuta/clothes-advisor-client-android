@@ -128,7 +128,7 @@ fun ClothesListScreen(
     AcceptCancelDialog(
         isOpen = isFilterDialogOpen,
         title = stringResource(R.string.clothes_list__filters__title),
-        onDismissRequest = { isFilterDialogOpen = false },
+        onDismiss = { isFilterDialogOpen = false },
         onAccept = {
             seasonFilter = selectedSeasons
                 .filter { it.isSelected }

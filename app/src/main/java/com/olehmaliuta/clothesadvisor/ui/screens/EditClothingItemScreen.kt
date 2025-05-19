@@ -185,7 +185,7 @@ fun EditClothingItemScreen(
             isOpen = isDeleteAcceptDialogOpen,
             title = stringResource(
                 R.string.edit_clothing_item__delete_item_message_title),
-            onDismissRequest = {
+            onDismiss = {
                 isDeleteAcceptDialogOpen = false
             },
             onAccept = {

@@ -1,9 +1,12 @@
 package com.olehmaliuta.clothesadvisor.ui.components
 
 import android.Manifest
+import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
+import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -24,7 +27,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,6 +39,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
@@ -51,12 +54,28 @@ fun ImagePicker(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    var hasPermission by remember { mutableStateOf(false) }
+    val requiredPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        Manifest.permission.READ_MEDIA_IMAGES
+    } else {
+        Manifest.permission.READ_EXTERNAL_STORAGE
+    }
+
+    var showRationale by remember { mutableStateOf(false) }
+    var showPermanentDenial by remember { mutableStateOf(false) }
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { granted ->
-        hasPermission = granted
+        if (!granted) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    context as Activity,
+                    requiredPermission
+                )) {
+                showRationale = true
+            } else {
+                showPermanentDenial = true
+            }
+        }
     }
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
@@ -68,14 +87,39 @@ fun ImagePicker(
         onImageSelected(uri)
     }
 
-    LaunchedEffect(Unit) {
-        val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            Manifest.permission.READ_MEDIA_IMAGES
-        } else {
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        }
-        hasPermission = ContextCompat.checkSelfPermission(context, permission) ==
-                PackageManager.PERMISSION_GRANTED
+    AcceptCancelDialog(
+        isOpen = showRationale,
+        title = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            stringResource(R.string.permissions__read_media_images__title) else
+            stringResource(R.string.permissions__read_external_storage__title),
+        onDismiss = { showRationale = false },
+        onAccept = {
+            showRationale = false
+            permissionLauncher.launch(requiredPermission)
+        },
+        acceptText = stringResource(R.string.permissions__try_again_button),
+    ) {
+        Text(stringResource(R.string.permissions__reason__select_images))
+    }
+
+    AcceptCancelDialog(
+        isOpen = showPermanentDenial,
+        title = stringResource(R.string.permissions__permanent__required),
+        onDismiss = { showPermanentDenial = false },
+        onAccept = {
+            showPermanentDenial = false
+
+            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                data = Uri.fromParts("package", context.packageName, null)
+            }
+            context.startActivity(intent)
+        },
+        acceptText = stringResource(R.string.permissions__open_settings_button),
+    ) {
+        Text(if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            stringResource(R.string.permissions__read_media_images__permanent) else
+            stringResource(R.string.permissions__read_external_storage__permanent)
+        )
     }
 
     Column(modifier = modifier) {
@@ -86,15 +130,22 @@ fun ImagePicker(
                 .clip(RoundedCornerShape(8.dp))
                 .background(MaterialTheme.colorScheme.surfaceVariant)
                 .clickable {
-                    if (hasPermission) {
-                        imagePickerLauncher.launch("image/*")
-                    } else {
-                        val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                            Manifest.permission.READ_MEDIA_IMAGES
-                        } else {
-                            Manifest.permission.READ_EXTERNAL_STORAGE
+                    when {
+                        ContextCompat.checkSelfPermission(
+                            context,
+                            requiredPermission
+                        ) == PackageManager.PERMISSION_GRANTED -> {
+                            imagePickerLauncher.launch("image/*")
                         }
-                        permissionLauncher.launch(permission)
+                        ActivityCompat.shouldShowRequestPermissionRationale(
+                            context as Activity,
+                            requiredPermission
+                        ) -> {
+                            showRationale = true
+                        }
+                        else -> {
+                            permissionLauncher.launch(requiredPermission)
+                        }
                     }
                 },
             contentAlignment = Alignment.Center
@@ -136,7 +187,8 @@ fun ImagePicker(
             }
         }
 
-        if (!hasPermission) {
+        if (ContextCompat.checkSelfPermission(context, requiredPermission) !=
+            PackageManager.PERMISSION_GRANTED) {
             Text(
                 text = stringResource(R.string.image_picker__permission_required),
                 color = MaterialTheme.colorScheme.error,

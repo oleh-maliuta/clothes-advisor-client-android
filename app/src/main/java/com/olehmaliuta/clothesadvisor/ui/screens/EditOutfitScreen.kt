@@ -158,7 +158,7 @@ fun EditOutfitScreen(
         AcceptCancelDialog(
             isOpen = isDeleteAcceptDialogOpen,
             title = "Delete the outfit",
-            onDismissRequest = {
+            onDismiss = {
                 isDeleteAcceptDialogOpen = false
             },
             onAccept = {

@@ -13,7 +13,7 @@ import com.olehmaliuta.clothesadvisor.R
 fun AcceptCancelDialog(
     isOpen: Boolean,
     title: String,
-    onDismissRequest: () -> Unit,
+    onDismiss: () -> Unit,
     onAccept: () -> Unit,
     acceptText: String = stringResource(R.string.accept_cancel_dialog__accept_button),
     cancelText: String = stringResource(R.string.accept_cancel_dialog__cancel_button),
@@ -25,7 +25,7 @@ fun AcceptCancelDialog(
     }
 
     AlertDialog(
-        onDismissRequest = onDismissRequest,
+        onDismissRequest = onDismiss,
         title = { Text(title) },
         text = { content() },
         confirmButton = {
@@ -38,7 +38,7 @@ fun AcceptCancelDialog(
         },
         dismissButton = {
             Button(
-                onClick = onDismissRequest,
+                onClick = onDismiss,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.tertiary,
                     contentColor = MaterialTheme.colorScheme.onTertiary

@@ -116,7 +116,7 @@ fun LogInScreen(
     AcceptCancelDialog(
         isOpen = isForgotPasswordDialogOpen,
         title = stringResource(R.string.authorization__forgot_password_title),
-        onDismissRequest = {
+        onDismiss = {
             isForgotPasswordDialogOpen = false
         },
         onAccept = {

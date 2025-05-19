@@ -98,8 +98,12 @@ private fun ContentForUser(
     var useCurrentLocation by remember { mutableStateOf(true) }
     var location by remember { mutableStateOf<GeoPoint?>(null) }
     var address by remember { mutableStateOf<String?>(null) }
-    var dateAndTime by remember { mutableStateOf<Date>(Date()) }
-    var mainColor by remember { mutableStateOf(Color.Black) }
+
+    var dateAndTime by remember { mutableStateOf(Date()) }
+
+    var includeColor by remember { mutableStateOf(true) }
+    var color by remember { mutableStateOf(Color.Black) }
+
     var palettes by remember { mutableStateOf(emptySet<String>()) }
     var eventType by remember { mutableStateOf<String?>(null) }
     var considerFavorites by remember { mutableStateOf(true) }
@@ -196,11 +200,33 @@ private fun ContentForUser(
 
         Spacer(modifier = Modifier.height(30.dp))
 
-        ColorPicker(
-            color = mainColor,
-            imageUri = null,
-            onColorChange = { newColor -> mainColor = newColor }
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Switch(
+                checked = includeColor,
+                onCheckedChange = { includeColor = !includeColor },
+                modifier = Modifier.semantics {
+                    this.contentDescription =
+                        if (includeColor) "Checked" else "Unchecked"
+                }
+            )
+            Spacer(Modifier.width(12.dp))
+            Text(
+                text = "Include Color",
+                fontSize = 17.sp
+            )
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        if (includeColor) {
+            ColorPicker(
+                color = color,
+                imageUri = null,
+                onColorChange = { newColor -> color = newColor }
+            )
+        }
 
         Spacer(modifier = Modifier.height(30.dp))
 
