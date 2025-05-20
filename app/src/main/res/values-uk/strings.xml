@@ -220,4 +220,22 @@
     <string name="outfits_list__outfit_limit_reached_message">
         Досягнуто ліміту по кількості наборів. Дозволено максимально %d наборів на одного користувача.
     </string>
+
+    <!-- Edit Outfit Page -->
+    <string name="edit_outfit__new__title">Додавання нового нобору</string>
+    <string name="edit_outfit__edit__title">Редагування набору</string>
+    <string name="edit_outfit__main__title">Основна інформація</string>
+    <string name="edit_outfit__main__name__label">Назва*</string>
+    <string name="edit_outfit__main__name__not_valid">Необхідно вказати назву</string>
+    <string name="edit_outfit__add_button">Додати</string>
+    <string name="edit_outfit__save_button">Зберегти</string>
+    <string name="edit_outfit__cancel_button">Скасувати</string>
+    <string name="edit_outfit__select_items__title">Виберіть елементи одягу</string>
+    <string name="edit_outfit__select_items__not_found">Елементи не знайдено</string>
+    <string name="edit_outfit__select_items__done_button">Готово</string>
+    <string name="edit_outfit__mini_card__material">Матеріал: %s</string>
+    <string name="edit_outfit__mini_card__brand">Бренд: %s</string>
+    <string name="edit_outfit__error_message_title">Помилка</string>
+    <string name="edit_outfit__delete_outfit_message_title">Видалити набір</string>
+    <string name="edit_outfit__delete_outfit_message_description">Ви впевнені, що бажаєте видалити цей набір?</string>
 </resources>

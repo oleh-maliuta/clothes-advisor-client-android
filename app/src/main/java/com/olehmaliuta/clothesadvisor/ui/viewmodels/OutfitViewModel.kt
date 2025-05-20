@@ -19,6 +19,7 @@ import com.olehmaliuta.clothesadvisor.data.database.entities.query.OutfitWithClo
 import com.olehmaliuta.clothesadvisor.data.database.entities.query.OutfitWithClothingItems
 import com.olehmaliuta.clothesadvisor.data.database.repositories.OutfitDaoRepository
 import com.olehmaliuta.clothesadvisor.navigation.StateHandler
+import com.olehmaliuta.clothesadvisor.utils.LocaleConstants
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
@@ -106,7 +107,8 @@ class OutfitViewModel(
                         val errorBody = gson.fromJson(
                             response.errorBody()?.string(),
                             BaseResponse::class.java)
-                        outfitUploadingState = ApiState.Error(errorBody.detail)
+                        outfitUploadingState = ApiState.Error(
+                            LocaleConstants.getString(errorBody.detail.toString()))
                         return@launch
                     }
                 }
@@ -156,7 +158,8 @@ class OutfitViewModel(
                         val errorBody = gson.fromJson(
                             response.errorBody()?.string(),
                             BaseResponse::class.java)
-                        outfitUploadingState = ApiState.Error(errorBody.detail)
+                        outfitUploadingState = ApiState.Error(
+                            LocaleConstants.getString(errorBody.detail.toString()))
                         return@launch
                     }
                 }
@@ -195,7 +198,8 @@ class OutfitViewModel(
                         val errorBody = gson.fromJson(
                             response.errorBody()?.string(),
                             BaseResponse::class.java)
-                        outfitDeletingState = ApiState.Error(errorBody.detail)
+                        outfitDeletingState = ApiState.Error(
+                            LocaleConstants.getString(errorBody.detail.toString()))
                         return@launch
                     }
                 }

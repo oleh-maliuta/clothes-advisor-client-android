@@ -60,8 +60,20 @@ object LocaleConstants {
         "Clothing item updated successfully." to mapOf(
             "uk" to "Елемент одягу було успішно оновлено."
         ),
+        "Clothing combination created successfully." to mapOf(
+            "uk" to "Набір було успішно додано."
+        ),
+        "Clothing combination updated successfully." to mapOf(
+            "uk" to "Набір було успішно оновлено."
+        ),
         "Clothing item not found" to mapOf(
             "uk" to "Елемент одягу не знайдено"
+        ),
+        "Combination not found" to mapOf(
+            "uk" to "Набір не знайдено"
+        ),
+        "Some clothing items from request not found." to mapOf(
+            "uk" to "Деякі елементи одягу із запиту не знайдено."
         ),
     )
 

@@ -29,6 +29,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -52,12 +53,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.olehmaliuta.clothesadvisor.R
 import com.olehmaliuta.clothesadvisor.data.http.security.ApiState
 import com.olehmaliuta.clothesadvisor.ui.components.AcceptCancelDialog
 import com.olehmaliuta.clothesadvisor.ui.components.ClothingItemCard
@@ -66,6 +68,7 @@ import com.olehmaliuta.clothesadvisor.data.database.entities.ClothingItem
 import com.olehmaliuta.clothesadvisor.navigation.Router
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.ClothingItemViewModel
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.OutfitViewModel
+import com.olehmaliuta.clothesadvisor.utils.AppConstants
 
 @Composable
 fun EditOutfitScreen(
@@ -104,13 +107,15 @@ fun EditOutfitScreen(
         }
     }
 
+    val errorMessageTitle = stringResource(R.string.edit_outfit__error_message_title)
+
     LaunchedEffect(outfitViewModel.outfitUploadingState) {
         when (val apiState = outfitViewModel.outfitUploadingState) {
             is ApiState.Success -> {
                 outfitViewModel.idOfOutfitToEdit.value = apiState.data
             }
             is ApiState.Error -> {
-                okDialogTitle = "Error"
+                okDialogTitle = errorMessageTitle
                 okDialogMessage = apiState.message
             }
             else -> {}
@@ -123,7 +128,7 @@ fun EditOutfitScreen(
                 router.navigateBack()
             }
             is ApiState.Error -> {
-                okDialogTitle = "Error"
+                okDialogTitle = errorMessageTitle
                 okDialogMessage = apiState.message
             }
             else -> {}
@@ -157,7 +162,7 @@ fun EditOutfitScreen(
     if (currentOutfit != null) {
         AcceptCancelDialog(
             isOpen = isDeleteAcceptDialogOpen,
-            title = "Delete the outfit",
+            title = stringResource(R.string.edit_outfit__delete_outfit_message_title),
             onDismiss = {
                 isDeleteAcceptDialogOpen = false
             },
@@ -165,10 +170,9 @@ fun EditOutfitScreen(
                 outfitViewModel
                     .deleteOutfit(currentOutfit!!.outfit.id)
             },
-            acceptText = "Accept",
         ) {
             Text(
-                text = "Are you sure you want to delete the outfit?",
+                text = stringResource(R.string.edit_outfit__delete_outfit_message_description),
                 textAlign = TextAlign.Justify
             )
         }
@@ -179,17 +183,16 @@ fun EditOutfitScreen(
         currentOutfit == null
     ) {
         Spacer(modifier = Modifier.height(10.dp))
-        Text(
-            text = "Loading...",
-            textAlign = TextAlign.Center,
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .fillMaxWidth(),
-            style = TextStyle(
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Bold,
-                letterSpacing = 1.sp,
-                lineHeight = 30.sp)
-        )
+                .fillMaxWidth()
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .size(50.dp)
+            )
+        }
     } else {
         Column(
             modifier = Modifier
@@ -201,7 +204,8 @@ fun EditOutfitScreen(
         ) {
             Text(
                 text = if (currentOutfit == null)
-                    "Add New Outfit" else "Edit Outfit",
+                    stringResource(R.string.edit_outfit__new__title) else
+                    stringResource(R.string.edit_outfit__edit__title),
                 textAlign = TextAlign.Center,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
@@ -213,7 +217,7 @@ fun EditOutfitScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Main info",
+                text = stringResource(R.string.edit_outfit__main__title),
                 textAlign = TextAlign.Center,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
@@ -226,13 +230,13 @@ fun EditOutfitScreen(
                         name = it
                     }
                 },
-                label = { Text("Name*") },
+                label = { Text(stringResource(R.string.edit_outfit__main__name__label)) },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
                 isError = !isNameValid,
                 supportingText = {
                     if (!isNameValid) {
-                        Text("Name is required")
+                        Text(stringResource(R.string.edit_outfit__main__name__not_valid))
                     }
                 }
             )
@@ -261,7 +265,8 @@ fun EditOutfitScreen(
                 ) {
                     Text(
                         text = if (currentOutfit == null)
-                            "Add Outfit" else "Save Changes"
+                            stringResource(R.string.edit_outfit__add_button) else
+                            stringResource(R.string.edit_outfit__save_button)
                     )
                 }
 
@@ -303,7 +308,7 @@ fun EditOutfitScreen(
                     modifier = Modifier
                         .testTag("cancel_button")
                 ) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.edit_outfit__cancel_button))
                 }
             }
 
@@ -356,7 +361,7 @@ private fun SelectItemsToOutfitDialog(
 
     AlertDialog(
         onDismissRequest = onConfirm,
-        title = { Text("Select Clothing Items") },
+        title = { Text(stringResource(R.string.edit_outfit__select_items__title)) },
         text = {
             var searchInputValue by remember { mutableStateOf("") }
             var searchQuery by remember { mutableStateOf("") }
@@ -401,18 +406,19 @@ private fun SelectItemsToOutfitDialog(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 if (items == null || selectedCategories == null) {
-                    Text(
-                        text = "Loading",
-                        textAlign = TextAlign.Center,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 8.dp)
-                    )
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .size(50.dp)
+                        )
+                    }
                 } else if (searchQuery.isNotBlank() && items.isNullOrEmpty()) {
                     Text(
-                        text = "Items were not found",
+                        text = stringResource(R.string.edit_outfit__select_items__not_found),
                         textAlign = TextAlign.Center,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
@@ -441,7 +447,7 @@ private fun SelectItemsToOutfitDialog(
                 ),
                 onClick = onConfirm
             ) {
-                Text("Done")
+                Text(stringResource(R.string.edit_outfit__select_items__done_button))
             }
         }
     )
@@ -505,7 +511,8 @@ private fun ClothingItemMiniCard(
                     }
 
                     Text(
-                        text = item.category,
+                        text = stringResource(
+                            AppConstants.categories.getValue(item.category)),
                         fontSize = 14.sp
                     )
                     Text(
@@ -513,7 +520,8 @@ private fun ClothingItemMiniCard(
                         fontSize = 14.sp
                     )
                     Text(
-                        text = item.season,
+                        text = stringResource(
+                            AppConstants.seasons.getValue(item.season)),
                         fontSize = 14.sp
                     )
                     Text(
@@ -544,7 +552,9 @@ private fun ClothingItemMiniCard(
                 Spacer(modifier = Modifier.height(3.dp))
 
                 Text(
-                    text = "Material: ${item.material}",
+                    text = stringResource(
+                        R.string.edit_outfit__mini_card__material,
+                        item.material),
                     fontSize = 14.sp
                 )
 
@@ -552,7 +562,9 @@ private fun ClothingItemMiniCard(
                     Spacer(modifier = Modifier.height(3.dp))
 
                     Text(
-                        text = "Brand: ${item.brand}",
+                        text = stringResource(
+                            R.string.edit_outfit__mini_card__brand,
+                            item.brand),
                         fontSize = 14.sp
                     )
                 }

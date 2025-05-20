@@ -220,4 +220,22 @@
     <string name="outfits_list__outfit_limit_reached_message">
         Outfit count limit reached. Maximum %d outfits allowed per user.
     </string>
+
+    <!-- Edit Outfit Page -->
+    <string name="edit_outfit__new__title">Add New Outfit</string>
+    <string name="edit_outfit__edit__title">Edit Outfit</string>
+    <string name="edit_outfit__main__title">Main Info</string>
+    <string name="edit_outfit__main__name__label">Name*</string>
+    <string name="edit_outfit__main__name__not_valid">Name is required</string>
+    <string name="edit_outfit__add_button">Add</string>
+    <string name="edit_outfit__save_button">Save</string>
+    <string name="edit_outfit__cancel_button">Cancel</string>
+    <string name="edit_outfit__select_items__title">Select Clothing Items</string>
+    <string name="edit_outfit__select_items__not_found">Items were not found</string>
+    <string name="edit_outfit__select_items__done_button">Done</string>
+    <string name="edit_outfit__mini_card__material">Material: %s</string>
+    <string name="edit_outfit__mini_card__brand">Brand: %s</string>
+    <string name="edit_outfit__error_message_title">Error</string>
+    <string name="edit_outfit__delete_outfit_message_title">Delete the outfit</string>
+    <string name="edit_outfit__delete_outfit_message_description">Are you sure you want to delete the outfit?</string>
 </resources>
