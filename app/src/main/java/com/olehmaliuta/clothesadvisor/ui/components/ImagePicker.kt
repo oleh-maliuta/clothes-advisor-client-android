@@ -28,6 +28,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -53,24 +54,33 @@ fun ImagePicker(
     onImageSelected: (Uri?) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
-    val requiredPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        Manifest.permission.READ_MEDIA_IMAGES
+    val requiredPermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+        arrayOf(
+            Manifest.permission.READ_MEDIA_IMAGES,
+            Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED
+        )
+    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        arrayOf(Manifest.permission.READ_MEDIA_IMAGES)
     } else {
-        Manifest.permission.READ_EXTERNAL_STORAGE
+        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
     }
+    val context = LocalContext.current
 
     var showRationale by remember { mutableStateOf(false) }
     var showPermanentDenial by remember { mutableStateOf(false) }
+    var permissionRequestCount by remember { mutableIntStateOf(0) }
 
     val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission()
-    ) { granted ->
-        if (!granted) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(
-                    context as Activity,
-                    requiredPermission
-                )) {
+        contract = ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val allGranted = permissions.any { it.value }
+        if (!allGranted) {
+            if (requiredPermissions.all { permission ->
+                    ActivityCompat.shouldShowRequestPermissionRationale(
+                        context as Activity,
+                        permission
+                    )
+                }) {
                 showRationale = true
             } else {
                 showPermanentDenial = true
@@ -89,13 +99,16 @@ fun ImagePicker(
 
     AcceptCancelDialog(
         isOpen = showRationale,
-        title = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-            stringResource(R.string.permissions__read_media_images__title) else
-            stringResource(R.string.permissions__read_external_storage__title),
+        title = when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU ->
+                stringResource(R.string.permissions__read_media_images__title)
+            else ->
+                stringResource(R.string.permissions__read_external_storage__title)
+        },
         onDismiss = { showRationale = false },
         onAccept = {
             showRationale = false
-            permissionLauncher.launch(requiredPermission)
+            permissionLauncher.launch(requiredPermissions)
         },
         acceptText = stringResource(R.string.permissions__try_again_button),
     ) {
@@ -108,7 +121,6 @@ fun ImagePicker(
         onDismiss = { showPermanentDenial = false },
         onAccept = {
             showPermanentDenial = false
-
             val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
                 data = Uri.fromParts("package", context.packageName, null)
             }
@@ -116,9 +128,13 @@ fun ImagePicker(
         },
         acceptText = stringResource(R.string.permissions__open_settings_button),
     ) {
-        Text(if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-            stringResource(R.string.permissions__read_media_images__permanent) else
-            stringResource(R.string.permissions__read_external_storage__permanent)
+        Text(
+            when {
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU ->
+                    stringResource(R.string.permissions__read_media_images__permanent)
+                else ->
+                    stringResource(R.string.permissions__read_external_storage__permanent)
+            }
         )
     }
 
@@ -130,21 +146,24 @@ fun ImagePicker(
                 .clip(RoundedCornerShape(8.dp))
                 .background(MaterialTheme.colorScheme.surfaceVariant)
                 .clickable {
-                    when {
-                        ContextCompat.checkSelfPermission(
-                            context,
-                            requiredPermission
-                        ) == PackageManager.PERMISSION_GRANTED -> {
-                            imagePickerLauncher.launch("image/*")
-                        }
-                        ActivityCompat.shouldShowRequestPermissionRationale(
-                            context as Activity,
-                            requiredPermission
-                        ) -> {
-                            showRationale = true
-                        }
-                        else -> {
-                            permissionLauncher.launch(requiredPermission)
+                    if (requiredPermissions.any { permission ->
+                            ContextCompat.checkSelfPermission(context, permission) ==
+                                    PackageManager.PERMISSION_GRANTED
+                        }) {
+                        imagePickerLauncher.launch("image/*")
+                    } else if (requiredPermissions.all { permission ->
+                            ActivityCompat.shouldShowRequestPermissionRationale(
+                                context as Activity,
+                                permission
+                            )
+                        }) {
+                        showRationale = true
+                    } else {
+                        if (permissionRequestCount < 2) {
+                            permissionRequestCount++
+                            permissionLauncher.launch(requiredPermissions)
+                        } else {
+                            showPermanentDenial = true
                         }
                     }
                 },
@@ -153,16 +172,14 @@ fun ImagePicker(
             if (!currentImageUri.isNullOrBlank()) {
                 val resultImageUrl = if (currentImageUri.startsWith("http"))
                     currentImageUri.replace("://localhost", "://10.0.2.2") else
-                        currentImageUri
+                    currentImageUri
 
                 AsyncImage(
                     model = ImageRequest.Builder(context)
                         .data(resultImageUrl)
                         .memoryCachePolicy(CachePolicy.DISABLED)
                         .diskCachePolicy(CachePolicy.DISABLED)
-                        .setHeader(
-                            "Cache-Control",
-                            "no-store, no-cache, must-revalidate")
+                        .setHeader("Cache-Control", "no-store, no-cache, must-revalidate")
                         .setHeader("Pragma", "no-cache")
                         .setHeader("Expires", "0")
                         .crossfade(true)
@@ -185,15 +202,6 @@ fun ImagePicker(
                     Text(stringResource(R.string.image_picker__select_image))
                 }
             }
-        }
-
-        if (ContextCompat.checkSelfPermission(context, requiredPermission) !=
-            PackageManager.PERMISSION_GRANTED) {
-            Text(
-                text = stringResource(R.string.image_picker__permission_required),
-                color = MaterialTheme.colorScheme.error,
-                modifier = Modifier.padding(top = 8.dp)
-            )
         }
 
         if (!currentImageUri.isNullOrBlank()) {

@@ -103,7 +103,6 @@
 
     <!-- Image Picker -->
     <string name="image_picker__select_image">Натисніть, щоб вибрати зображення</string>
-    <string name="image_picker__permission_required">Потрібен дозвіл для доступу до зображень</string>
 
     <!-- Registration page -->
     <string name="registration__header">Реєстрація</string>

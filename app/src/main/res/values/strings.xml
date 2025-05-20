@@ -103,7 +103,6 @@
 
     <!-- Image Picker -->
     <string name="image_picker__select_image">Tap to select image</string>
-    <string name="image_picker__permission_required">Permission needed to access images</string>
 
     <!-- Registration Page -->
     <string name="registration__header">Sign up</string>
