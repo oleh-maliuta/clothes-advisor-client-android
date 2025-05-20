@@ -34,17 +34,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.olehmaliuta.clothesadvisor.R
 import com.olehmaliuta.clothesadvisor.data.database.entities.query.OutfitWithClothingItemsCount
 import com.olehmaliuta.clothesadvisor.ui.components.InfoDialog
 import com.olehmaliuta.clothesadvisor.navigation.Router
 import com.olehmaliuta.clothesadvisor.navigation.Screen
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.OutfitViewModel
+import com.olehmaliuta.clothesadvisor.utils.AppConstants
 
 @Composable
 fun OutfitListScreen(
@@ -88,7 +91,7 @@ fun OutfitListScreen(
                         shape = RoundedCornerShape(28.dp)
                     )
                     .clip(RoundedCornerShape(28.dp)),
-                placeholder = { Text("Search") },
+                placeholder = { Text(stringResource(R.string.outfits_list__search)) },
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Search
                 ),
@@ -135,7 +138,7 @@ fun OutfitListScreen(
         if (outfitCount == 0L) {
             item {
                 InfoMessage(
-                    "You have no outfits at the moment."
+                    stringResource(R.string.outfits_list__info__no_outfits)
                 )
             }
         }
@@ -143,7 +146,7 @@ fun OutfitListScreen(
         if (outfitCount != 0L && searchResults?.isEmpty() == true) {
             item {
                 InfoMessage(
-                    "No outfits were found according to the parameters."
+                    stringResource(R.string.outfits_list__info__no_outfits_found)
                 )
             }
         }
@@ -153,16 +156,20 @@ fun OutfitListScreen(
         modifier = Modifier
             .fillMaxSize()
     ) {
+        val errorMessageTitle = stringResource(R.string.outfits_list__error_message_title)
+        val errorMessageContent = stringResource(
+            R.string.outfits_list__outfit_limit_reached_message,
+            AppConstants.MAX_OUTFITS)
+
         FloatingActionButton(
             onClick = {
                 if (outfitCount != null) {
-                    if (outfitCount!! < 50) {
+                    if (outfitCount!! < AppConstants.MAX_OUTFITS) {
                         outfitViewModel.idOfOutfitToEdit.value = null
                         router.navigate(Screen.EditOutfit.name)
                     } else {
-                        okDialogTitle = "Error"
-                        okDialogMessage = "Item limit reached. " +
-                                "Maximum 50 outfits allowed per user."
+                        okDialogTitle = errorMessageTitle
+                        okDialogMessage = errorMessageContent
                     }
                 }
             },
@@ -201,7 +208,9 @@ fun OutfitCard(
             )
 
             Text(
-                text = "Item count: ${outfit.itemCount}",
+                text = stringResource(
+                    R.string.outfits_list__outfit__item_count,
+                    outfit.itemCount),
                 color = if (outfit.itemCount == 0L)
                     MaterialTheme.colorScheme.error else Color.Unspecified,
                 style = MaterialTheme.typography.bodyLarge

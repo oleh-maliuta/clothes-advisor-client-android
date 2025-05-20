@@ -210,4 +210,14 @@
     <string name="edit_clothing_item__delete_item_message_title">Видалити елемент одягу</string>
     <string name="edit_clothing_item__delete_item_message_description">Ви впевнені, що бажаєте видалити цей елемент?</string>
     <string name="edit_clothing_item__failed_to_remove_bg">Не вдалося видалити фон.</string>
+
+    <!-- Outfit List Page -->
+    <string name="outfits_list__search">Пошук</string>
+    <string name="outfits_list__info__no_outfits">На даний момент у вас немає наборів.</string>
+    <string name="outfits_list__info__no_outfits_found">Жодного набора не було знайдено за даними параметрами.</string>
+    <string name="outfits_list__outfit__item_count">Кількість речей: %d</string>
+    <string name="outfits_list__error_message_title">Помилка</string>
+    <string name="outfits_list__outfit_limit_reached_message">
+        Досягнуто ліміту по кількості наборів. Дозволено максимально %d наборів на одного користувача.
+    </string>
 </resources>

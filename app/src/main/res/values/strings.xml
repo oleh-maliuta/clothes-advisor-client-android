@@ -210,4 +210,14 @@
     <string name="edit_clothing_item__delete_item_message_title">Delete the clothing item</string>
     <string name="edit_clothing_item__delete_item_message_description">Are you sure you want to delete the item?</string>
     <string name="edit_clothing_item__failed_to_remove_bg">Could not remove the background.</string>
+
+    <!-- Outfit List Page -->
+    <string name="outfits_list__search">Search</string>
+    <string name="outfits_list__info__no_outfits">You have no outfits at the moment.</string>
+    <string name="outfits_list__info__no_outfits_found">No outfits were found according to the parameters.</string>
+    <string name="outfits_list__outfit__item_count">Item count: %d</string>
+    <string name="outfits_list__error_message_title">Error</string>
+    <string name="outfits_list__outfit_limit_reached_message">
+        Outfit count limit reached. Maximum %d outfits allowed per user.
+    </string>
 </resources>
