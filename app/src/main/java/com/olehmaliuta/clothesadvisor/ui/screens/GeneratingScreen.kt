@@ -1,5 +1,15 @@
 package com.olehmaliuta.clothesadvisor.ui.screens
 
+import android.Manifest
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.LocationManager
+import android.net.Uri
+import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -14,19 +24,24 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Place
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
@@ -38,14 +53,18 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -56,29 +75,48 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import coil.compose.AsyncImage
+import coil.request.CachePolicy
+import coil.request.ImageRequest
+import com.olehmaliuta.clothesadvisor.R
+import com.olehmaliuta.clothesadvisor.data.http.requests.RecommendationRequest
+import com.olehmaliuta.clothesadvisor.data.http.responses.GeneratedItemResponse
+import com.olehmaliuta.clothesadvisor.data.http.responses.GeneratedOutfitResponse
+import com.olehmaliuta.clothesadvisor.data.http.responses.WeatherResponse
+import com.olehmaliuta.clothesadvisor.data.http.security.ApiState
 import com.olehmaliuta.clothesadvisor.data.http.security.AuthState
+import com.olehmaliuta.clothesadvisor.navigation.Router
+import com.olehmaliuta.clothesadvisor.navigation.Screen
 import com.olehmaliuta.clothesadvisor.types.PaletteInfo
+import com.olehmaliuta.clothesadvisor.ui.components.AcceptCancelDialog
 import com.olehmaliuta.clothesadvisor.ui.components.CenteredScrollContainer
 import com.olehmaliuta.clothesadvisor.ui.components.ColorPicker
 import com.olehmaliuta.clothesadvisor.ui.components.DateTimePicker
-import com.olehmaliuta.clothesadvisor.navigation.Router
-import com.olehmaliuta.clothesadvisor.navigation.Screen
+import com.olehmaliuta.clothesadvisor.ui.components.InfoDialog
 import com.olehmaliuta.clothesadvisor.ui.components.OsmLocationPickerDialog
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.AuthViewModel
+import com.olehmaliuta.clothesadvisor.ui.viewmodels.OutfitViewModel
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.RecommendationViewModel
 import com.olehmaliuta.clothesadvisor.utils.AppConstants
 import org.osmdroid.util.GeoPoint
+import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 @Composable
 fun GeneratingScreen(
     router: Router,
     authViewModel: AuthViewModel,
+    outfitViewModel: OutfitViewModel,
     recommendationViewModel: RecommendationViewModel
 ) {
     when (authViewModel.authState.value) {
         is AuthState.Authenticated -> {
             ContentForUser(
+                router = router,
+                outfitViewModel = outfitViewModel,
                 recommendationViewModel = recommendationViewModel
             )
         }
@@ -93,8 +131,15 @@ fun GeneratingScreen(
 
 @Composable
 private fun ContentForUser(
+    router: Router,
+    outfitViewModel: OutfitViewModel,
     recommendationViewModel: RecommendationViewModel
 ) {
+    val context = LocalContext.current
+    val locationManager = context.getSystemService(Context.LOCATION_SERVICE)
+            as LocationManager
+    val requiredPermission = Manifest.permission.ACCESS_COARSE_LOCATION
+
     var useCurrentLocation by remember { mutableStateOf(true) }
     var location by remember { mutableStateOf<GeoPoint?>(null) }
     var address by remember { mutableStateOf<String?>(null) }
@@ -108,8 +153,85 @@ private fun ContentForUser(
     var eventType by remember { mutableStateOf<String?>(null) }
     var considerFavorites by remember { mutableStateOf(true) }
 
+    var weatherResult by remember { mutableStateOf<WeatherResponse?>(null) }
+    var generatedResults by remember {
+        mutableStateOf<List<GeneratedOutfitResponse>?>(null)
+    }
+
     var isEventTypeDropMenuOpen by remember { mutableStateOf(false) }
     var isLocationPickerOpen by remember { mutableStateOf(false) }
+    var okDialogTitle by remember { mutableStateOf("") }
+    var okDialogMessage by remember { mutableStateOf<String?>(null) }
+
+    var showRationale by remember { mutableStateOf(false) }
+    var showPermanentDenial by remember { mutableStateOf(false) }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { isGranted ->
+            if (!isGranted) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(
+                        context as Activity,
+                        requiredPermission
+                    )) {
+                    showRationale = true
+                } else {
+                    showPermanentDenial = true
+                }
+            }
+        }
+    )
+
+    LaunchedEffect(recommendationViewModel.recommendationState) {
+        when (val apiState = recommendationViewModel.recommendationState) {
+            is ApiState.Success -> {
+                weatherResult = apiState.data?.weather
+                generatedResults = apiState.data?.outfits
+            }
+            is ApiState.Error -> {
+                okDialogTitle = "Error"
+                okDialogMessage = apiState.message
+            }
+            else -> {}
+        }
+    }
+
+    InfoDialog(
+        title = okDialogTitle,
+        content = okDialogMessage,
+        onConfirm = {
+            okDialogMessage = null
+        }
+    )
+
+    AcceptCancelDialog(
+        isOpen = showRationale,
+        title = stringResource(R.string.permissions__access_fine_location__title),
+        onDismiss = { showRationale = false },
+        onAccept = {
+            showRationale = false
+            permissionLauncher.launch(requiredPermission)
+        },
+        acceptText = stringResource(R.string.permissions__try_again_button),
+    ) {
+        Text(stringResource(R.string.permissions__reason__get_location))
+    }
+
+    AcceptCancelDialog(
+        isOpen = showPermanentDenial,
+        title = stringResource(R.string.permissions__permanent__required),
+        onDismiss = { showPermanentDenial = false },
+        onAccept = {
+            showPermanentDenial = false
+            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                data = Uri.fromParts("package", context.packageName, null)
+            }
+            context.startActivity(intent)
+        },
+        acceptText = stringResource(R.string.permissions__open_settings_button),
+    ) {
+        Text(stringResource(R.string.permissions__access_fine_location__permanent))
+    }
 
     OsmLocationPickerDialog(
         isOpen = isLocationPickerOpen,
@@ -153,7 +275,10 @@ private fun ContentForUser(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .background(
+                        color = MaterialTheme.colorScheme.surfaceVariant,
+                        shape = RoundedCornerShape(8.dp)
+                    )
                     .padding(8.dp),
             ) {
                 Button(
@@ -341,7 +466,46 @@ private fun ContentForUser(
         Spacer(modifier = Modifier.height(30.dp))
 
         Button(
-            onClick = {},
+            enabled = if (!useCurrentLocation) location != null else true,
+            onClick = {
+                if (useCurrentLocation && ContextCompat.checkSelfPermission(
+                        context,
+                        requiredPermission
+                    ) != PackageManager.PERMISSION_GRANTED) {
+                    permissionLauncher.launch(requiredPermission)
+                    return@Button
+                }
+
+                val geoData = if (useCurrentLocation) {
+                    val currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+                        ?: locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+                    if (currentLocation != null)
+                        GeoPoint(currentLocation.latitude, currentLocation.longitude)
+                    else {
+                        okDialogTitle = "Error"
+                        okDialogMessage = "Could not get the location of the device."
+                        return@Button
+                    }
+                } else location!!
+
+                val dateFormatter = SimpleDateFormat(
+                    "yyyy-MM-dd HH:mm:ss",
+                    Locale.getDefault())
+
+                recommendationViewModel.recommendations(
+                    RecommendationRequest(
+                        latitude = geoData.latitude,
+                        longitude = geoData.longitude,
+                        targetTime = dateFormatter.format(dateAndTime),
+                        red = (color.red * 255).toInt(),
+                        green = (color.green * 255).toInt(),
+                        blue = (color.blue * 255).toInt(),
+                        paletteType = palettes.toList(),
+                        event = eventType,
+                        includeFavorites = considerFavorites
+                    )
+                )
+            },
             modifier = Modifier
                 .fillMaxWidth()
         ) {
@@ -353,16 +517,125 @@ private fun ContentForUser(
             modifier = Modifier.padding(vertical = 15.dp)
         )
 
-        Text(
-            text = "Generated results will be displayed here",
-            textAlign = TextAlign.Center,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .fillMaxWidth()
-        )
+        if (recommendationViewModel.recommendationState is ApiState.Loading) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .size(50.dp)
+                )
+            }
+        } else {
+            if (weatherResult != null) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant
+                    ),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Column {
+                                Text(
+                                    text = "Temperature",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                                )
+                                Row(
+                                    verticalAlignment = Alignment.Bottom,
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
+                                    Text(
+                                        text = "${weatherResult!!.temp}°",
+                                        style = MaterialTheme.typography.displaySmall,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+                            }
 
-        Spacer(modifier = Modifier.height(15.dp))
+                            if (weatherResult!!.weather != null) {
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+
+                                    AsyncImage(
+                                        model = ImageRequest.Builder(LocalContext.current)
+                                            .data("https://openweathermap.org/img/wn/10d@2x.png")
+                                            .memoryCachePolicy(CachePolicy.DISABLED)
+                                            .diskCachePolicy(CachePolicy.DISABLED)
+                                            .setHeader(
+                                                "Cache-Control",
+                                                "no-store, no-cache, must-revalidate")
+                                            .setHeader("Pragma", "no-cache")
+                                            .setHeader("Expires", "0")
+                                            .crossfade(true)
+                                            .build(),
+                                        contentDescription = weatherResult!!.weather!!,
+                                        modifier = Modifier.size(48.dp),
+                                        error = rememberVectorPainter(Icons.Default.Place)
+                                    )
+                                    Text(
+                                        text = weatherResult!!.weather!!.replaceFirstChar { it.titlecase() },
+                                        style = MaterialTheme.typography.bodyMedium
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (generatedResults == null) {
+                Text(
+                    text = "Generated results will be displayed here",
+                    textAlign = TextAlign.Center,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(15.dp))
+            } else if (generatedResults!!.isEmpty()) {
+                Text(
+                    text = "No outfits generated",
+                    textAlign = TextAlign.Center,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(15.dp))
+            } else {
+                generatedResults?.forEach { outfitInfo ->
+                    OutfitCard(
+                        outfit = outfitInfo,
+                        onSaveClick = {
+                            outfitViewModel.initialItemIds.value = outfitInfo.items
+                                ?.filter { item -> item.id != null }
+                                ?.map { item -> item.id!! }?.toSet() ?: emptySet()
+                            router.navigate(
+                                route = Screen.EditOutfit.name,
+                                apiStatesToRestore = listOf(recommendationViewModel)
+                            )
+                        }
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -620,6 +893,156 @@ private fun SelectedColorPaletteElement(
             Icon(
                 imageVector = Icons.Default.Clear,
                 contentDescription = "Remove Selected Palette"
+            )
+        }
+    }
+}
+
+@Composable
+private fun OutfitCard(
+    outfit: GeneratedOutfitResponse,
+    onSaveClick: () -> Unit
+) {
+    Card(
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        shape = RoundedCornerShape(12.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 10.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            outfit.scoreAvg?.let { score ->
+                val (ratingText, ratingColor) = when {
+                    score >= 0.9 -> "Perfect Fit" to Color(0xFF4CAF50)
+                    score >= 0.7 -> "Good Fit" to Color(0xFF8BC34A)
+                    score >= 0.5 -> "Decent Fit" to Color(0xFFFFC107)
+                    score >= 0.3 -> "Not Ideal" to Color(0xFFFF9800)
+                    else -> "Poor Fit" to Color(0xFFF44336)
+                }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(ratingColor.copy(alpha = 0.2f))
+                            .padding(horizontal = 12.dp, vertical = 6.dp)
+                    ) {
+                        Text(
+                            text = ratingText,
+                            color = ratingColor,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 14.sp
+                        )
+                    }
+
+                    Text(
+                        text = "Score: ${"%.2f".format(score)}",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+
+            // Items grid
+            Text(
+                text = "Outfit Items:",
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                outfit.items?.forEach { item ->
+                    ClothingItemCard(item = item)
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Save button
+            Button(
+                onClick = onSaveClick,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(text = "Save Outfit")
+            }
+        }
+    }
+}
+
+@Composable
+private fun ClothingItemCard(item: GeneratedItemResponse) {
+    Column(
+        modifier = Modifier.width(100.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(
+            modifier = Modifier
+                .size(100.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .background(MaterialTheme.colorScheme.surfaceVariant)
+        ) {
+            if (!item.image.isNullOrEmpty()) {
+                val resultImageUrl = item.image!!.replace(
+                    "://localhost", "://10.0.2.2")
+
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(resultImageUrl)
+                        .memoryCachePolicy(CachePolicy.DISABLED)
+                        .diskCachePolicy(CachePolicy.DISABLED)
+                        .setHeader(
+                            "Cache-Control",
+                            "no-store, no-cache, must-revalidate")
+                        .setHeader("Pragma", "no-cache")
+                        .setHeader("Expires", "0")
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = item.name,
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    error = rememberVectorPainter(Icons.Default.Warning)
+                )
+            } else {
+                Image(
+                    imageVector = Icons.Default.Warning,
+                    contentDescription = "No image",
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        Text(
+            text = item.name ?: "Unknown",
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Bold,
+            maxLines = 1,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        item.category?.let { category ->
+            Text(
+                text = category,
+                fontSize = 10.sp,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                maxLines = 1,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
             )
         }
     }

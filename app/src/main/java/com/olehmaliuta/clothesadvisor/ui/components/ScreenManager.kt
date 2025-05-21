@@ -90,7 +90,9 @@ fun ScreenManager() {
         )
     )
     val recommendationViewModel: RecommendationViewModel = viewModel(
-        factory = RecommendationViewModel.Factory()
+        factory = RecommendationViewModel.Factory(
+            context = context
+        )
     )
 
     // NAVIGATION
@@ -154,6 +156,7 @@ fun ScreenManager() {
             GeneratingScreen(
                 router = router,
                 authViewModel = authViewModel,
+                outfitViewModel = outfitViewModel,
                 recommendationViewModel = recommendationViewModel
             )
         },

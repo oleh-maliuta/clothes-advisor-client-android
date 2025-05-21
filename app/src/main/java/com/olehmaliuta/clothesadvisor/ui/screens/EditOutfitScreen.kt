@@ -77,7 +77,7 @@ fun EditOutfitScreen(
     outfitViewModel: OutfitViewModel
 ) {
     var name by remember { mutableStateOf("") }
-    var itemIds by remember { mutableStateOf(emptySet<Long>()) }
+    var itemIds by remember { mutableStateOf(outfitViewModel.initialItemIds.value) }
 
     val currentOutfit by outfitViewModel
         .getOutfitToEdit(outfitViewModel.idOfOutfitToEdit.value)

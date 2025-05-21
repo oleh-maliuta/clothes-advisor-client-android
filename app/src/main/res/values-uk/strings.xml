@@ -55,7 +55,10 @@
     <string name="permissions__read_media_images__permanent">Ви перманентно заборонили доступ до зображень. Увімкніть його в налаштуваннях додатку.</string>
     <string name="permissions__read_external_storage__title">Потрібен дозвіл на доступ до зовнішнього сховища</string>
     <string name="permissions__read_external_storage__permanent">Ви перманентно заборонили доступ до зовнішньої пам’яті. Увімкніть його в налаштуваннях додатку.</string>
+    <string name="permissions__access_fine_location__title">Потрібен дозвіл на доступ до геоданих</string>
+    <string name="permissions__access_fine_location__permanent">Ви перманентно заборонили доступ до геоданих. Увімкніть його в налаштуваннях додатку.</string>
     <string name="permissions__reason__select_images">Це необхідно для можливості вибору зображень з пристрою.</string>
+    <string name="permissions__reason__get_location">Це необхідно для того, щоб отримати поточне розташування пристрою.</string>
     <string name="permissions__permanent__required">Потрібен дозвіл</string>
     <string name="permissions__try_again_button">Спробувати знову</string>
     <string name="permissions__open_settings_button">Відкрити налаштування</string>
