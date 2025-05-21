@@ -50,6 +50,32 @@
     <string name="events__home_relax">home relax</string>
     <string name="events__sport_training">sport training</string>
 
+    <!-- Palettes -->
+    <string name="palettes__monochromatic__name">Monochromatic</string>
+    <string name="palettes__monochromatic__description">
+        It involves using one color, its tones and shades. Monochromatic color harmony is always a preferred choice. Due to the unique contrast of shades, it makes the design more attractive.
+    </string>
+    <string name="palettes__analogous__name">Analogous</string>
+    <string name="palettes__analogous__description">
+        Analogous palettes are based on colors that are adjacent to each other on the color wheel. Such palettes are used when it is necessary to create a design without contrasts. In website design, this means maintaining color harmony by filling the page background with analogous colors.
+    </string>
+    <string name="palettes__complementary__name">Complementary</string>
+    <string name="palettes__complementary__description">
+        A complementary palette is built on the basis of two opposite colors on the wheel and is used to create a contrasting effect.
+    </string>
+    <string name="palettes__split_complementary__name">Split-complementary</string>
+    <string name="palettes__split_complementary__description">
+        A split-complementary scheme is based on the same contrasting pair of colors, only in this case one of them is split into two adjacent ones.
+    </string>
+    <string name="palettes__triadic__name">Triadic</string>
+    <string name="palettes__triadic__description">
+        A triadic color scheme is constructed from three equidistant colors on the color wheel. This palette allows for both contrast and harmony.
+    </string>
+    <string name="palettes__rectangle__name">Rectangular</string>
+    <string name="palettes__rectangle__description">
+        A rectangular palette includes two pairs of complementary colors. The most experienced designers use it to create fascinating images.
+    </string>
+
     <!-- Permissions -->
     <string name="permissions__read_media_images__title">Media Image Access Permission Needed</string>
     <string name="permissions__read_media_images__permanent">You have permanently denied media image access permission. Please enable it in the app settings.</string>

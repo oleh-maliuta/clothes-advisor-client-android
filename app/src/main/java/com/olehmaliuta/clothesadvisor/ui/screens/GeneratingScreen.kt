@@ -70,7 +70,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -97,8 +96,8 @@ import com.olehmaliuta.clothesadvisor.ui.components.DateTimePicker
 import com.olehmaliuta.clothesadvisor.ui.components.InfoDialog
 import com.olehmaliuta.clothesadvisor.ui.components.OsmLocationPickerDialog
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.AuthViewModel
-import com.olehmaliuta.clothesadvisor.ui.viewmodels.OutfitViewModel
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.RecommendationViewModel
+import com.olehmaliuta.clothesadvisor.ui.viewmodels.StorageViewModel
 import com.olehmaliuta.clothesadvisor.utils.AppConstants
 import org.osmdroid.util.GeoPoint
 import java.text.SimpleDateFormat
@@ -109,14 +108,14 @@ import java.util.Locale
 fun GeneratingScreen(
     router: Router,
     authViewModel: AuthViewModel,
-    outfitViewModel: OutfitViewModel,
+    storageViewModel: StorageViewModel,
     recommendationViewModel: RecommendationViewModel
 ) {
     when (authViewModel.authState.value) {
         is AuthState.Authenticated -> {
             ContentForUser(
                 router = router,
-                outfitViewModel = outfitViewModel,
+                storageViewModel = storageViewModel,
                 recommendationViewModel = recommendationViewModel
             )
         }
@@ -132,7 +131,7 @@ fun GeneratingScreen(
 @Composable
 private fun ContentForUser(
     router: Router,
-    outfitViewModel: OutfitViewModel,
+    storageViewModel: StorageViewModel,
     recommendationViewModel: RecommendationViewModel
 ) {
     val context = LocalContext.current
@@ -624,7 +623,7 @@ private fun ContentForUser(
                     OutfitCard(
                         outfit = outfitInfo,
                         onSaveClick = {
-                            outfitViewModel.initialItemIds.value = outfitInfo.items
+                            storageViewModel.initialItemIds.value = outfitInfo.items
                                 ?.filter { item -> item.id != null }
                                 ?.map { item -> item.id!! }?.toSet() ?: emptySet()
                             router.navigate(
@@ -672,9 +671,8 @@ private fun ContentForGuest(
             ) {
                 Text(
                     text = "Log In",
-                    style = TextStyle(
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold)
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
                 )
             }
 
@@ -693,9 +691,8 @@ private fun ContentForGuest(
             ) {
                 Text(
                     text = "Sign Up",
-                    style = TextStyle(
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold)
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
                 )
             }
         }
@@ -831,7 +828,7 @@ private fun ColorPaletteSelectorCard(
                     .padding(end = 16.dp)
             ) {
                 Text(
-                    text = palette.name,
+                    text = stringResource(palette.nameId),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
@@ -846,7 +843,7 @@ private fun ColorPaletteSelectorCard(
             Spacer(modifier = Modifier.height(10.dp))
 
             Text(
-                text = palette.description,
+                text = stringResource(palette.descriptionId),
                 textAlign = TextAlign.Justify
             )
 
@@ -886,7 +883,7 @@ private fun SelectedColorPaletteElement(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = palette.name,
+                text = stringResource(palette.nameId),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )

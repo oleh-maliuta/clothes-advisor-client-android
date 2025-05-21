@@ -1,7 +1,7 @@
 package com.olehmaliuta.clothesadvisor.types
 
 data class PaletteInfo(
-    val name: String,
-    val description: String,
+    val nameId: Int,
+    val descriptionId: Int,
     val imageId: Int
 )

@@ -38,10 +38,13 @@ class Router(
         }
     }
 
-    fun navigateBack() {
+    fun navigateBack(
+        apiStatesToRestore: List<StateHandler>? = null
+    ) {
         if (!controller.popBackStack()) {
             controller.navigate(startDestination)
         }
+        restoreState(apiStatesToRestore)
     }
 
     @Composable

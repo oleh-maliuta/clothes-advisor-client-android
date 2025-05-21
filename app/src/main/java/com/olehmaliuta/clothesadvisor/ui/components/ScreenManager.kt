@@ -49,6 +49,7 @@ import com.olehmaliuta.clothesadvisor.ui.viewmodels.ClothingItemViewModel
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.OutfitViewModel
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.RecommendationViewModel
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.StatisticsViewModel
+import com.olehmaliuta.clothesadvisor.ui.viewmodels.StorageViewModel
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.UserViewModel
 
 @Composable
@@ -94,6 +95,9 @@ fun ScreenManager() {
             context = context
         )
     )
+    val storageViewModel: StorageViewModel = viewModel(
+        factory = StorageViewModel.Factory()
+    )
 
     // NAVIGATION
     val navController = rememberNavController()
@@ -106,7 +110,8 @@ fun ScreenManager() {
                 clothingItemViewModel,
                 outfitViewModel,
                 statisticsViewModel,
-                recommendationViewModel
+                recommendationViewModel,
+                storageViewModel
             )
         )
     }
@@ -149,14 +154,15 @@ fun ScreenManager() {
             EditOutfitScreen(
                 router = router,
                 clothingItemViewModel = clothingItemViewModel,
-                outfitViewModel = outfitViewModel
+                outfitViewModel = outfitViewModel,
+                storageViewModel = storageViewModel
             )
         },
         Screen.Generate to {
             GeneratingScreen(
                 router = router,
                 authViewModel = authViewModel,
-                outfitViewModel = outfitViewModel,
+                storageViewModel = storageViewModel,
                 recommendationViewModel = recommendationViewModel
             )
         },

@@ -68,16 +68,18 @@ import com.olehmaliuta.clothesadvisor.data.database.entities.ClothingItem
 import com.olehmaliuta.clothesadvisor.navigation.Router
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.ClothingItemViewModel
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.OutfitViewModel
+import com.olehmaliuta.clothesadvisor.ui.viewmodels.StorageViewModel
 import com.olehmaliuta.clothesadvisor.utils.AppConstants
 
 @Composable
 fun EditOutfitScreen(
     router: Router,
     clothingItemViewModel: ClothingItemViewModel,
-    outfitViewModel: OutfitViewModel
+    outfitViewModel: OutfitViewModel,
+    storageViewModel: StorageViewModel
 ) {
     var name by remember { mutableStateOf("") }
-    var itemIds by remember { mutableStateOf(outfitViewModel.initialItemIds.value) }
+    var itemIds by remember { mutableStateOf(storageViewModel.initialItemIds.value) }
 
     val currentOutfit by outfitViewModel
         .getOutfitToEdit(outfitViewModel.idOfOutfitToEdit.value)

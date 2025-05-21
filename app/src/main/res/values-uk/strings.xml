@@ -50,6 +50,32 @@
     <string name="events__home_relax">відпочинок вдома</string>
     <string name="events__sport_training">спортивні тренування</string>
 
+    <!-- Palettes -->
+    <string name="palettes__monochromatic__name">Монохроматична</string>
+    <string name="palettes__monochromatic__description">
+        Має на увазі використання одного кольору, його тональностей і тіней. Монохроматична колірна гармонія завжди виявляється кращим вибором. За рахунок унікального розмаїття відтінків вона робить дизайн привабливішим.
+    </string>
+    <string name="palettes__analogous__name">Аналогова</string>
+    <string name="palettes__analogous__description">
+        Аналогові палітри ґрунтуються на кольорах, що розташовані поряд на кольоровому колі. Такі палітри використовують у випадках, коли потрібно створити дизайн без контрастів. В оформленні сайтів це означає дотримання гармонії кольору за рахунок заповнення фону сторінки аналоговими кольорами.
+    </string>
+    <string name="palettes__complementary__name">Комплементарна</string>
+    <string name="palettes__complementary__description">
+        Комплементарна палітра будується на основі двох протилежних кольорів кола та використовується для створення ефекту контрасту.
+    </string>
+    <string name="palettes__split_complementary__name">Спліт-комплементарна</string>
+    <string name="palettes__split_complementary__description">
+        В основі спліт-комплементарної схеми лежить та ж контрастна пара кольорів, тільки в цьому випадку один з них розбивається на два сусідні.
+    </string>
+    <string name="palettes__triadic__name">Триадична</string>
+    <string name="palettes__triadic__description">
+        Триадична колірна схема будується із трьох рівновіддалених один від одного кольорів кола. За допомогою такої палітри вдається одночасно досягти і розмаїття, і гармонії.
+    </string>
+    <string name="palettes__rectangle__name">Прямокутна</string>
+    <string name="palettes__rectangle__description">
+        Прямокутна гамма включає дві пари комплементарних кольорів. Найбільш досвідчені дизайнери використовують її для створення чарівних зображень.
+    </string>
+
     <!-- Permissions -->
     <string name="permissions__read_media_images__title">Потрібен дозвіл на доступ до зображень</string>
     <string name="permissions__read_media_images__permanent">Ви перманентно заборонили доступ до зображень. Увімкніть його в налаштуваннях додатку.</string>

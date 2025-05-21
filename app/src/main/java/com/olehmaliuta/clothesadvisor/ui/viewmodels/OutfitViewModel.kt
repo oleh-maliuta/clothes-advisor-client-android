@@ -55,15 +55,12 @@ class OutfitViewModel(
         private set
 
     var idOfOutfitToEdit = mutableStateOf<Long?>(null)
-    var initialItemIds = mutableStateOf(setOf<Long>())
 
     val countOutfits = repository.countOutfits()
 
     override fun restoreState() {
         outfitUploadingState = ApiState.Idle
         outfitDeletingState = ApiState.Idle
-
-        initialItemIds.value = emptySet()
     }
 
     fun getOutfitToEdit(id: Long?): Flow<OutfitWithClothingItems?> {
