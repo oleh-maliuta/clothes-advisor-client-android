@@ -124,14 +124,25 @@
     <string name="color_picker__picking__instruction">Натисніть на зображення, щоб вибрати колір</string>
     <string name="color_picker__picking__not_available">Немає зображення для вибору кольору.</string>
 
-    <!-- Date picker -->
+    <!-- Date Picker -->
     <string name="date_picker__default_label">Виберіть дату</string>
     <string name="date_picker__not_selected">Не вказано</string>
     <string name="date_picker__clear">Прибрати</string>
     <string name="date_picker__cancel">Скасувати</string>
 
+    <!-- Date Time Picker -->
+    <string name="date_time_picker__default_label">Виберіть дату та час</string>
+    <string name="date_time_picker__select_date">Виберіть дату</string>
+    <string name="date_time_picker__select_time">Виберіть час</string>
+    <string name="date_time_picker__select_date_then_time">Виберіть час (спочатку виберіть дату)</string>
+    <string name="date_time_picker__cancel_button">Скасувати</string>
+
     <!-- Image Picker -->
     <string name="image_picker__select_image">Натисніть, щоб вибрати зображення</string>
+
+    <!-- OSM Location Picker Dialog -->
+    <string name="osm_location_picker_dialog__select_button">Обрати</string>
+    <string name="osm_location_picker_dialog__cancel_button">Скасувати</string>
 
     <!-- Registration page -->
     <string name="registration__header">Реєстрація</string>
@@ -267,4 +278,24 @@
     <string name="edit_outfit__error_message_title">Помилка</string>
     <string name="edit_outfit__delete_outfit_message_title">Видалити набір</string>
     <string name="edit_outfit__delete_outfit_message_description">Ви впевнені, що бажаєте видалити цей набір?</string>
+
+    <!-- Generating Page -->
+    <string name="generating__location__use_device_location">Використовувати місцезнаходження пристрою</string>
+    <string name="generating__location__select_button">Обрати місцезнаходження</string>
+    <string name="generating__location__latitude">Широта: %s</string>
+    <string name="generating__location__longitude">Довгота: %s</string>
+    <string name="generating__location__address">Адреса: %s</string>
+    <string name="generating__color__include">Включити колір</string>
+    <string name="generating__palettes__title">Обрані палітри</string>
+    <string name="generating__palettes__no_selected">Палітри не вибрано</string>
+    <string name="generating__palettes__dialog__title">Палітри</string>
+    <string name="generating__palettes__dialog__done_button">Готово</string>
+    <string name="generating__event__title">Тип події</string>
+    <string name="generating__favorites__label">Розглядати улюблені предмети</string>
+    <string name="generating__generate_button">Згенерувати набори</string>
+    <string name="generating__guest__title">Вам потрібно авторизуватися, щоб скористатися функцією генерації.</string>
+    <string name="generating__guest__log_in_button">Aвторизуватися</string>
+    <string name="generating__guest__sign_up_button">Зареєструватися</string>
+    <string name="generating__error_message_title">Помилка</string>
+    <string name="generating__location_not_found_message">Не вдалося отримати місцезнаходження пристрою.</string>
 </resources>

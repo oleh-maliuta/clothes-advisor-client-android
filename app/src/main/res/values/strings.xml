@@ -124,14 +124,25 @@
     <string name="color_picker__picking__instruction">Tap on the image to pick a color</string>
     <string name="color_picker__picking__not_available">No image available for color picking.</string>
 
-    <!-- Date picker -->
+    <!-- Date Picker -->
     <string name="date_picker__default_label">Select date</string>
     <string name="date_picker__not_selected">Not selected</string>
     <string name="date_picker__clear">Clear</string>
     <string name="date_picker__cancel">Cancel</string>
 
+    <!-- Date Time Picker -->
+    <string name="date_time_picker__default_label">Select date and time</string>
+    <string name="date_time_picker__select_date">Select date</string>
+    <string name="date_time_picker__select_time">Select time</string>
+    <string name="date_time_picker__select_date_then_time">Select time (Select date first)</string>
+    <string name="date_time_picker__cancel_button">Cancel</string>
+
     <!-- Image Picker -->
     <string name="image_picker__select_image">Tap to select image</string>
+
+    <!-- OSM Location Picker Dialog -->
+    <string name="osm_location_picker_dialog__select_button">Select</string>
+    <string name="osm_location_picker_dialog__cancel_button">Cancel</string>
 
     <!-- Registration Page -->
     <string name="registration__header">Sign up</string>
@@ -267,4 +278,25 @@
     <string name="edit_outfit__error_message_title">Error</string>
     <string name="edit_outfit__delete_outfit_message_title">Delete the outfit</string>
     <string name="edit_outfit__delete_outfit_message_description">Are you sure you want to delete the outfit?</string>
+
+    <!-- Generating Page -->
+    <string name="generating__location__use_device_location">Use the location of the device</string>
+    <string name="generating__location__select_button">Select Location</string>
+    <string name="generating__location__latitude">Latitude: %s</string>
+    <string name="generating__location__longitude">Longitude: %s</string>
+    <string name="generating__location__address">Address: %s</string>
+    <string name="generating__color__include">Include Color</string>
+    <string name="generating__palettes__title">Selected Palettes</string>
+    <string name="generating__palettes__no_selected">No Palettes Selected</string>
+    <string name="generating__palettes__dialog__title">Palettes</string>
+    <string name="generating__palettes__dialog__done_button">Done</string>
+    <string name="generating__event__title">Event Type</string>
+    <string name="generating__favorites__label">Consider Favorite Items</string>
+    <string name="generating__generate_button">Generate Outfits</string>
+    <string name="generating__results__weather__temp">Temperature</string>
+    <string name="generating__guest__title">You need to log in to use the generating feature.</string>
+    <string name="generating__guest__log_in_button">Log in</string>
+    <string name="generating__guest__sign_up_button">Sign up</string>
+    <string name="generating__error_message_title">Error</string>
+    <string name="generating__location_not_found_message">Could not get the location of the device.</string>
 </resources>

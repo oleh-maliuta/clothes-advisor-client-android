@@ -4,16 +4,17 @@ import android.content.Context
 import android.location.Geocoder
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
+import com.olehmaliuta.clothesadvisor.R
 import kotlinx.coroutines.launch
 import org.osmdroid.config.Configuration
 import org.osmdroid.events.MapEventsReceiver
@@ -105,7 +106,7 @@ fun OsmLocationPickerDialog(
                             contentColor = MaterialTheme.colorScheme.onTertiary
                         )
                     ) {
-                        Text("Cancel")
+                        Text(stringResource(R.string.osm_location_picker_dialog__cancel_button))
                     }
                     Spacer(Modifier.width(8.dp))
                     Button(
@@ -118,7 +119,7 @@ fun OsmLocationPickerDialog(
                         },
                         enabled = !isLoading
                     ) {
-                        Text("Select")
+                        Text(stringResource(R.string.osm_location_picker_dialog__cancel_button))
                     }
                 }
             }

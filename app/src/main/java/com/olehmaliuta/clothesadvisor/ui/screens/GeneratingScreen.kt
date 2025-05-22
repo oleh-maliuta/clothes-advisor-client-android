@@ -181,6 +181,8 @@ private fun ContentForUser(
         }
     )
 
+    val errorMessageTitle = stringResource(R.string.generating__error_message_title)
+
     LaunchedEffect(recommendationViewModel.recommendationState) {
         when (val apiState = recommendationViewModel.recommendationState) {
             is ApiState.Success -> {
@@ -188,7 +190,7 @@ private fun ContentForUser(
                 generatedResults = apiState.data?.outfits
             }
             is ApiState.Error -> {
-                okDialogTitle = "Error"
+                okDialogTitle = errorMessageTitle
                 okDialogMessage = apiState.message
             }
             else -> {}
@@ -262,7 +264,7 @@ private fun ContentForUser(
             )
             Spacer(Modifier.width(12.dp))
             Text(
-                text = "Use the location of the device",
+                text = stringResource(R.string.generating__location__use_device_location),
                 fontSize = 17.sp
             )
         }
@@ -284,20 +286,24 @@ private fun ContentForUser(
                     onClick = { isLocationPickerOpen = true },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Select Location")
+                    Text(stringResource(R.string.generating__location__select_button))
                 }
 
                 if (location != null) {
                     Spacer(Modifier.height(16.dp))
 
                     Text(
-                        text = "Latitude: ${location!!.latitude}",
+                        text = stringResource(
+                            R.string.generating__location__latitude,
+                            location!!.latitude),
                         textAlign = TextAlign.Center,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
-                        text = "Longitude: ${location!!.longitude}",
+                        text = stringResource(
+                            R.string.generating__location__longitude,
+                            location!!.longitude),
                         textAlign = TextAlign.Center,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -306,7 +312,9 @@ private fun ContentForUser(
                         Spacer(Modifier.height(8.dp))
 
                         Text(
-                            text = "Address: $it",
+                            text = stringResource(
+                                R.string.generating__location__address,
+                                it),
                             textAlign = TextAlign.Center,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -337,7 +345,7 @@ private fun ContentForUser(
             )
             Spacer(Modifier.width(12.dp))
             Text(
-                text = "Include Color",
+                text = stringResource(R.string.generating__color__include),
                 fontSize = 17.sp
             )
         }
@@ -368,7 +376,7 @@ private fun ContentForUser(
         Spacer(modifier = Modifier.height(30.dp))
 
         Text(
-            text = "Event Type",
+            text = stringResource(R.string.generating__event__title),
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
         )
@@ -410,7 +418,7 @@ private fun ContentForUser(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Clear,
-                            contentDescription = "Clear date",
+                            contentDescription = "Clear event",
                             tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                         )
                     }
@@ -418,7 +426,7 @@ private fun ContentForUser(
 
                 Icon(
                     imageVector = Icons.Default.ArrowDropDown,
-                    contentDescription = "Select date",
+                    contentDescription = "Select event",
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.padding(end = 4.dp)
                 )
@@ -457,12 +465,14 @@ private fun ContentForUser(
             )
             Spacer(Modifier.width(12.dp))
             Text(
-                text = "Consider Favorite Items",
+                text = stringResource(R.string.generating__favorites__label),
                 fontSize = 17.sp
             )
         }
 
         Spacer(modifier = Modifier.height(30.dp))
+
+        val locationNotFoundMessage = stringResource(R.string.generating__location_not_found_message)
 
         Button(
             enabled = if (!useCurrentLocation) location != null else true,
@@ -481,8 +491,8 @@ private fun ContentForUser(
                     if (currentLocation != null)
                         GeoPoint(currentLocation.latitude, currentLocation.longitude)
                     else {
-                        okDialogTitle = "Error"
-                        okDialogMessage = "Could not get the location of the device."
+                        okDialogTitle = errorMessageTitle
+                        okDialogMessage = locationNotFoundMessage
                         return@Button
                     }
                 } else location!!
@@ -496,10 +506,10 @@ private fun ContentForUser(
                         latitude = geoData.latitude,
                         longitude = geoData.longitude,
                         targetTime = dateFormatter.format(dateAndTime),
-                        red = (color.red * 255).toInt(),
-                        green = (color.green * 255).toInt(),
-                        blue = (color.blue * 255).toInt(),
-                        paletteType = palettes.toList(),
+                        red = if (includeColor) (color.red * 255).toInt() else null,
+                        green = if (includeColor) (color.green * 255).toInt() else null,
+                        blue = if (includeColor) (color.blue * 255).toInt() else null,
+                        paletteTypes = palettes.toList(),
                         event = eventType,
                         includeFavorites = considerFavorites
                     )
@@ -508,7 +518,7 @@ private fun ContentForUser(
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            Text("Generate outfits")
+            Text(stringResource(R.string.generating__generate_button))
         }
 
         HorizontalDivider(
@@ -550,7 +560,7 @@ private fun ContentForUser(
                         ) {
                             Column {
                                 Text(
-                                    text = "Temperature",
+                                    text = stringResource(R.string.generating__results__weather__temp),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                                 )
@@ -559,7 +569,7 @@ private fun ContentForUser(
                                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                                 ) {
                                     Text(
-                                        text = "${weatherResult!!.temp}°",
+                                        text = "${weatherResult!!.temp}°C",
                                         style = MaterialTheme.typography.displaySmall,
                                         fontWeight = FontWeight.Bold
                                     )
@@ -570,10 +580,9 @@ private fun ContentForUser(
                                 Column(
                                     horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
-
                                     AsyncImage(
                                         model = ImageRequest.Builder(LocalContext.current)
-                                            .data("https://openweathermap.org/img/wn/10d@2x.png")
+                                            .data("https://openweathermap.org/img/wn/${weatherResult!!.icon}@2x.png")
                                             .memoryCachePolicy(CachePolicy.DISABLED)
                                             .diskCachePolicy(CachePolicy.DISABLED)
                                             .setHeader(
@@ -584,9 +593,17 @@ private fun ContentForUser(
                                             .crossfade(true)
                                             .build(),
                                         contentDescription = weatherResult!!.weather!!,
-                                        modifier = Modifier.size(48.dp),
+                                        modifier = Modifier
+                                            .size(48.dp)
+                                            .background(
+                                                color = Color.Gray,
+                                                shape = RoundedCornerShape(5.dp)
+                                            ),
                                         error = rememberVectorPainter(Icons.Default.Place)
                                     )
+
+                                    Spacer(modifier = Modifier.height(8.dp))
+
                                     Text(
                                         text = weatherResult!!.weather!!.replaceFirstChar { it.titlecase() },
                                         style = MaterialTheme.typography.bodyMedium
@@ -648,7 +665,7 @@ private fun ContentForGuest(
     ) {
         Column {
             Text(
-                text = "You need to log in to use the generating feature.",
+                text = stringResource(R.string.generating__guest__title),
                 textAlign = TextAlign.Center,
                 fontSize = 23.sp,
                 fontWeight = FontWeight.Bold,
@@ -670,7 +687,7 @@ private fun ContentForGuest(
                     .testTag("log_in__button")
             ) {
                 Text(
-                    text = "Log In",
+                    text = stringResource(R.string.generating__guest__log_in_button),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -690,7 +707,7 @@ private fun ContentForGuest(
                     .testTag("sign_up__button")
             ) {
                 Text(
-                    text = "Sign Up",
+                    text = stringResource(R.string.generating__guest__sign_up_button),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -711,7 +728,7 @@ private fun ColorPaletteSelector(
             onDismissRequest = {
                 isSelectionMenuOpen = false
             },
-            title = { Text("Palettes") },
+            title = { Text(stringResource(R.string.generating__palettes__dialog__title)) },
             text = {
                 Column(
                     modifier = Modifier
@@ -736,7 +753,7 @@ private fun ColorPaletteSelector(
                     ),
                     onClick = { isSelectionMenuOpen = false }
                 ) {
-                    Text("Done")
+                    Text(stringResource(R.string.generating__palettes__dialog__done_button))
                 }
             }
         )
@@ -744,7 +761,7 @@ private fun ColorPaletteSelector(
 
     Column {
         Text(
-            text = "Selected Palettes",
+            text = stringResource(R.string.generating__palettes__title),
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
         )
@@ -784,7 +801,7 @@ private fun ColorPaletteSelector(
                 }
             } else {
                 Text(
-                    text = "No palettes selected",
+                    text = stringResource(R.string.generating__palettes__no_selected),
                     textAlign = TextAlign.Center,
                     fontSize = 17.sp,
                     fontWeight = FontWeight.Bold,
@@ -945,7 +962,31 @@ private fun OutfitCard(
                     )
                 }
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(10.dp))
+            }
+
+            outfit.paletteType?.let { palette ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = "Palette:",
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontWeight = FontWeight.Bold,
+                    )
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text(
+                        text = stringResource(AppConstants.palettes.getValue(palette).nameId),
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 12.sp,
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f))
+                            .padding(horizontal = 12.dp, vertical = 6.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.height(10.dp))
             }
 
             // Items grid
@@ -1034,7 +1075,7 @@ private fun ClothingItemCard(item: GeneratedItemResponse) {
 
         item.category?.let { category ->
             Text(
-                text = category,
+                text = stringResource(AppConstants.categories.getValue(category)),
                 fontSize = 10.sp,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                 maxLines = 1,

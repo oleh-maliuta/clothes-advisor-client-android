@@ -4,15 +4,12 @@ import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
-import com.olehmaliuta.clothesadvisor.data.database.entities.Outfit
 import com.olehmaliuta.clothesadvisor.data.http.HttpServiceManager
 import com.olehmaliuta.clothesadvisor.data.http.requests.RecommendationRequest
-import com.olehmaliuta.clothesadvisor.data.http.requests.UploadOutfitRequest
 import com.olehmaliuta.clothesadvisor.data.http.responses.BaseResponse
 import com.olehmaliuta.clothesadvisor.data.http.responses.RecommendationResponse
 import com.olehmaliuta.clothesadvisor.data.http.security.ApiState

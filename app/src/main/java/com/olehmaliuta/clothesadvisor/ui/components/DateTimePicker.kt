@@ -23,7 +23,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.olehmaliuta.clothesadvisor.R
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -34,7 +36,7 @@ fun DateTimePicker(
     selectedDate: Date?,
     onDateSelected: (Date) -> Unit,
     modifier: Modifier = Modifier,
-    label: String = "Select date and time"
+    label: String = stringResource(R.string.date_time_picker__default_label)
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
     var showTimePicker by remember { mutableStateOf(false) }
@@ -70,7 +72,8 @@ fun DateTimePicker(
                     .padding(vertical = 12.dp)
             ) {
                 Text(
-                    text = selectedDate?.let { dateFormatter.format(it) } ?: "Select date",
+                    text = selectedDate?.let { dateFormatter.format(it) } ?:
+                    stringResource(R.string.date_time_picker__select_date),
                     modifier = Modifier.weight(1f)
                 )
                 Icon(
@@ -97,8 +100,8 @@ fun DateTimePicker(
                 Text(
                     text = when {
                         selectedDate != null -> timeFormatter.format(selectedDate)
-                        tempDate != null -> "Select time"
-                        else -> "Select time (Select date first)"
+                        tempDate != null -> stringResource(R.string.date_time_picker__select_time)
+                        else -> stringResource(R.string.date_time_picker__select_date_then_time)
                     },
                     modifier = Modifier.weight(1f)
                 )
@@ -132,7 +135,10 @@ fun DateTimePicker(
             day
         )
 
-        datePickerDialog.setButton(DatePickerDialog.BUTTON_NEGATIVE, "Cancel") { _, _ ->
+        datePickerDialog.setButton(
+            DatePickerDialog.BUTTON_NEGATIVE,
+            stringResource(R.string.date_time_picker__cancel_button)
+        ) { _, _ ->
             showDatePicker = false
         }
 
@@ -164,7 +170,10 @@ fun DateTimePicker(
             false
         )
 
-        timePickerDialog.setButton(TimePickerDialog.BUTTON_NEGATIVE, "Cancel") { _, _ ->
+        timePickerDialog.setButton(
+            TimePickerDialog.BUTTON_NEGATIVE,
+            stringResource(R.string.date_time_picker__cancel_button)
+        ) { _, _ ->
             showTimePicker = false
             tempDate = null
         }
