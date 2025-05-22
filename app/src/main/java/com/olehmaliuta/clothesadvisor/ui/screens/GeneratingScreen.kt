@@ -18,6 +18,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -576,7 +577,7 @@ private fun ContentForUser(
                                 }
                             }
 
-                            if (weatherResult!!.weather != null) {
+                            if (weatherResult!!.id != null) {
                                 Column(
                                     horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
@@ -592,7 +593,7 @@ private fun ContentForUser(
                                             .setHeader("Expires", "0")
                                             .crossfade(true)
                                             .build(),
-                                        contentDescription = weatherResult!!.weather!!,
+                                        contentDescription = weatherResult!!.id!!.toString(),
                                         modifier = Modifier
                                             .size(48.dp)
                                             .background(
@@ -605,7 +606,9 @@ private fun ContentForUser(
                                     Spacer(modifier = Modifier.height(8.dp))
 
                                     Text(
-                                        text = weatherResult!!.weather!!.replaceFirstChar { it.titlecase() },
+                                        text = stringResource(AppConstants.weatherTypes
+                                            .getValue(weatherResult!!.id!!))
+                                            .replaceFirstChar { it.titlecase() },
                                         style = MaterialTheme.typography.bodyMedium
                                     )
                                 }
@@ -617,7 +620,7 @@ private fun ContentForUser(
 
             if (generatedResults == null) {
                 Text(
-                    text = "Generated results will be displayed here",
+                    text = stringResource(R.string.generating__results__hint),
                     textAlign = TextAlign.Center,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
@@ -627,7 +630,7 @@ private fun ContentForUser(
                 Spacer(modifier = Modifier.height(15.dp))
             } else if (generatedResults!!.isEmpty()) {
                 Text(
-                    text = "No outfits generated",
+                    text = stringResource(R.string.generating__results__none),
                     textAlign = TextAlign.Center,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
@@ -929,11 +932,11 @@ private fun OutfitCard(
         ) {
             outfit.scoreAvg?.let { score ->
                 val (ratingText, ratingColor) = when {
-                    score >= 0.9 -> "Perfect Fit" to Color(0xFF4CAF50)
-                    score >= 0.7 -> "Good Fit" to Color(0xFF8BC34A)
-                    score >= 0.5 -> "Decent Fit" to Color(0xFFFFC107)
-                    score >= 0.3 -> "Not Ideal" to Color(0xFFFF9800)
-                    else -> "Poor Fit" to Color(0xFFF44336)
+                    score >= 0.9 -> stringResource(R.string.outfit_generating_score__perfect_fit) to Color(0xFF4CAF50)
+                    score >= 0.7 -> stringResource(R.string.outfit_generating_score__good_fit) to Color(0xFF8BC34A)
+                    score >= 0.5 -> stringResource(R.string.outfit_generating_score__decent_fit) to Color(0xFFFFC107)
+                    score >= 0.3 -> stringResource(R.string.outfit_generating_score__not_ideal) to Color(0xFFFF9800)
+                    else -> stringResource(R.string.outfit_generating_score__poor_fit) to Color(0xFFF44336)
                 }
 
                 Row(
@@ -956,7 +959,9 @@ private fun OutfitCard(
                     }
 
                     Text(
-                        text = "Score: ${"%.2f".format(score)}",
+                        text = stringResource(
+                            R.string.generating__results__outfit__score,
+                            "%.1f".format(score * 100)),
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp
                     )
@@ -970,13 +975,15 @@ private fun OutfitCard(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        text = "Palette:",
+                        text = stringResource(R.string.generating__results__outfit__palette),
                         color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.Bold,
                     )
                     Spacer(modifier = Modifier.width(10.dp))
                     Text(
-                        text = stringResource(AppConstants.palettes.getValue(palette).nameId),
+                        text = stringResource(
+                            AppConstants.palettes[palette]?.nameId ?:
+                            R.string.palettes__none__name),
                         color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.Bold,
                         fontSize = 12.sp,
@@ -989,16 +996,16 @@ private fun OutfitCard(
                 Spacer(modifier = Modifier.height(10.dp))
             }
 
-            // Items grid
             Text(
-                text = "Outfit Items:",
+                text = stringResource(R.string.generating__results__outfit__items),
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
 
-            Row(
+            FlowRow(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 outfit.items?.forEach { item ->
                     ClothingItemCard(item = item)
@@ -1007,12 +1014,11 @@ private fun OutfitCard(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Save button
             Button(
                 onClick = onSaveClick,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = "Save Outfit")
+                Text(stringResource(R.string.generating__results__outfit__save_button))
             }
         }
     }

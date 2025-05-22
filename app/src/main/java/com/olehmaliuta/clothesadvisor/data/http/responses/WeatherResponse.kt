@@ -4,6 +4,6 @@ import com.google.gson.annotations.SerializedName
 
 data class WeatherResponse(
     @SerializedName("temp") var temp: Double? = null,
-    @SerializedName("weather") var weather: String? = null,
+    @SerializedName("id") var id: Int? = null,
     @SerializedName("icon") var icon: String? = null,
 )

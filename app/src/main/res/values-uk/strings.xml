@@ -51,6 +51,7 @@
     <string name="events__sport_training">спортивні тренування</string>
 
     <!-- Palettes -->
+    <string name="palettes__none__name">Немає</string>
     <string name="palettes__monochromatic__name">Монохроматична</string>
     <string name="palettes__monochromatic__description">
         Має на увазі використання одного кольору, його тональностей і тіней. Монохроматична колірна гармонія завжди виявляється кращим вибором. За рахунок унікального розмаїття відтінків вона робить дизайн привабливішим.
@@ -75,6 +76,70 @@
     <string name="palettes__rectangle__description">
         Прямокутна гамма включає дві пари комплементарних кольорів. Найбільш досвідчені дизайнери використовують її для створення чарівних зображень.
     </string>
+
+    <!-- Outfit Generating Score -->
+    <string name="outfit_generating_score__perfect_fit">Ідеально підходить</string>
+    <string name="outfit_generating_score__good_fit">Добре підходить</string>
+    <string name="outfit_generating_score__decent_fit">Непогано підходить</string>
+    <string name="outfit_generating_score__not_ideal">Не ідеальний</string>
+    <string name="outfit_generating_score__poor_fit">Погано підходить</string>
+
+    <!-- Weather types -->
+    <string name="weather_types__200">гроза з невеликим дощем</string>
+    <string name="weather_types__201">гроза з дощем</string>
+    <string name="weather_types__202">гроза з сильним дощем</string>
+    <string name="weather_types__210">невелика гроза</string>
+    <string name="weather_types__211">гроза</string>
+    <string name="weather_types__212">сильна гроза</string>
+    <string name="weather_types__221">нерівномірна гроза</string>
+    <string name="weather_types__230">гроза з невеликою мрякою</string>
+    <string name="weather_types__231">гроза з мрякою</string>
+    <string name="weather_types__232">гроза з сильною мрякою</string>
+    <string name="weather_types__300">невелика мряка</string>
+    <string name="weather_types__301">мряка</string>
+    <string name="weather_types__302">сильна мряка</string>
+    <string name="weather_types__310">невелика мряка з дощем</string>
+    <string name="weather_types__311">мряка з дощем</string>
+    <string name="weather_types__312">сильна мряка з дощем</string>
+    <string name="weather_types__313">дощ з мрякою</string>
+    <string name="weather_types__314">сильний дощ з мрякою</string>
+    <string name="weather_types__321">злива з мрякою</string>
+    <string name="weather_types__500">невеликий дощ</string>
+    <string name="weather_types__501">помірний дощ</string>
+    <string name="weather_types__502">сильний дощ</string>
+    <string name="weather_types__503">дуже сильний дощ</string>
+    <string name="weather_types__504">екстремальний дощ</string>
+    <string name="weather_types__511">крижаний дощ</string>
+    <string name="weather_types__520">невелика злива</string>
+    <string name="weather_types__521">злива</string>
+    <string name="weather_types__522">сильна злива</string>
+    <string name="weather_types__531">нерівномірна злива</string>
+    <string name="weather_types__600">невеликий сніг</string>
+    <string name="weather_types__601">сніг</string>
+    <string name="weather_types__602">сильний сніг</string>
+    <string name="weather_types__611">мокрий сніг</string>
+    <string name="weather_types__612">невеликий мокрий сніг</string>
+    <string name="weather_types__613">мокрий сніг</string>
+    <string name="weather_types__615">невеликий дощ зі снігом</string>
+    <string name="weather_types__616">дощ зі снігом</string>
+    <string name="weather_types__620">невеликий снігопад</string>
+    <string name="weather_types__621">снігопад</string>
+    <string name="weather_types__622">сильний снігопад</string>
+    <string name="weather_types__701">імла</string>
+    <string name="weather_types__711">дим</string>
+    <string name="weather_types__721">серпанок</string>
+    <string name="weather_types__731">пилові вихори</string>
+    <string name="weather_types__741">туман</string>
+    <string name="weather_types__751">пісок</string>
+    <string name="weather_types__761">пил</string>
+    <string name="weather_types__762">вулканічний попіл</string>
+    <string name="weather_types__771">шквали</string>
+    <string name="weather_types__781">торнадо</string>
+    <string name="weather_types__800">ясно</string>
+    <string name="weather_types__801">невелика хмарність: 11–25%</string>
+    <string name="weather_types__802">розсіяні хмари: 25–50%</string>
+    <string name="weather_types__803">переважно хмарно: 51–84%</string>
+    <string name="weather_types__804">хмарно: 85–100%</string>
 
     <!-- Permissions -->
     <string name="permissions__read_media_images__title">Потрібен дозвіл на доступ до зображень</string>
@@ -293,6 +358,13 @@
     <string name="generating__event__title">Тип події</string>
     <string name="generating__favorites__label">Розглядати улюблені предмети</string>
     <string name="generating__generate_button">Згенерувати набори</string>
+    <string name="generating__results__hint">Згенеровані результати відображатимуться тут</string>
+    <string name="generating__results__none">Не було сгенеровано жодного набору</string>
+    <string name="generating__results__weather__temp">Температура</string>
+    <string name="generating__results__outfit__score">Оцінка: %s%%</string>
+    <string name="generating__results__outfit__palette">Палітра:</string>
+    <string name="generating__results__outfit__items">Елементи набору:</string>
+    <string name="generating__results__outfit__save_button">Зберегти набір</string>
     <string name="generating__guest__title">Вам потрібно авторизуватися, щоб скористатися функцією генерації.</string>
     <string name="generating__guest__log_in_button">Aвторизуватися</string>
     <string name="generating__guest__sign_up_button">Зареєструватися</string>

@@ -51,6 +51,7 @@
     <string name="events__sport_training">sport training</string>
 
     <!-- Palettes -->
+    <string name="palettes__none__name">None</string>
     <string name="palettes__monochromatic__name">Monochromatic</string>
     <string name="palettes__monochromatic__description">
         It involves using one color, its tones and shades. Monochromatic color harmony is always a preferred choice. Due to the unique contrast of shades, it makes the design more attractive.
@@ -75,6 +76,70 @@
     <string name="palettes__rectangle__description">
         A rectangular palette includes two pairs of complementary colors. The most experienced designers use it to create fascinating images.
     </string>
+
+    <!-- Outfit Generating Score -->
+    <string name="outfit_generating_score__perfect_fit">Perfect Fit</string>
+    <string name="outfit_generating_score__good_fit">Good Fit</string>
+    <string name="outfit_generating_score__decent_fit">Decent Fit</string>
+    <string name="outfit_generating_score__not_ideal">Not Ideal</string>
+    <string name="outfit_generating_score__poor_fit">Poor Fit</string>
+
+    <!-- Weather types -->
+    <string name="weather_types__200">thunderstorm with light rain</string>
+    <string name="weather_types__201">thunderstorm with rain</string>
+    <string name="weather_types__202">thunderstorm with heavy rain</string>
+    <string name="weather_types__210">light thunderstorm</string>
+    <string name="weather_types__211">thunderstorm</string>
+    <string name="weather_types__212">heavy thunderstorm</string>
+    <string name="weather_types__221">ragged thunderstorm</string>
+    <string name="weather_types__230">thunderstorm with light drizzle</string>
+    <string name="weather_types__231">thunderstorm with drizzle</string>
+    <string name="weather_types__232">thunderstorm with heavy drizzle</string>
+    <string name="weather_types__300">light intensity drizzle</string>
+    <string name="weather_types__301">drizzle</string>
+    <string name="weather_types__302">heavy intensity drizzle</string>
+    <string name="weather_types__310">light intensity drizzle rain</string>
+    <string name="weather_types__311">drizzle rain</string>
+    <string name="weather_types__312">heavy intensity drizzle rain</string>
+    <string name="weather_types__313">shower rain and drizzle</string>
+    <string name="weather_types__314">heavy shower rain and drizzle</string>
+    <string name="weather_types__321">shower drizzle</string>
+    <string name="weather_types__500">light rain</string>
+    <string name="weather_types__501">moderate rain</string>
+    <string name="weather_types__502">heavy intensity rain</string>
+    <string name="weather_types__503">very heavy rain</string>
+    <string name="weather_types__504">extreme rain</string>
+    <string name="weather_types__511">freezing rain</string>
+    <string name="weather_types__520">light intensity shower rain</string>
+    <string name="weather_types__521">shower rain</string>
+    <string name="weather_types__522">heavy intensity shower rain</string>
+    <string name="weather_types__531">ragged shower rain</string>
+    <string name="weather_types__600">light snow</string>
+    <string name="weather_types__601">snow</string>
+    <string name="weather_types__602">heavy snow</string>
+    <string name="weather_types__611">sleet</string>
+    <string name="weather_types__612">light shower sleet</string>
+    <string name="weather_types__613">shower sleet</string>
+    <string name="weather_types__615">light rain and snow</string>
+    <string name="weather_types__616">rain and snow</string>
+    <string name="weather_types__620">light shower snow</string>
+    <string name="weather_types__621">shower snow</string>
+    <string name="weather_types__622">heavy shower snow</string>
+    <string name="weather_types__701">mist</string>
+    <string name="weather_types__711">smoke</string>
+    <string name="weather_types__721">haze</string>
+    <string name="weather_types__731">sand/dust whirls</string>
+    <string name="weather_types__741">fog</string>
+    <string name="weather_types__751">sand</string>
+    <string name="weather_types__761">dust</string>
+    <string name="weather_types__762">volcanic ash</string>
+    <string name="weather_types__771">squalls</string>
+    <string name="weather_types__781">tornado</string>
+    <string name="weather_types__800">clear sky</string>
+    <string name="weather_types__801">few clouds: 11–25%</string>
+    <string name="weather_types__802">scattered clouds: 25–50%</string>
+    <string name="weather_types__803">broken clouds: 51–84%</string>
+    <string name="weather_types__804">overcast clouds: 85–100%</string>
 
     <!-- Permissions -->
     <string name="permissions__read_media_images__title">Media Image Access Permission Needed</string>
@@ -293,7 +358,13 @@
     <string name="generating__event__title">Event Type</string>
     <string name="generating__favorites__label">Consider Favorite Items</string>
     <string name="generating__generate_button">Generate Outfits</string>
+    <string name="generating__results__hint">Generated results will be displayed here</string>
+    <string name="generating__results__none">No outfits generated</string>
     <string name="generating__results__weather__temp">Temperature</string>
+    <string name="generating__results__outfit__score">Score: %s%%</string>
+    <string name="generating__results__outfit__palette">Palette:</string>
+    <string name="generating__results__outfit__items">Outfit Items:</string>
+    <string name="generating__results__outfit__save_button">Save Outfit</string>
     <string name="generating__guest__title">You need to log in to use the generating feature.</string>
     <string name="generating__guest__log_in_button">Log in</string>
     <string name="generating__guest__sign_up_button">Sign up</string>
