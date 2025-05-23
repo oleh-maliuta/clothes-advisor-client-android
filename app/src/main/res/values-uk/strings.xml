@@ -240,6 +240,11 @@
     <string name="settings__account__title">Обліковий запис</string>
     <string name="settings__account__label">Ви увійшли як:</string>
     <string name="settings__account__log_out_button">Вийти</string>
+    <string name="settings__personalization__title">Персоналізація</string>
+    <string name="settings__personalization__language__title">Мова</string>
+    <string name="settings__personalization__language__system">&#60; Системна мова &#62;</string>
+    <string name="settings__personalization__language__en">Англійська (English)</string>
+    <string name="settings__personalization__language__uk">Українська</string>
     <string name="settings__change_email__title">Змінити адресу електронної пошти</string>
     <string name="settings__change_email__new_email_input">Нова електронна пошта</string>
     <string name="settings__change_email__password_input">Пароль</string>
@@ -251,7 +256,6 @@
     <string name="settings__change_password__apply_button">Виконати</string>
     <string name="settings__success_message_title">Успішно</string>
     <string name="settings__error_message_title">Помилка</string>
-    <string name="settings__guest__title">Вам потрібно авторизуватися, щоб побачити меню налаштувань.</string>
     <string name="settings__guest__log_in_button">Aвторизуватися</string>
     <string name="settings__guest__sign_up_button">Зареєструватися</string>
 

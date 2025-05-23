@@ -4,6 +4,7 @@ import com.olehmaliuta.clothesadvisor.R
 import com.olehmaliuta.clothesadvisor.types.PaletteInfo
 import com.olehmaliuta.clothesadvisor.navigation.NavItem
 import com.olehmaliuta.clothesadvisor.navigation.Screen
+import com.olehmaliuta.clothesadvisor.ui.LanguageManager
 
 object AppConstants {
     const val MAX_CLOTHING_ITEMS = 100
@@ -116,6 +117,11 @@ object AppConstants {
             descriptionId = R.string.palettes__rectangle__description,
             imageId = R.drawable.rectangular_palette
         ),
+    )
+    val languages: Map<String, Int> = mapOf(
+        LanguageManager.SYSTEM_DEFAULT_LANGUAGE to R.string.settings__personalization__language__system,
+        "en" to R.string.settings__personalization__language__en,
+        "uk" to R.string.settings__personalization__language__uk,
     )
     val weatherTypes: Map<Int, Int> = mapOf(
         200 to R.string.weather_types__200,

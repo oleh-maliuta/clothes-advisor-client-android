@@ -240,6 +240,11 @@
     <string name="settings__account__title">Account</string>
     <string name="settings__account__label">Logged in as:</string>
     <string name="settings__account__log_out_button">Log out</string>
+    <string name="settings__personalization__title">Personalization</string>
+    <string name="settings__personalization__language__title">Language</string>
+    <string name="settings__personalization__language__system">&#60; System Language &#62;</string>
+    <string name="settings__personalization__language__en">English</string>
+    <string name="settings__personalization__language__uk">Ukraine (Українська)</string>
     <string name="settings__change_email__title">Change email address</string>
     <string name="settings__change_email__new_email_input">New Email</string>
     <string name="settings__change_email__password_input">Password</string>
@@ -251,7 +256,6 @@
     <string name="settings__change_password__apply_button">Apply</string>
     <string name="settings__success_message_title">Success</string>
     <string name="settings__error_message_title">Error</string>
-    <string name="settings__guest__title">You need to log in to see the settings menu.</string>
     <string name="settings__guest__log_in_button">Log in</string>
     <string name="settings__guest__sign_up_button">Sign up</string>
 
