@@ -1,6 +1,8 @@
 package com.olehmaliuta.clothesadvisor.ui.screens
 
 import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import android.util.Patterns
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
@@ -51,6 +53,7 @@ import com.olehmaliuta.clothesadvisor.ui.viewmodels.AuthViewModel
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.UserViewModel
 import com.olehmaliuta.clothesadvisor.utils.AppConstants
 import com.olehmaliuta.clothesadvisor.utils.LocaleConstants
+import com.olehmaliuta.clothesadvisor.utils.findActivity
 import java.util.Locale
 
 @Composable
@@ -256,9 +259,9 @@ private fun PersonalizationForm() {
 
     var isLanguageMenuOpen by remember { mutableStateOf(false) }
 
-    var selectedLanguage = remember {
-        derivedStateOf { languageManager.getLanguageCode(context) }
-    }.value
+    val selectedLanguage by remember {
+        derivedStateOf { languageManager.getCurrentLanguage() }
+    }
 
     Column(
         modifier = Modifier
@@ -306,9 +309,9 @@ private fun PersonalizationForm() {
                     DropdownMenuItem(
                         text = { Text(stringResource(languageOption.value)) },
                         onClick = {
-                            languageManager.changeLanguage(context, languageOption.key)
+                            languageManager.setAppLanguage(languageOption.key)
                             isLanguageMenuOpen = false
-                            (context as? Activity)?.recreate()
+                            context.findActivity()?.recreate()
                         }
                     )
                 }
