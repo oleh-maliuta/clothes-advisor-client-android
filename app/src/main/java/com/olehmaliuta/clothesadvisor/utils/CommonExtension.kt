@@ -6,6 +6,10 @@ import android.content.ContextWrapper
 import kotlin.math.roundToInt
 
 fun Float.roundToDecimals(decimals: Int): Float {
+    if (decimals < 0) {
+        throw IllegalArgumentException("Decimals count must be a positive number!")
+    }
+
     var multiplier = 1.0f
     repeat(decimals) { multiplier *= 10 }
     return (this * multiplier).roundToInt() / multiplier

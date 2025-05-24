@@ -12,8 +12,8 @@ import java.util.Locale
 
 class LanguageManager(private val context: Context) {
     companion object {
-        private const val PREFS_NAME = "AppLanguagePrefs"
-        private const val KEY_SELECTED_LANGUAGE = "selected_language"
+        private const val PREFS_NAME = "user"
+        private const val KEY_SELECTED_LANGUAGE = "language"
         const val SYSTEM_DEFAULT_LANGUAGE = "system"
     }
 

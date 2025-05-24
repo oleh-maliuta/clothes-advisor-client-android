@@ -237,6 +237,7 @@ private fun ContentForUser(
 
     OsmLocationPickerDialog(
         isOpen = isLocationPickerOpen,
+        initialLocation = location ?: GeoPoint(0.0, 0.0),
         onLocationSelected = { geoPoint, selectedAddress ->
             location = geoPoint
             address = selectedAddress
@@ -577,7 +578,7 @@ private fun ContentForUser(
                                 }
                             }
 
-                            if (weatherResult!!.id != null) {
+                            if (weatherResult!!.code != null) {
                                 Column(
                                     horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
@@ -593,7 +594,7 @@ private fun ContentForUser(
                                             .setHeader("Expires", "0")
                                             .crossfade(true)
                                             .build(),
-                                        contentDescription = weatherResult!!.id!!.toString(),
+                                        contentDescription = weatherResult!!.code!!.toString(),
                                         modifier = Modifier
                                             .size(48.dp)
                                             .background(
@@ -607,7 +608,7 @@ private fun ContentForUser(
 
                                     Text(
                                         text = stringResource(AppConstants.weatherTypes
-                                            .getValue(weatherResult!!.id!!))
+                                            .getValue(weatherResult!!.code!!))
                                             .replaceFirstChar { it.titlecase() },
                                         style = MaterialTheme.typography.bodyMedium
                                     )
