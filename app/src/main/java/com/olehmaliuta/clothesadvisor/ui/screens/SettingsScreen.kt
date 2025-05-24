@@ -1,8 +1,5 @@
 package com.olehmaliuta.clothesadvisor.ui.screens
 
-import android.app.Activity
-import android.content.Context
-import android.content.ContextWrapper
 import android.util.Patterns
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
@@ -19,6 +16,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -191,7 +189,12 @@ private fun UserAccountSection(
                 onClick = {
                     router.navigate(Screen.LogIn.name)
                 },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                ),
                 modifier = Modifier
+                    .fillMaxWidth()
                     .height(40.dp)
             ) {
                 Text(
@@ -208,7 +211,12 @@ private fun UserAccountSection(
                 onClick = {
                     router.navigate(Screen.Registration.name)
                 },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.tertiary,
+                    contentColor = MaterialTheme.colorScheme.onTertiary
+                ),
                 modifier = Modifier
+                    .fillMaxWidth()
                     .height(40.dp)
             ) {
                 Text(

@@ -119,7 +119,7 @@ fun OsmLocationPickerDialog(
                         },
                         enabled = !isLoading
                     ) {
-                        Text(stringResource(R.string.osm_location_picker_dialog__cancel_button))
+                        Text(stringResource(R.string.osm_location_picker_dialog__select_button))
                     }
                 }
             }
