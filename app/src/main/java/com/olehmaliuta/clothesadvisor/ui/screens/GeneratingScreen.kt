@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.net.Uri
+import android.os.Build
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -138,7 +139,10 @@ private fun ContentForUser(
     val context = LocalContext.current
     val locationManager = context.getSystemService(Context.LOCATION_SERVICE)
             as LocationManager
-    val requiredPermission = Manifest.permission.ACCESS_COARSE_LOCATION
+    val requiredPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+        Manifest.permission.ACCESS_COARSE_LOCATION
+    else
+        Manifest.permission.ACCESS_FINE_LOCATION
 
     var useCurrentLocation by remember { mutableStateOf(true) }
     var location by remember { mutableStateOf<GeoPoint?>(null) }
@@ -501,25 +505,38 @@ private fun ContentForUser(
         val locationNotFoundMessage = stringResource(R.string.generating__location_not_found_message)
 
         Button(
-            enabled = if (!useCurrentLocation) location != null else true,
+            enabled = if (!useCurrentLocation) location != null else true &&
+                recommendationViewModel.recommendationState !is ApiState.Loading,
             onClick = {
-                if (useCurrentLocation && ContextCompat.checkSelfPermission(
-                        context,
-                        requiredPermission
-                    ) != PackageManager.PERMISSION_GRANTED) {
-                    permissionLauncher.launch(requiredPermission)
-                    return@Button
+                if (useCurrentLocation) {
+                    if (ContextCompat.checkSelfPermission(
+                            context,
+                            requiredPermission
+                        ) != PackageManager.PERMISSION_GRANTED) {
+                        permissionLauncher.launch(requiredPermission)
+                        return@Button
+                    }
                 }
 
                 val geoData = if (useCurrentLocation) {
-                    val currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-                        ?: locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-                    if (currentLocation != null)
-                        GeoPoint(currentLocation.latitude, currentLocation.longitude)
-                    else {
-                        okDialogTitle = errorMessageTitle
-                        okDialogMessage = locationNotFoundMessage
-                        return@Button
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        val currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+                            ?: locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+                        if (currentLocation != null)
+                            GeoPoint(currentLocation.latitude, currentLocation.longitude)
+                        else {
+                            okDialogTitle = errorMessageTitle
+                            okDialogMessage = locationNotFoundMessage
+                            return@Button
+                        }
+                    } else {
+                        val geoResult = recommendationViewModel.getDeviceLocation(context)
+                        if (geoResult != null) geoResult
+                        else {
+                            okDialogTitle = errorMessageTitle
+                            okDialogMessage = locationNotFoundMessage
+                            return@Button
+                        }
                     }
                 } else location!!
 
@@ -601,6 +618,8 @@ private fun ContentForUser(
                                     )
                                 }
                             }
+
+                            Spacer(modifier = Modifier.width(12.dp))
 
                             if (weatherResult!!.code != null) {
                                 Column(

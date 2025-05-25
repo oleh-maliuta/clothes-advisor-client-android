@@ -1,12 +1,17 @@
 package com.olehmaliuta.clothesadvisor.ui.viewmodels
 
+import android.Manifest
 import android.content.Context
+import android.location.Location
+import androidx.annotation.RequiresPermission
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.gson.Gson
 import com.olehmaliuta.clothesadvisor.data.http.HttpServiceManager
 import com.olehmaliuta.clothesadvisor.data.http.requests.RecommendationRequest
@@ -17,6 +22,8 @@ import com.olehmaliuta.clothesadvisor.data.http.services.RecommendationApiServic
 import com.olehmaliuta.clothesadvisor.navigation.StateHandler
 import com.olehmaliuta.clothesadvisor.utils.LocaleConstants
 import kotlinx.coroutines.launch
+import org.osmdroid.util.GeoPoint
+
 
 class RecommendationViewModel(
     context: Context
@@ -46,6 +53,26 @@ class RecommendationViewModel(
 
     override fun restoreState() {
         recommendationState = ApiState.Idle
+    }
+
+    @RequiresPermission(allOf = [
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.ACCESS_COARSE_LOCATION
+    ])
+    fun getDeviceLocation(
+        context: Context
+    ): GeoPoint? {
+        val locationClient = LocationServices.getFusedLocationProviderClient(context)
+        var geoPoint: GeoPoint? = null
+
+        locationClient.lastLocation
+            .addOnSuccessListener{ location: Location? ->
+                if (location != null) {
+                    geoPoint = GeoPoint(location.latitude, location.longitude)
+                }
+            }
+
+        return geoPoint
     }
 
     fun recommendations(

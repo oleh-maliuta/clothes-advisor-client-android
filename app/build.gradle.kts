@@ -63,6 +63,7 @@ dependencies {
     implementation(libs.room.runtime)
     implementation(libs.osmdroid.osmdroid.android)
     implementation(libs.androidx.appcompat)
+    implementation(libs.play.services.location)
 
     ksp(libs.androidx.room.room.compiler)
 
