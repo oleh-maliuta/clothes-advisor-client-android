@@ -644,7 +644,6 @@ private fun ContentForUser(
                                                 color = Color.Gray,
                                                 shape = RoundedCornerShape(5.dp)
                                             ),
-                                        error = rememberVectorPainter(Icons.Default.Place)
                                     )
 
                                     Spacer(modifier = Modifier.height(8.dp))

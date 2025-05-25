@@ -51,7 +51,7 @@
     <string name="events__sport_training">спортивні тренування</string>
 
     <!-- Palettes -->
-    <string name="palettes__none__name">Немає</string>
+    <string name="palettes__none__name">Відсутня</string>
     <string name="palettes__monochromatic__name">Монохроматична</string>
     <string name="palettes__monochromatic__description">
         Має на увазі використання одного кольору, його тональностей і тіней. Монохроматична колірна гармонія завжди виявляється кращим вибором. За рахунок унікального розмаїття відтінків вона робить дизайн привабливішим.

@@ -34,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -196,6 +197,7 @@ private fun UserAccountSection(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(40.dp)
+                    .testTag("log_in__button")
             ) {
                 Text(
                     text = stringResource(R.string.settings__guest__log_in_button),
@@ -218,6 +220,7 @@ private fun UserAccountSection(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(40.dp)
+                    .testTag("sign_up__button")
             ) {
                 Text(
                     text = stringResource(R.string.settings__guest__sign_up_button),
