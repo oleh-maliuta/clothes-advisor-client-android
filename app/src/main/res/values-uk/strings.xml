@@ -355,6 +355,7 @@
     <string name="generating__location__longitude">Довгота: %s</string>
     <string name="generating__location__address">Адреса: %s</string>
     <string name="generating__color__include">Включити колір</string>
+    <string name="generating__palettes__include">Включити палітри</string>
     <string name="generating__palettes__title">Обрані палітри</string>
     <string name="generating__palettes__no_selected">Палітри не вибрано</string>
     <string name="generating__palettes__dialog__title">Палітри</string>

@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.olehmaliuta.clothesadvisor.App
 import com.olehmaliuta.clothesadvisor.R
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -39,9 +40,14 @@ fun DatePicker(
     label: String = stringResource(R.string.date_picker__default_label),
     showClearButton: Boolean = true
 ) {
+    val context = LocalContext.current
+    val languageManager = (context.applicationContext as App).languageManager
+
     var showDatePicker by remember { mutableStateOf(false) }
 
-    val dateFormatter = remember { SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()) }
+    val dateFormatter = remember {
+        SimpleDateFormat("MMM dd, yyyy", Locale(languageManager.getCurrentLanguage()))
+    }
 
     Column(modifier = modifier) {
         Text(

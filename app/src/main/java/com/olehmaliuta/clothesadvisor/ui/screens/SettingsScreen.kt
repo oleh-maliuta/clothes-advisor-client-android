@@ -317,8 +317,8 @@ private fun PersonalizationForm() {
                     DropdownMenuItem(
                         text = { Text(stringResource(languageOption.value)) },
                         onClick = {
-                            languageManager.setAppLanguage(languageOption.key)
                             isLanguageMenuOpen = false
+                            languageManager.setAppLanguage(languageOption.key)
                             context.findActivity()?.recreate()
                         }
                     )

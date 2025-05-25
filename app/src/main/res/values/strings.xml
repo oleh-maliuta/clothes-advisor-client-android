@@ -355,6 +355,7 @@
     <string name="generating__location__longitude">Longitude: %s</string>
     <string name="generating__location__address">Address: %s</string>
     <string name="generating__color__include">Include Color</string>
+    <string name="generating__palettes__include">Include Palettes</string>
     <string name="generating__palettes__title">Selected Palettes</string>
     <string name="generating__palettes__no_selected">No Palettes Selected</string>
     <string name="generating__palettes__dialog__title">Palettes</string>

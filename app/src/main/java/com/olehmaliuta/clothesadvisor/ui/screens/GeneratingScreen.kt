@@ -149,7 +149,9 @@ private fun ContentForUser(
     var includeColor by remember { mutableStateOf(true) }
     var color by remember { mutableStateOf(Color.Black) }
 
+    var includePalettes by remember { mutableStateOf(true) }
     var palettes by remember { mutableStateOf(emptySet<String>()) }
+
     var eventType by remember { mutableStateOf<String?>(null) }
     var considerFavorites by remember { mutableStateOf(true) }
 
@@ -352,9 +354,9 @@ private fun ContentForUser(
             )
         }
 
-        Spacer(modifier = Modifier.height(10.dp))
-
         if (includeColor) {
+            Spacer(modifier = Modifier.height(10.dp))
+
             ColorPicker(
                 color = color,
                 imageUri = null,
@@ -364,16 +366,38 @@ private fun ContentForUser(
 
         Spacer(modifier = Modifier.height(30.dp))
 
-        ColorPaletteSelector(
-            selectedPalettes = palettes,
-            onPaletteSelected = { selectedPalette ->
-                palettes = if (palettes.contains(selectedPalette)) {
-                    palettes - selectedPalette
-                } else {
-                    palettes + selectedPalette
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Switch(
+                checked = includePalettes,
+                onCheckedChange = { includePalettes = !includePalettes },
+                modifier = Modifier.semantics {
+                    this.contentDescription =
+                        if (includePalettes) "Checked" else "Unchecked"
                 }
-            }
-        )
+            )
+            Spacer(Modifier.width(12.dp))
+            Text(
+                text = stringResource(R.string.generating__palettes__include),
+                fontSize = 17.sp
+            )
+        }
+
+        if (includePalettes) {
+            Spacer(modifier = Modifier.height(10.dp))
+
+            ColorPaletteSelector(
+                selectedPalettes = palettes,
+                onPaletteSelected = { selectedPalette ->
+                    palettes = if (palettes.contains(selectedPalette)) {
+                        palettes - selectedPalette
+                    } else {
+                        palettes + selectedPalette
+                    }
+                }
+            )
+        }
 
         Spacer(modifier = Modifier.height(30.dp))
 
@@ -511,7 +535,7 @@ private fun ContentForUser(
                         red = if (includeColor) (color.red * 255).toInt() else null,
                         green = if (includeColor) (color.green * 255).toInt() else null,
                         blue = if (includeColor) (color.blue * 255).toInt() else null,
-                        paletteTypes = palettes.toList(),
+                        paletteTypes = if (includePalettes) palettes.toList() else null,
                         event = eventType,
                         includeFavorites = considerFavorites
                     )

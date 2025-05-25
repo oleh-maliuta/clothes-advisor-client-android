@@ -25,7 +25,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.olehmaliuta.clothesadvisor.App
 import com.olehmaliuta.clothesadvisor.R
+import com.olehmaliuta.clothesadvisor.ui.LanguageManager
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -42,8 +44,15 @@ fun DateTimePicker(
     var showTimePicker by remember { mutableStateOf(false) }
     var tempDate by remember { mutableStateOf<Date?>(null) }
 
-    val dateFormatter = remember { SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()) }
-    val timeFormatter = remember { SimpleDateFormat("hh:mm a", Locale.getDefault()) }
+    val context = LocalContext.current
+    val languageManager = (context.applicationContext as App).languageManager
+
+    val dateFormatter = remember {
+        SimpleDateFormat("MMM dd, yyyy", Locale(languageManager.getCurrentLanguage()))
+    }
+    val timeFormatter = remember {
+        SimpleDateFormat("hh:mm:ss", Locale(languageManager.getCurrentLanguage()))
+    }
 
     Column(
         modifier = modifier
