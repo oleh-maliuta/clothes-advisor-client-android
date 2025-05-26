@@ -5,6 +5,7 @@ import android.app.LocaleManager
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
+import android.content.res.Resources
 import android.os.Build
 import android.os.LocaleList
 import androidx.core.content.edit
@@ -38,6 +39,11 @@ class LanguageManager(private val context: Context) {
         if (context is Activity) {
             context.recreate()
         }
+    }
+
+    fun getSystemLanguage(): String {
+        val systemLocale = Resources.getSystem().configuration.locales[0]
+        return systemLocale.language.split("-").first()
     }
 
     fun getCurrentLanguage(): String {

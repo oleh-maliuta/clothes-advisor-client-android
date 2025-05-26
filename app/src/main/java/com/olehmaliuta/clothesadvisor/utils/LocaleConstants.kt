@@ -1,9 +1,7 @@
 package com.olehmaliuta.clothesadvisor.utils
 
-import android.app.Activity
 import android.content.Context
 import com.olehmaliuta.clothesadvisor.App
-import java.util.Locale
 
 object LocaleConstants {
     private const val DEFAULT_LANG = "en"
@@ -90,7 +88,7 @@ object LocaleConstants {
         context: Context
     ): String {
         val application = context.applicationContext as App
-        val language = application.languageManager.getCurrentLanguage()
+        val language = application.languageManager.getSystemLanguage()
 
         if (language == DEFAULT_LANG) {
             return value
