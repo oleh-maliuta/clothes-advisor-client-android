@@ -22,6 +22,48 @@ class LogInAndSignInTesting {
     private val helper = UiTestHelper(composeTestRule)
 
     @Test
+    fun failedSignUpDueToInvalidEmailFormat() {
+        helper.assertExists("screen__${Screen.ClothesList.name}")
+        composeTestRule.onNodeWithTag(
+            "bottom_bar__navigation_button__${Screen.Settings.name}")
+            .performClick()
+        helper.assertExists("screen__${Screen.Settings.name}")
+        composeTestRule.onNodeWithTag(
+            "sign_up__button")
+            .performClick()
+
+        helper.register("111", "123")
+
+        helper.assertExists(
+            hasTestTag("info_dialog__description") and
+                    hasText(LocaleConstants.getString(
+                        "Invalid email format",
+                        composeTestRule.activity))
+        )
+    }
+
+    @Test
+    fun failedSignUpDueToTheEmailAlreadyRegistered() {
+        helper.assertExists("screen__${Screen.ClothesList.name}")
+        composeTestRule.onNodeWithTag(
+            "bottom_bar__navigation_button__${Screen.Settings.name}")
+            .performClick()
+        helper.assertExists("screen__${Screen.Settings.name}")
+        composeTestRule.onNodeWithTag(
+            "sign_up__button")
+            .performClick()
+
+        helper.register(userEmail, "123")
+
+        helper.assertExists(
+            hasTestTag("info_dialog__description") and
+                    hasText(LocaleConstants.getString(
+                        "Email is already taken",
+                        composeTestRule.activity))
+        )
+    }
+
+    @Test
     fun successfulLogIn() {
         helper.assertExists("screen__${Screen.ClothesList.name}")
         composeTestRule.onNodeWithTag(

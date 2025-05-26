@@ -34,13 +34,31 @@ class UiTestHelper(
         }
     }
 
+    fun register(
+        email: String,
+        password: String,
+        confirmPassword: String = password
+    ) {
+        assertExists("screen__${Screen.Registration.name}")
+        rule.onNodeWithTag(
+            "email__input")
+            .performTextInput(email)
+        rule.onNodeWithTag(
+            "password__input")
+            .performTextInput(password)
+        rule.onNodeWithTag(
+            "confirm_password__input")
+            .performTextInput(confirmPassword)
+        rule.onNodeWithTag(
+            "apply__button")
+            .performClick()
+    }
+
     fun authorize(
         email: String,
         password: String
     ) {
-        rule.onNodeWithTag(
-            "screen__${Screen.LogIn.name}")
-            .assertExists()
+        assertExists("screen__${Screen.LogIn.name}")
         rule.onNodeWithTag(
             "email__input")
             .performTextInput(email)

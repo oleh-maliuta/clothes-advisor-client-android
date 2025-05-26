@@ -23,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -123,8 +124,10 @@ fun RegistrationScreen(
                     Text(stringResource(R.string.registration__email_input))
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("email__input")
             )
 
             OutlinedTextField(
@@ -135,8 +138,10 @@ fun RegistrationScreen(
                 },
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("password__input")
             )
 
             OutlinedTextField(
@@ -147,7 +152,6 @@ fun RegistrationScreen(
                 },
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 isError = !passwordsMatch && confirmPassword.isNotBlank(),
                 supportingText = {
@@ -158,7 +162,10 @@ fun RegistrationScreen(
                             )
                         )
                     }
-                }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("confirm_password__input")
             )
 
             Button(
@@ -172,7 +179,8 @@ fun RegistrationScreen(
                 )},
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(52.dp),
+                    .height(52.dp)
+                    .testTag("apply__button"),
                 enabled = isFormValid
             ) {
                 if (userViewModel.registrationState is ApiState.Loading) {
