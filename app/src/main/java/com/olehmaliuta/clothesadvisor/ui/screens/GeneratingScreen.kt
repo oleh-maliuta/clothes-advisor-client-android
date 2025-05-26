@@ -35,7 +35,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -545,7 +544,8 @@ private fun ContentForUser(
                     Locale.getDefault())
 
                 recommendationViewModel.recommendations(
-                    RecommendationRequest(
+                    context = context,
+                    request = RecommendationRequest(
                         latitude = geoData.latitude,
                         longitude = geoData.longitude,
                         targetTime = dateFormatter.format(dateAndTime),

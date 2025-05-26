@@ -76,6 +76,7 @@ class OutfitViewModel(
     }
 
     fun addOutfit(
+        context: Context,
         name: String,
         itemIds: List<Long>
     ) {
@@ -108,7 +109,9 @@ class OutfitViewModel(
                             response.errorBody()?.string(),
                             BaseResponse::class.java)
                         outfitUploadingState = ApiState.Error(
-                            LocaleConstants.getString(errorBody.detail.toString()))
+                            LocaleConstants.getString(
+                                errorBody.detail.toString(),
+                                context))
                         return@launch
                     }
                 }
@@ -122,6 +125,7 @@ class OutfitViewModel(
     }
 
     fun updateOutfit(
+        context: Context,
         id: Long,
         name: String,
         itemIds: List<Long>
@@ -159,7 +163,9 @@ class OutfitViewModel(
                             response.errorBody()?.string(),
                             BaseResponse::class.java)
                         outfitUploadingState = ApiState.Error(
-                            LocaleConstants.getString(errorBody.detail.toString()))
+                            LocaleConstants.getString(
+                                errorBody.detail.toString(),
+                                context))
                         return@launch
                     }
                 }
@@ -173,6 +179,7 @@ class OutfitViewModel(
     }
 
     fun deleteOutfit(
+        context: Context,
         id: Long
     ) {
         viewModelScope.launch {
@@ -199,7 +206,9 @@ class OutfitViewModel(
                             response.errorBody()?.string(),
                             BaseResponse::class.java)
                         outfitDeletingState = ApiState.Error(
-                            LocaleConstants.getString(errorBody.detail.toString()))
+                            LocaleConstants.getString(
+                                errorBody.detail.toString(),
+                                context))
                         return@launch
                     }
                 }

@@ -337,6 +337,8 @@ private fun ChangeEmailForm(
     okDialogTitle: MutableState<String>,
     okDialogMessage: MutableState<String?>
 ) {
+    val context = LocalContext.current
+
     var newEmail by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -407,6 +409,7 @@ private fun ChangeEmailForm(
         Button(
             onClick = {
                 userViewModel.changeEmail(
+                    context,
                     newEmail,
                     password,
                     locale = LocaleConstants.getSecondLangCodeByFirst(
@@ -439,6 +442,8 @@ private fun ChangePasswordForm(
     okDialogTitle: MutableState<String>,
     okDialogMessage: MutableState<String?>
 ) {
+    val context = LocalContext.current
+
     var oldPassword by remember { mutableStateOf("") }
     var newPassword by remember { mutableStateOf("") }
     var confirmNewPassword by remember { mutableStateOf("") }
@@ -523,6 +528,7 @@ private fun ChangePasswordForm(
         Button(
             onClick = {
                 userViewModel.changePassword(
+                    context,
                     oldPassword,
                     newPassword
                 )

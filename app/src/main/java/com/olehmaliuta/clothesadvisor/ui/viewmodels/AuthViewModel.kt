@@ -114,7 +114,7 @@ class AuthViewModel(
                                 BaseResponse::class.java)
                             authState.value = AuthState.Error(
                                 LocaleConstants.getString(
-                                    errorBody.detail.toString()))
+                                    errorBody.detail.toString(), context))
                             return@launch
                         }
                     }

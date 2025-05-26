@@ -16,82 +16,60 @@ class NavigationTesting {
     @get:Rule
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
+    private val helper = UiTestHelper(composeTestRule)
+
     @Test
-    fun testFullUserJourney() {
-        composeTestRule.onNodeWithTag(
-            "screen__${Screen.ClothesList.name}")
-            .assertExists()
+    fun fullUserJourney() {
+        helper.assertExists("screen__${Screen.ClothesList.name}")
         composeTestRule.onNodeWithTag(
             "add_item_button")
             .performClick()
-        composeTestRule.onNodeWithTag(
-            "screen__${Screen.EditClothingItem.name}")
-            .assertExists()
+        helper.assertExists("screen__${Screen.EditClothingItem.name}")
         composeTestRule
             .onNodeWithTag("main_content_container")
             .performScrollToNode(hasTestTag("cancel_button"))
         composeTestRule.onNodeWithTag(
             "cancel_button")
             .performClick()
-        composeTestRule.onNodeWithTag(
-            "screen__${Screen.ClothesList.name}")
-            .assertExists()
+        helper.assertExists("screen__${Screen.ClothesList.name}")
         composeTestRule.onNodeWithTag(
             "bottom_bar__navigation_button__${Screen.OutfitList.name}")
             .performClick()
-        composeTestRule.onNodeWithTag(
-            "screen__${Screen.OutfitList.name}")
-            .assertExists()
+        helper.assertExists("screen__${Screen.OutfitList.name}")
         composeTestRule.onNodeWithTag(
             "add_outfit_button")
             .performClick()
-        composeTestRule.onNodeWithTag(
-            "screen__${Screen.EditOutfit.name}")
-            .assertExists()
+        helper.assertExists("screen__${Screen.EditOutfit.name}")
         composeTestRule
             .onNodeWithTag("main_content_container")
             .performScrollToNode(hasTestTag("cancel_button"))
         composeTestRule.onNodeWithTag(
             "cancel_button")
             .performClick()
-        composeTestRule.onNodeWithTag(
-            "screen__${Screen.OutfitList.name}")
-            .assertExists()
+        helper.assertExists("screen__${Screen.OutfitList.name}")
         composeTestRule.onNodeWithTag(
             "bottom_bar__navigation_button__${Screen.Generate.name}")
             .performClick()
-        composeTestRule.onNodeWithTag(
-            "screen__${Screen.Generate.name}")
-            .assertExists()
+        helper.assertExists("screen__${Screen.Generate.name}")
         composeTestRule.onNodeWithTag(
             "bottom_bar__navigation_button__${Screen.Statistics.name}")
             .performClick()
-        composeTestRule.onNodeWithTag(
-            "screen__${Screen.Statistics.name}")
-            .assertExists()
+        helper.assertExists("screen__${Screen.Statistics.name}")
         composeTestRule.onNodeWithTag(
             "bottom_bar__navigation_button__${Screen.Settings.name}")
             .performClick()
-        composeTestRule.onNodeWithTag(
-            "screen__${Screen.Settings.name}")
-            .assertExists()
+        helper.assertExists("screen__${Screen.Settings.name}")
         composeTestRule.onNodeWithTag(
             "log_in__button")
             .performClick()
-        composeTestRule.onNodeWithTag(
-            "screen__${Screen.LogIn.name}")
-            .assertExists()
+        helper.assertExists("screen__${Screen.LogIn.name}")
         composeTestRule.activityRule.scenario.onActivity { activity ->
             activity.onBackPressedDispatcher.onBackPressed()
         }
-        composeTestRule.onNodeWithTag(
-            "screen__${Screen.Settings.name}")
-            .assertExists()
+        helper.assertExists("screen__${Screen.Settings.name}")
         composeTestRule.onNodeWithTag(
             "sign_up__button")
             .performClick()
-        composeTestRule.onNodeWithTag(
-            "screen__${Screen.Registration.name}")
-            .assertExists()
+        helper.assertExists("screen__${Screen.Registration.name}")
     }
 }

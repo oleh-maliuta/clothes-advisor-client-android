@@ -1,5 +1,8 @@
 package com.olehmaliuta.clothesadvisor.utils
 
+import android.app.Activity
+import android.content.Context
+import com.olehmaliuta.clothesadvisor.App
 import java.util.Locale
 
 object LocaleConstants {
@@ -83,9 +86,11 @@ object LocaleConstants {
     )
 
     fun getString(
-        value: String
+        value: String,
+        context: Context
     ): String {
-        val language = Locale.getDefault().language
+        val application = context.applicationContext as App
+        val language = application.languageManager.getCurrentLanguage()
 
         if (language == DEFAULT_LANG) {
             return value

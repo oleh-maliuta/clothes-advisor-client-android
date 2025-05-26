@@ -28,6 +28,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -121,6 +122,7 @@ fun LogInScreen(
         },
         onAccept = {
             userViewModel.forgotPassword(
+                context = context,
                 email = emailToRestorePassword,
                 locale = LocaleConstants.getSecondLangCodeByFirst(
                     Locale.getDefault().language)
@@ -173,8 +175,10 @@ fun LogInScreen(
                 onValueChange = { email = it },
                 label = { Text(stringResource(R.string.authorization__email_input)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("email__input")
             )
 
             OutlinedTextField(
@@ -183,7 +187,6 @@ fun LogInScreen(
                 label = { Text(stringResource(R.string.authorization__password_input)) },
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 trailingIcon = {
                     TextButton(
@@ -196,7 +199,10 @@ fun LogInScreen(
                             color = MaterialTheme.colorScheme.primary
                         )
                     }
-                }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("password__input")
             )
 
             Spacer(Modifier.height(2.dp))
@@ -231,7 +237,8 @@ fun LogInScreen(
                     )},
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(52.dp),
+                    .height(52.dp)
+                    .testTag("apply__button"),
                 enabled = isFormValid
             ) {
                 if (userViewModel.logInState is ApiState.Loading) {

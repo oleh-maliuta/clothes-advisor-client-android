@@ -51,6 +51,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -78,6 +79,8 @@ fun EditOutfitScreen(
     outfitViewModel: OutfitViewModel,
     storageViewModel: StorageViewModel
 ) {
+    val context = LocalContext.current
+
     var name by remember { mutableStateOf("") }
     var itemIds by remember { mutableStateOf(storageViewModel.initialItemIds.value) }
 
@@ -170,7 +173,10 @@ fun EditOutfitScreen(
             },
             onAccept = {
                 outfitViewModel
-                    .deleteOutfit(currentOutfit!!.outfit.id)
+                    .deleteOutfit(
+                        context,
+                        currentOutfit!!.outfit.id
+                    )
             },
         ) {
             Text(
@@ -252,11 +258,13 @@ fun EditOutfitScreen(
                     onClick = {
                         if (currentOutfit == null) {
                             outfitViewModel.addOutfit(
+                                context,
                                 name,
                                 itemIds.toList()
                             )
                         } else {
                             outfitViewModel.updateOutfit(
+                                context,
                                 currentOutfit!!.outfit.id,
                                 name,
                                 itemIds.toList()
@@ -305,6 +313,7 @@ fun EditOutfitScreen(
                         contentColor = MaterialTheme.colorScheme.onTertiary
                     ),
                     onClick = {
+                        outfitViewModel.idOfOutfitToEdit.value = null
                         router.navigateBack()
                     },
                     modifier = Modifier

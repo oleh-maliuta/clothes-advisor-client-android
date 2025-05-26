@@ -22,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -44,6 +45,8 @@ fun RegistrationScreen(
     router: Router,
     userViewModel: UserViewModel
 ) {
+    val context = LocalContext.current
+
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
@@ -161,6 +164,7 @@ fun RegistrationScreen(
             Button(
                 onClick = {
                     userViewModel.register(
+                        context = context,
                         email = email,
                         password = password,
                         locale = LocaleConstants.getSecondLangCodeByFirst(

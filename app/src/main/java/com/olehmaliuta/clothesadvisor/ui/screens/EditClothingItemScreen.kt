@@ -190,7 +190,10 @@ fun EditClothingItemScreen(
             },
             onAccept = {
                 clothingItemViewModel
-                    .deleteClothingItem(currentItem!!.id)
+                    .deleteClothingItem(
+                        context,
+                        currentItem!!.id
+                    )
             },
         ) {
             Text(
@@ -562,8 +565,10 @@ fun EditClothingItemScreen(
                                 newItem.filename.toUri()) ?: return@Button
 
                             clothingItemViewModel.addClothingItem(
+                                context,
                                 file,
-                                newItem)
+                                newItem
+                            )
                         } else {
                             val file = if (imageUri != currentItem?.filename)
                                 FileTool.getFileFromUri(
@@ -572,8 +577,10 @@ fun EditClothingItemScreen(
                                 ) else null
 
                             clothingItemViewModel.updateClothingItem(
+                                context,
                                 file,
-                                newItem)
+                                newItem
+                            )
                         }
                     },
                     enabled = isFormValid
@@ -625,6 +632,7 @@ fun EditClothingItemScreen(
                         contentColor = MaterialTheme.colorScheme.onTertiary
                     ),
                     onClick = {
+                        clothingItemViewModel.idOfItemToEdit.value = null
                         router.navigateBack()
                     },
                     modifier = Modifier

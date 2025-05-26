@@ -49,6 +49,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -74,6 +75,8 @@ fun ClothesListScreen(
     router: Router,
     clothingItemViewModel: ClothingItemViewModel
 ) {
+    val context = LocalContext.current
+
     var searchInputValue by remember { mutableStateOf("") }
 
     var searchQuery by remember { mutableStateOf("") }
@@ -311,7 +314,10 @@ fun ClothesListScreen(
                 ClothingItemCard(
                     item = item,
                     onFavoriteClick = {
-                        clothingItemViewModel.updateIsFavoriteValue(item.id)
+                        clothingItemViewModel.updateIsFavoriteValue(
+                            context,
+                            item.id
+                        )
                     },
                     onClick = {
                         clothingItemViewModel.idOfItemToEdit.value = item.id
@@ -350,7 +356,6 @@ fun ClothesListScreen(
             onClick = {
                 if (itemCount != null) {
                     if (itemCount!! < AppConstants.MAX_CLOTHING_ITEMS) {
-                        clothingItemViewModel.idOfItemToEdit.value = null
                         router.navigate(Screen.EditClothingItem.name)
                     } else {
                         okDialogTitle = errorMessageTitle

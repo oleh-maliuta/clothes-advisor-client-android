@@ -104,6 +104,7 @@ class ClothingItemViewModel(
     }
 
     fun addClothingItem(
+        context: Context,
         file: File,
         item: ClothingItem
     ) {
@@ -155,7 +156,9 @@ class ClothingItemViewModel(
                             response.errorBody()?.string(),
                             BaseResponse::class.java)
                         itemUploadingState = ApiState.Error(
-                            LocaleConstants.getString(errorBody.detail.toString()))
+                            LocaleConstants.getString(
+                                errorBody.detail.toString(),
+                                context))
                         return@launch
                     }
                 }
@@ -171,6 +174,7 @@ class ClothingItemViewModel(
     }
 
     fun updateClothingItem(
+        context: Context,
         file: File?,
         item: ClothingItem
     ) {
@@ -224,7 +228,9 @@ class ClothingItemViewModel(
                             response.errorBody()?.string(),
                             BaseResponse::class.java)
                         itemUploadingState = ApiState.Error(
-                            LocaleConstants.getString(errorBody.detail.toString()))
+                            LocaleConstants.getString(
+                                errorBody.detail.toString(),
+                                context))
                         return@launch
                     }
                 }
@@ -240,6 +246,7 @@ class ClothingItemViewModel(
     }
 
     fun updateIsFavoriteValue(
+        context: Context,
         id: Long
     ) {
         viewModelScope.launch {
@@ -269,7 +276,9 @@ class ClothingItemViewModel(
                                 response.errorBody()?.string(),
                                 BaseResponse::class.java)
                             isFavoriteTogglingState = ApiState.Error(
-                                LocaleConstants.getString(errorBody.detail.toString()))
+                                LocaleConstants.getString(
+                                    errorBody.detail.toString(),
+                                    context))
                         }
                         return@launch
                     }
@@ -286,6 +295,7 @@ class ClothingItemViewModel(
     }
 
     fun deleteClothingItem(
+        context: Context,
         id: Long
     ) {
         viewModelScope.launch {
@@ -312,7 +322,9 @@ class ClothingItemViewModel(
                             response.errorBody()?.string(),
                             BaseResponse::class.java)
                         itemDeletingState = ApiState.Error(
-                            LocaleConstants.getString(errorBody.detail.toString()))
+                            LocaleConstants.getString(
+                                errorBody.detail.toString(),
+                                context))
                         return@launch
                     }
                 }

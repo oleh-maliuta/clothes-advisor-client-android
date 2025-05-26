@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.tasks.OnSuccessListener
 import com.google.gson.Gson
 import com.olehmaliuta.clothesadvisor.data.http.HttpServiceManager
 import com.olehmaliuta.clothesadvisor.data.http.requests.RecommendationRequest
@@ -76,6 +75,7 @@ class RecommendationViewModel(
     }
 
     fun recommendations(
+        context: Context,
         request: RecommendationRequest
     ) {
         viewModelScope.launch {
@@ -97,7 +97,9 @@ class RecommendationViewModel(
                         response.errorBody()?.string(),
                         BaseResponse::class.java)
                     recommendationState = ApiState.Error(
-                        LocaleConstants.getString(errorBody.detail.toString()))
+                        LocaleConstants.getString(
+                            errorBody.detail.toString(),
+                            context))
                 }
             } catch (e: Exception) {
                 recommendationState = ApiState.Error("Network error: ${e.message}")
