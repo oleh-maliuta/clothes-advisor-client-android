@@ -35,6 +35,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -60,12 +62,16 @@ fun ClothingItemCard(
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
-            .testTag("clothing_item_card"),
+            .testTag("clothing_item_card")
+            .semantics {
+                this.contentDescription = "ClothingItemKey/${item.id}"
+            },
         shape = RoundedCornerShape(12.dp),
         onClick = { onClick?.invoke() }
     ) {
         Column(
-            modifier = Modifier.padding(12.dp)
+            modifier = Modifier
+                .padding(12.dp)
         ) {
             Box(
                 modifier = Modifier
@@ -172,7 +178,13 @@ fun ClothingItemCard(
                     if (onFavoriteClick != null) {
                         IconButton(
                             onClick = onFavoriteClick,
-                            modifier = Modifier.size(24.dp)
+                            modifier = Modifier
+                                .size(24.dp)
+                                .testTag("clothing_item_card__favorite_button")
+                                .semantics {
+                                    this.contentDescription =
+                                        if (item.isFavorite) "Favorite" else "Regular"
+                                }
                         ) {
                             Icon(
                                 imageVector = if (item.isFavorite) Icons.Filled.Favorite

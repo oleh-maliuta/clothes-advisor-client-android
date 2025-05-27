@@ -170,6 +170,7 @@ fun ClothesListScreen(
         modifier = Modifier
             .padding(top = 10.dp)
             .padding(horizontal = 8.dp)
+            .testTag("main_content_container")
     ) {
         item {
             TextField(

@@ -1,6 +1,8 @@
 package com.olehmaliuta.clothesadvisor
 
+import android.content.Context
 import androidx.compose.ui.test.assertCountEquals
+import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.hasAnyChild
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasTestTag
@@ -13,8 +15,10 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
+import androidx.core.content.edit
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.olehmaliuta.clothesadvisor.navigation.Screen
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -41,6 +45,16 @@ class OutfitManagementTesting {
             .performClick()
         helper.authorize(userEmail, userPassword)
         helper.assertExists("screen__${Screen.ClothesList.name}")
+    }
+
+    @After
+    fun cleanup() {
+        val prefs = composeTestRule.activity.getSharedPreferences(
+            "user", Context.MODE_PRIVATE)
+        prefs.edit {
+            remove("token")
+            remove("token_type")
+        }
     }
 
     @Test
@@ -139,5 +153,38 @@ class OutfitManagementTesting {
         helper.assertDoesNotExist(
             hasTestTag("outfit_card__item_count") and hasText("NewTest")
         )
+    }
+
+    @Test
+    fun failedAddingOutfitDueToNameAbsence() {
+        composeTestRule.onNodeWithTag(
+            "bottom_bar__navigation_button__${Screen.OutfitList.name}")
+            .performClick()
+        helper.assertExists("screen__${Screen.OutfitList.name}")
+        composeTestRule.onNodeWithTag(
+            "add_outfit_button")
+            .performClick()
+        helper.assertExists("screen__${Screen.EditOutfit.name}")
+        helper.assertExists("mode__add")
+        composeTestRule
+            .onNodeWithTag("clothing_item_card")
+            .assertDoesNotExist()
+        composeTestRule
+            .onNodeWithTag("name_input")
+            .performTextClearance()
+        composeTestRule
+            .onNodeWithTag("edit_item_list_button")
+            .performClick()
+        helper.assertExists("select_items_for_outfit_dialog")
+        composeTestRule
+            .onAllNodesWithTag("clothing_item_mini_card")
+            .onFirst()
+            .performClick()
+        composeTestRule
+            .onNodeWithTag("select_items_for_outfit_dialog__done_button")
+            .performClick()
+        composeTestRule
+            .onNodeWithTag("apply_button")
+            .assertIsNotEnabled()
     }
 }
