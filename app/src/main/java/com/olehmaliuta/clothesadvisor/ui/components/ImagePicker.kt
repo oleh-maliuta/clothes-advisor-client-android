@@ -38,6 +38,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
@@ -52,7 +53,8 @@ import com.olehmaliuta.clothesadvisor.utils.FileTool
 fun ImagePicker(
     currentImageUri: String?,
     onImageSelected: (Uri?) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    testTag: String = "image_picker"
 ) {
     val requiredPermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
         arrayOf(
@@ -138,13 +140,17 @@ fun ImagePicker(
         )
     }
 
-    Column(modifier = modifier) {
+    Column(
+        modifier = modifier
+            .testTag(testTag)
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
                 .clip(RoundedCornerShape(8.dp))
                 .background(MaterialTheme.colorScheme.surfaceVariant)
+                .testTag("${testTag}__box")
                 .clickable {
                     if (requiredPermissions.any { permission ->
                             ContextCompat.checkSelfPermission(context, permission) ==
@@ -207,7 +213,9 @@ fun ImagePicker(
         if (!currentImageUri.isNullOrBlank()) {
             Text(
                 text = currentImageUri,
-                modifier = Modifier.padding(top = 8.dp)
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .testTag("${testTag}__path")
             )
         }
     }

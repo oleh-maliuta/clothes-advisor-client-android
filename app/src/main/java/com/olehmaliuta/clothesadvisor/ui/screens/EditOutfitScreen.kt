@@ -55,6 +55,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -103,6 +105,15 @@ fun EditOutfitScreen(
             outfitViewModel.outfitUploadingState !is ApiState.Loading &&
             outfitViewModel.outfitDeletingState !is ApiState.Loading
 
+    Box(
+        modifier = Modifier
+            .testTag(
+                "mode__" +
+                        if (outfitViewModel.idOfOutfitToEdit.value == null)
+                            "add" else "edit"
+            )
+    )
+
     LaunchedEffect(currentOutfit) {
         currentOutfit?.let { outfit ->
             name = outfit.outfit.name
@@ -148,7 +159,7 @@ fun EditOutfitScreen(
         }
     )
 
-    SelectItemsToOutfitDialog(
+    SelectItemsForOutfitDialog(
         clothingItemViewModel = clothingItemViewModel,
         isOpen = isItemListDialogOpen,
         selectedItems = itemIds,
@@ -240,7 +251,9 @@ fun EditOutfitScreen(
                 },
                 label = { Text(stringResource(R.string.edit_outfit__main__name__label)) },
                 singleLine = true,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("name_input"),
                 isError = !isNameValid,
                 supportingText = {
                     if (!isNameValid) {
@@ -271,7 +284,9 @@ fun EditOutfitScreen(
                             )
                         }
                     },
-                    enabled = isFormValid
+                    enabled = isFormValid,
+                    modifier = Modifier
+                        .testTag("apply_button")
                 ) {
                     Text(
                         text = if (currentOutfit == null)
@@ -294,7 +309,9 @@ fun EditOutfitScreen(
                         enabled = outfitViewModel
                             .outfitUploadingState !is ApiState.Loading &&
                                 outfitViewModel
-                                    .outfitDeletingState !is ApiState.Loading
+                                    .outfitDeletingState !is ApiState.Loading,
+                        modifier = Modifier
+                            .testTag("delete_button")
                     ) {
                         Icon(
                             imageVector = Icons.Default.Delete,
@@ -336,10 +353,11 @@ fun EditOutfitScreen(
                         contentColor = MaterialTheme.colorScheme.onPrimary
                     ),
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .testTag("edit_item_list_button"),
                     onClick = {
                         isItemListDialogOpen = true
-                    }
+                    },
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Search,
@@ -359,7 +377,7 @@ fun EditOutfitScreen(
 }
 
 @Composable
-private fun SelectItemsToOutfitDialog(
+private fun SelectItemsForOutfitDialog(
     clothingItemViewModel: ClothingItemViewModel,
     isOpen: Boolean,
     selectedItems: Set<Long>,
@@ -456,11 +474,15 @@ private fun SelectItemsToOutfitDialog(
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary
                 ),
-                onClick = onConfirm
+                onClick = onConfirm,
+                modifier = Modifier
+                    .testTag("select_items_for_outfit_dialog__done_button")
             ) {
                 Text(stringResource(R.string.edit_outfit__select_items__done_button))
             }
-        }
+        },
+        modifier = Modifier
+            .testTag("select_items_for_outfit_dialog")
     )
 }
 
@@ -488,7 +510,8 @@ private fun ClothingItemMiniCard(
         },
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(vertical = 8.dp)
+            .testTag("clothing_item_mini_card"),
     ) {
         Row(
             modifier = Modifier
@@ -497,7 +520,13 @@ private fun ClothingItemMiniCard(
         ) {
             Checkbox(
                 checked = isChecked,
-                onCheckedChange = null
+                onCheckedChange = null,
+                modifier = Modifier
+                    .testTag("clothing_item_mini_card__checkbox")
+                    .semantics {
+                        this.contentDescription =
+                            if (isChecked) "Checked" else "Unchecked"
+                    }
             )
 
             Column(

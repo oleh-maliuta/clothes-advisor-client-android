@@ -264,7 +264,9 @@ private fun ContentForUser(
             Switch(
                 checked = useCurrentLocation,
                 onCheckedChange = { useCurrentLocation = !useCurrentLocation },
-                modifier = Modifier.semantics {
+                modifier = Modifier
+                    .testTag("use_device_location_switch")
+                    .semantics {
                     this.contentDescription =
                         if (useCurrentLocation) "Checked" else "Unchecked"
                 }
@@ -560,6 +562,7 @@ private fun ContentForUser(
             },
             modifier = Modifier
                 .fillMaxWidth()
+                .testTag("generate_button")
         ) {
             Text(stringResource(R.string.generating__generate_button))
         }
@@ -585,7 +588,8 @@ private fun ContentForUser(
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 16.dp),
+                        .padding(bottom = 16.dp)
+                        .testTag("weather_info_card"),
                     shape = RoundedCornerShape(12.dp),
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.surfaceVariant
@@ -969,6 +973,7 @@ private fun OutfitCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = 10.dp)
+            .testTag("outfit_card")
     ) {
         Column(
             modifier = Modifier.padding(16.dp)
@@ -1059,7 +1064,9 @@ private fun OutfitCard(
 
             Button(
                 onClick = onSaveClick,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("outfit_card__save_button")
             ) {
                 Text(stringResource(R.string.generating__results__outfit__save_button))
             }

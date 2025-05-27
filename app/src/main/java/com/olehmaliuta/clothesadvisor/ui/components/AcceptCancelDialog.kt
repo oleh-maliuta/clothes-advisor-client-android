@@ -6,6 +6,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import com.olehmaliuta.clothesadvisor.R
 
@@ -26,12 +28,20 @@ fun AcceptCancelDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(title) },
+        title = {
+            Text(
+                text = title,
+                modifier = Modifier
+                    .testTag("accept_cancel_dialog__title")
+            )
+        },
         text = { content() },
         confirmButton = {
             Button(
                 onClick = onAccept,
-                enabled = acceptEnabled
+                enabled = acceptEnabled,
+                modifier = Modifier
+                    .testTag("accept_cancel_dialog__confirm_button")
             ) {
                 Text(acceptText)
             }
@@ -46,6 +56,8 @@ fun AcceptCancelDialog(
             ) {
                 Text(cancelText)
             }
-        }
+        },
+        modifier = Modifier
+            .testTag("accept_cancel_dialog")
     )
 }

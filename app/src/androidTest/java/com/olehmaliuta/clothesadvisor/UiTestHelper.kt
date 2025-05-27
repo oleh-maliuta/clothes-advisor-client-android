@@ -34,6 +34,24 @@ class UiTestHelper(
         }
     }
 
+    fun assertDoesNotExist(
+        tag: String
+    ) {
+        rule.waitUntil(DEFAULT_TIMEOUT) {
+            rule.onAllNodesWithTag(tag)
+                .fetchSemanticsNodes().isEmpty()
+        }
+    }
+
+    fun assertDoesNotExist(
+        matcher: SemanticsMatcher
+    ) {
+        rule.waitUntil(DEFAULT_TIMEOUT) {
+            rule.onAllNodes(matcher)
+                .fetchSemanticsNodes().isEmpty()
+        }
+    }
+
     fun register(
         email: String,
         password: String,

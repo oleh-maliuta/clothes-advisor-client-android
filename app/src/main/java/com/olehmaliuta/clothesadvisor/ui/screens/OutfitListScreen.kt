@@ -196,6 +196,7 @@ fun OutfitCard(
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
+            .testTag("outfit_card")
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
@@ -203,7 +204,9 @@ fun OutfitCard(
         ) {
             Text(
                 text = outfit.name,
-                style = MaterialTheme.typography.headlineSmall
+                style = MaterialTheme.typography.headlineSmall,
+                modifier = modifier
+                    .testTag("outfit_card__name")
             )
 
             Text(
@@ -212,7 +215,9 @@ fun OutfitCard(
                     outfit.itemCount),
                 color = if (outfit.itemCount == 0L)
                     MaterialTheme.colorScheme.error else Color.Unspecified,
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = modifier
+                    .testTag("outfit_card__item_count")
             )
         }
     }
