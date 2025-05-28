@@ -49,6 +49,10 @@ class GeneratingTesting {
             .performClick()
         helper.authorize(userEmail, userPassword)
         helper.assertExists("screen__${Screen.ClothesList.name}")
+        composeTestRule
+            .onNodeWithTag("bottom_bar__navigation_button__${Screen.Generate.name}")
+            .performClick()
+        helper.assertExists("screen__${Screen.Generate.name}")
     }
 
     @After
@@ -63,10 +67,6 @@ class GeneratingTesting {
 
     @Test
     fun successGenerating() {
-        composeTestRule
-            .onNodeWithTag("bottom_bar__navigation_button__${Screen.Generate.name}")
-            .performClick()
-        helper.assertExists("screen__${Screen.Generate.name}")
         composeTestRule
             .onNodeWithTag("main_content_container")
             .performScrollToNode(hasTestTag("generate_button"))
@@ -85,10 +85,6 @@ class GeneratingTesting {
 
     @Test
     fun failedGeneratingDueToNotSelectedLocation() {
-        composeTestRule
-            .onNodeWithTag("bottom_bar__navigation_button__${Screen.Generate.name}")
-            .performClick()
-        helper.assertExists("screen__${Screen.Generate.name}")
         composeTestRule
             .onNodeWithTag("use_device_location_switch")
             .performClick()

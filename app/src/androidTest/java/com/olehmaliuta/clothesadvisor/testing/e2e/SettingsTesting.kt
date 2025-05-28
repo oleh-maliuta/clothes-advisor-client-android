@@ -141,6 +141,28 @@ class SettingsTesting {
     }
 
     @Test
+    fun successfulEmailChanging() {
+        composeTestRule
+            .onNodeWithTag("change_email_form__email_input")
+            .performScrollTo()
+            .performTextInput("1@gmail.com")
+        composeTestRule
+            .onNodeWithTag("change_email_form__password_input")
+            .performScrollTo()
+            .performTextInput(userPassword)
+        composeTestRule
+            .onNodeWithTag("change_email_form__apply_button")
+            .performScrollTo()
+            .performClick()
+        helper.assertExists(
+            hasTestTag("info_dialog__description") and
+                    hasText(LocaleConstants.getString(
+                        "Email successfully updated. Please verify new email",
+                        composeTestRule.activity))
+        )
+    }
+
+    @Test
     fun failedEmailChangingDueToInvalidPassword() {
         composeTestRule
             .onNodeWithTag("change_email_form__email_input")

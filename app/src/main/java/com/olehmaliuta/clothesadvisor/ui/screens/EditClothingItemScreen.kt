@@ -518,7 +518,9 @@ fun EditClothingItemScreen(
                 Switch(
                     checked = isFavorite,
                     onCheckedChange = { isFavorite = !isFavorite },
-                    modifier = Modifier.semantics {
+                    modifier = Modifier
+                        .testTag("is_favorite_switch")
+                        .semantics {
                         this.contentDescription =
                             if (isFavorite) "Checked" else "Unchecked"
                     }
