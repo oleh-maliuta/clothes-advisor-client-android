@@ -1,4 +1,4 @@
-package com.olehmaliuta.clothesadvisor
+package com.olehmaliuta.clothesadvisor.testing
 
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
@@ -7,6 +7,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.test.ext.junit.rules.ActivityScenarioRule
+import com.olehmaliuta.clothesadvisor.MainActivity
 import com.olehmaliuta.clothesadvisor.navigation.Screen
 
 class UiTestHelper(

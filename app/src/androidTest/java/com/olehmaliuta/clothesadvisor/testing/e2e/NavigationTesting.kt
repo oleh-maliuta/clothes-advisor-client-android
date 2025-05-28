@@ -1,4 +1,4 @@
-package com.olehmaliuta.clothesadvisor
+package com.olehmaliuta.clothesadvisor.testing.e2e
 
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -6,7 +6,9 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToNode
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.olehmaliuta.clothesadvisor.MainActivity
 import com.olehmaliuta.clothesadvisor.navigation.Screen
+import com.olehmaliuta.clothesadvisor.testing.UiTestHelper
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith

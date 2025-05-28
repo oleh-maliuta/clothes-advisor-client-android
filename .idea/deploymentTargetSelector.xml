@@ -13,16 +13,7 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="LogInAndSignInTesting">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="NavigationTesting">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="ClothesManagementTesting">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="GeneratingTesting">
+      <SelectionState runConfigName="SettingsTesting">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

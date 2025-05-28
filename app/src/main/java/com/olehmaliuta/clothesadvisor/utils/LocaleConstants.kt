@@ -88,7 +88,7 @@ object LocaleConstants {
         context: Context
     ): String {
         val application = context.applicationContext as App
-        val language = application.languageManager.getSystemLanguage()
+        val language = application.languageManager.getRealLanguage()
 
         if (language == DEFAULT_LANG) {
             return value

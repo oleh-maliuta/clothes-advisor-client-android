@@ -41,7 +41,7 @@ class LanguageManager(private val context: Context) {
         }
     }
 
-    fun getSystemLanguage(): String {
+    fun getRealLanguage(): String {
         val systemLocale = Resources.getSystem().configuration.locales[0]
         return systemLocale.language.split("-").first()
     }

@@ -251,6 +251,7 @@ private fun UserAccountSection(
                 },
                 modifier = Modifier
                     .height(40.dp)
+                    .testTag("log_out_button")
             ) {
                 Text(
                     text = stringResource(R.string.settings__account__log_out_button),
@@ -293,7 +294,9 @@ private fun PersonalizationForm() {
                 value = stringResource(AppConstants.languages.getValue(selectedLanguage)),
                 onValueChange = {},
                 label = { Text(stringResource(R.string.settings__personalization__language__title)) },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("language_input"),
                 readOnly = true,
                 trailingIcon = {
                     Icon(
@@ -323,7 +326,10 @@ private fun PersonalizationForm() {
                             isLanguageMenuOpen = false
                             languageManager.setAppLanguage(languageOption.key)
                             context.findActivity()?.recreate()
-                        }
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .testTag("language_input__item_${languageOption.key}"),
                     )
                 }
             }
@@ -388,7 +394,8 @@ private fun ChangeEmailForm(
             label = { Text(stringResource(R.string.settings__change_email__new_email_input)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .testTag("change_email_form__email_input"),
             isError = newEmail.isNotBlank() &&
                     !Patterns.EMAIL_ADDRESS.matcher(newEmail).matches()
         )
@@ -401,7 +408,9 @@ private fun ChangeEmailForm(
             label = { Text(stringResource(R.string.settings__change_email__password_input)) },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag("change_email_form__password_input")
         )
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -417,7 +426,8 @@ private fun ChangeEmailForm(
                 )
             },
             modifier = Modifier
-                .height(40.dp),
+                .height(40.dp)
+                .testTag("change_email_form__apply_button"),
             enabled = isFormValid
         ) {
             if (userViewModel.changeEmailState is ApiState.Loading) {
@@ -498,7 +508,9 @@ private fun ChangePasswordForm(
             label = { Text(stringResource(R.string.settings__change_password__old_password_input)) },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag("change_password_form__old_password_input")
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -509,7 +521,9 @@ private fun ChangePasswordForm(
             label = { Text(stringResource(R.string.settings__change_password__new_password_input)) },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag("change_password_form__new_password_input")
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -520,7 +534,9 @@ private fun ChangePasswordForm(
             label = { Text(stringResource(R.string.settings__change_password__confirm_new_password_input)) },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag("change_password_form__confirm_new_password_input")
         )
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -534,7 +550,8 @@ private fun ChangePasswordForm(
                 )
             },
             modifier = Modifier
-                .height(40.dp),
+                .height(40.dp)
+                .testTag("change_password_form__apply_button"),
             enabled = isFormValid
         ) {
             if (userViewModel.changePasswordState is ApiState.Loading) {

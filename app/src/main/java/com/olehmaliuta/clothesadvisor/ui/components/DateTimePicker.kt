@@ -27,7 +27,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.olehmaliuta.clothesadvisor.App
 import com.olehmaliuta.clothesadvisor.R
-import com.olehmaliuta.clothesadvisor.ui.LanguageManager
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date

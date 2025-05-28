@@ -1,4 +1,4 @@
-package com.olehmaliuta.clothesadvisor
+package com.olehmaliuta.clothesadvisor.testing.e2e
 
 import android.content.Context
 import androidx.compose.ui.test.assertCountEquals
@@ -17,7 +17,10 @@ import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import androidx.core.content.edit
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.olehmaliuta.clothesadvisor.MainActivity
+import com.olehmaliuta.clothesadvisor.R
 import com.olehmaliuta.clothesadvisor.navigation.Screen
+import com.olehmaliuta.clothesadvisor.testing.UiTestHelper
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule

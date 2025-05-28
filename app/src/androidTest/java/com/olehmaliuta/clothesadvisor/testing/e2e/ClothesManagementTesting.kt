@@ -1,4 +1,4 @@
-package com.olehmaliuta.clothesadvisor
+package com.olehmaliuta.clothesadvisor.testing.e2e
 
 import android.Manifest
 import android.content.Context
@@ -9,7 +9,6 @@ import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.onChild
 import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
@@ -18,7 +17,9 @@ import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.GrantPermissionRule
+import com.olehmaliuta.clothesadvisor.MainActivity
 import com.olehmaliuta.clothesadvisor.navigation.Screen
+import com.olehmaliuta.clothesadvisor.testing.UiTestHelper
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
