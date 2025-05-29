@@ -1,4 +1,4 @@
-package com.olehmaliuta.clothesadvisor
+package com.olehmaliuta.clothesadvisor.testing.unit
 
 import com.olehmaliuta.clothesadvisor.utils.roundToDecimals
 import org.junit.Assert.assertEquals
