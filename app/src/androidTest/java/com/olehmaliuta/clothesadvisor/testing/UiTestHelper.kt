@@ -14,7 +14,7 @@ class UiTestHelper(
     private val rule: AndroidComposeTestRule<ActivityScenarioRule<MainActivity>, MainActivity>
 ) {
     companion object {
-        const val DEFAULT_TIMEOUT = 10000L
+        const val DEFAULT_TIMEOUT = 5000L
     }
 
     fun assertExists(

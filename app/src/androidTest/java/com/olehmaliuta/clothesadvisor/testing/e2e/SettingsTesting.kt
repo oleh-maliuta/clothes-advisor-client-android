@@ -145,7 +145,7 @@ class SettingsTesting {
         composeTestRule
             .onNodeWithTag("change_email_form__email_input")
             .performScrollTo()
-            .performTextInput("1@gmail.com")
+            .performTextInput("new_tester@gmail.com")
         composeTestRule
             .onNodeWithTag("change_email_form__password_input")
             .performScrollTo()
