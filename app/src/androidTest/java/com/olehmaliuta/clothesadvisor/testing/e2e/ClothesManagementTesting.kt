@@ -4,17 +4,19 @@ import android.Manifest
 import android.content.Context
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.semantics.getOrNull
+import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.hasAnyChild
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.isEnabled
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performScrollToNode
 import androidx.core.content.edit
-import androidx.core.net.toUri
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.GrantPermissionRule
 import com.olehmaliuta.clothesadvisor.MainActivity
@@ -37,7 +39,6 @@ class ClothesManagementTesting {
         Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED
     )
 
-    private val imageToPick = "content://media/picker_get_content/0/com.android.providers.media.photopicker/media/1000000055".toUri()
     private val userEmail = "test@gmail.com"
     private val userPassword = "pass"
     private val helper = UiTestHelper(composeTestRule)
@@ -117,5 +118,119 @@ class ClothesManagementTesting {
             favoriteButton.fetchSemanticsNode().config
                 .getOrNull(SemanticsProperties.ContentDescription)?.any { it == "Regular" } == true
         }
+    }
+
+    @Test
+    fun successfulClothingItemEditing() {
+        var card = composeTestRule.onAllNodes(
+            hasTestTag("clothing_item_card"),
+            useUnmergedTree = true
+        ).onFirst()
+        var descriptions = card.fetchSemanticsNode().config
+            .getOrNull(SemanticsProperties.ContentDescription) ?: emptyList()
+        var key = descriptions.firstOrNull {
+            val keys = it.split('/')
+            keys.size == 2 &&
+                    keys.first() == "ClothingItemKey" &&
+                    keys.last().toLongOrNull() != null
+        }
+        assert(key != null)
+        var favoriteButton = composeTestRule.onNode(
+            hasTestTag("clothing_item_card__favorite_button") and
+                    hasParent(hasContentDescription(descriptions.first { it == key })),
+            useUnmergedTree = true
+        )
+        val isFavorite = favoriteButton.fetchSemanticsNode()
+            .config[SemanticsProperties.ContentDescription].any { it == "Favorite" } == true
+
+        card.performClick()
+        helper.assertExists("screen__${Screen.EditClothingItem.name}")
+        composeTestRule
+            .onNodeWithTag("is_favorite_switch")
+            .performScrollTo()
+            .performClick()
+        composeTestRule
+            .onNodeWithTag("apply_button")
+            .performScrollTo()
+            .performClick()
+        helper.assertExists(hasTestTag("apply_button") and isEnabled())
+        helper.assertDoesNotExist(hasTestTag("info_dialog__description"))
+        composeTestRule
+            .onNodeWithTag("cancel_button")
+            .performScrollTo()
+            .performClick()
+        helper.assertExists("screen__${Screen.ClothesList.name}")
+        card = composeTestRule.onAllNodes(
+            hasTestTag("clothing_item_card"),
+            useUnmergedTree = true
+        ).onFirst()
+        descriptions = card.fetchSemanticsNode().config
+            .getOrNull(SemanticsProperties.ContentDescription) ?: emptyList()
+        key = descriptions.firstOrNull {
+            val keys = it.split('/')
+            keys.size == 2 &&
+                    keys.first() == "ClothingItemKey" &&
+                    keys.last().toLongOrNull() != null
+        }
+        assert(key != null)
+        favoriteButton = composeTestRule.onNode(
+            hasTestTag("clothing_item_card__favorite_button") and
+                    hasParent(hasContentDescription(descriptions.first { it == key })),
+            useUnmergedTree = true
+        )
+        var isFavoriteAgain = favoriteButton.fetchSemanticsNode()
+            .config[SemanticsProperties.ContentDescription].any { it == "Favorite" } == true
+        assert(isFavoriteAgain != isFavorite)
+
+        card.performClick()
+        helper.assertExists("screen__${Screen.EditClothingItem.name}")
+        composeTestRule
+            .onNodeWithTag("is_favorite_switch")
+            .performScrollTo()
+            .performClick()
+        composeTestRule
+            .onNodeWithTag("apply_button")
+            .performScrollTo()
+            .performClick()
+        helper.assertExists(hasTestTag("apply_button") and isEnabled())
+        helper.assertDoesNotExist(hasTestTag("info_dialog__description"))
+        composeTestRule
+            .onNodeWithTag("cancel_button")
+            .performScrollTo()
+            .performClick()
+        helper.assertExists("screen__${Screen.ClothesList.name}")
+        card = composeTestRule.onAllNodes(
+            hasTestTag("clothing_item_card"),
+            useUnmergedTree = true
+        ).onFirst()
+        descriptions = card.fetchSemanticsNode().config
+            .getOrNull(SemanticsProperties.ContentDescription) ?: emptyList()
+        key = descriptions.firstOrNull {
+            val keys = it.split('/')
+            keys.size == 2 &&
+                    keys.first() == "ClothingItemKey" &&
+                    keys.last().toLongOrNull() != null
+        }
+        assert(key != null)
+        favoriteButton = composeTestRule.onNode(
+            hasTestTag("clothing_item_card__favorite_button") and
+                    hasParent(hasContentDescription(descriptions.first { it == key })),
+            useUnmergedTree = true
+        )
+        isFavoriteAgain = favoriteButton.fetchSemanticsNode()
+            .config[SemanticsProperties.ContentDescription].any { it == "Favorite" } == true
+        assert(isFavoriteAgain == isFavorite)
+    }
+
+    @Test
+    fun failedToAddElementDueToNecessaryValuesAbsence() {
+        composeTestRule.onNodeWithTag(
+            "add_item_button")
+            .performClick()
+        helper.assertExists("screen__${Screen.EditClothingItem.name}")
+        composeTestRule
+            .onNodeWithTag("apply_button")
+            .performScrollTo()
+            .assertIsNotEnabled()
     }
 }

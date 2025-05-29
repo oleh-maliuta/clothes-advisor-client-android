@@ -172,7 +172,9 @@ fun ClothingItemCard(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         maxLines = 1,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier
+                            .weight(1f)
+                            .testTag("clothing_item_card__name")
                     )
 
                     if (onFavoriteClick != null) {

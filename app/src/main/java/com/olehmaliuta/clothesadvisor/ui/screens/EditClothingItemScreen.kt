@@ -374,7 +374,9 @@ fun EditClothingItemScreen(
                 },
                 label = { Text(stringResource(R.string.edit_clothing_item__text__name__label)) },
                 singleLine = true,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("name_input"),
                 isError = !isNameValid,
                 supportingText = {
                     if (!isNameValid) {
@@ -585,7 +587,9 @@ fun EditClothingItemScreen(
                             )
                         }
                     },
-                    enabled = isFormValid
+                    enabled = isFormValid,
+                    modifier = Modifier
+                        .testTag("apply_button")
                 ) {
                     if (clothingItemViewModel.itemUploadingState is ApiState.Loading) {
                         CircularProgressIndicator(

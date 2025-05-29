@@ -19,6 +19,9 @@
       <SelectionState runConfigName="GeneratingTesting">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
+      <SelectionState runConfigName="ClothesManagementTesting">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
     </selectionStates>
   </component>
 </project>
