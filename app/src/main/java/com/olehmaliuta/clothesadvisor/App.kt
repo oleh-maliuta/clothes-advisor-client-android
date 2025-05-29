@@ -6,7 +6,7 @@ import com.olehmaliuta.clothesadvisor.data.database.AppDb
 import com.olehmaliuta.clothesadvisor.data.database.repositories.ClothingItemDaoRepository
 import com.olehmaliuta.clothesadvisor.data.database.repositories.OutfitDaoRepository
 import com.olehmaliuta.clothesadvisor.data.database.repositories.StatisticsDaoRepository
-import com.olehmaliuta.clothesadvisor.ui.LanguageManager
+import com.olehmaliuta.clothesadvisor.utils.localization.LanguageManager
 import java.util.Locale
 
 class App : Application() {

@@ -16,7 +16,7 @@ import com.olehmaliuta.clothesadvisor.data.http.security.ApiState
 import com.olehmaliuta.clothesadvisor.data.http.services.ClothingItemApiService
 import com.olehmaliuta.clothesadvisor.data.database.entities.ClothingItem
 import com.olehmaliuta.clothesadvisor.data.database.repositories.ClothingItemDaoRepository
-import com.olehmaliuta.clothesadvisor.navigation.StateHandler
+import com.olehmaliuta.clothesadvisor.utils.navigation.StateHandler
 import com.olehmaliuta.clothesadvisor.utils.FileTool
 import com.olehmaliuta.clothesadvisor.utils.LocaleConstants
 import kotlinx.coroutines.flow.Flow

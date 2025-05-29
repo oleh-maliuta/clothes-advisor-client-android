@@ -1,4 +1,4 @@
-package com.olehmaliuta.clothesadvisor.navigation
+package com.olehmaliuta.clothesadvisor.utils.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State

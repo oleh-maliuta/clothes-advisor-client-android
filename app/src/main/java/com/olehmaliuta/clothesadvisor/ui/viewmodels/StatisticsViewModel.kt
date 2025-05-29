@@ -3,7 +3,7 @@ package com.olehmaliuta.clothesadvisor.ui.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.olehmaliuta.clothesadvisor.data.database.repositories.StatisticsDaoRepository
-import com.olehmaliuta.clothesadvisor.navigation.StateHandler
+import com.olehmaliuta.clothesadvisor.utils.navigation.StateHandler
 
 class StatisticsViewModel(
     repository: StatisticsDaoRepository

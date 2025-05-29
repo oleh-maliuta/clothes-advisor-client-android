@@ -1,10 +1,9 @@
 package com.olehmaliuta.clothesadvisor.ui.viewmodels
 
-import android.content.Context
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.olehmaliuta.clothesadvisor.navigation.StateHandler
+import com.olehmaliuta.clothesadvisor.utils.navigation.StateHandler
 
 class StorageViewModel() : ViewModel(), StateHandler {
     class Factory() : ViewModelProvider.Factory {

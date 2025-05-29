@@ -1,10 +1,10 @@
 package com.olehmaliuta.clothesadvisor.utils
 
 import com.olehmaliuta.clothesadvisor.R
-import com.olehmaliuta.clothesadvisor.types.PaletteInfo
-import com.olehmaliuta.clothesadvisor.navigation.NavItem
-import com.olehmaliuta.clothesadvisor.navigation.Screen
-import com.olehmaliuta.clothesadvisor.ui.LanguageManager
+import com.olehmaliuta.clothesadvisor.utils.types.PaletteInfo
+import com.olehmaliuta.clothesadvisor.utils.navigation.NavItem
+import com.olehmaliuta.clothesadvisor.utils.navigation.Screen
+import com.olehmaliuta.clothesadvisor.utils.localization.LanguageManager
 
 object AppConstants {
     const val MAX_CLOTHING_ITEMS = 100

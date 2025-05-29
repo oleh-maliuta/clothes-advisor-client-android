@@ -19,7 +19,7 @@ import androidx.core.content.edit
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.olehmaliuta.clothesadvisor.MainActivity
 import com.olehmaliuta.clothesadvisor.R
-import com.olehmaliuta.clothesadvisor.navigation.Screen
+import com.olehmaliuta.clothesadvisor.utils.navigation.Screen
 import com.olehmaliuta.clothesadvisor.testing.UiTestHelper
 import org.junit.After
 import org.junit.Before

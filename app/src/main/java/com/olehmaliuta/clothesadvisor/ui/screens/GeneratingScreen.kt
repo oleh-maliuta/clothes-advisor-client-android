@@ -87,9 +87,9 @@ import com.olehmaliuta.clothesadvisor.data.http.responses.GeneratedOutfitRespons
 import com.olehmaliuta.clothesadvisor.data.http.responses.WeatherResponse
 import com.olehmaliuta.clothesadvisor.data.http.security.ApiState
 import com.olehmaliuta.clothesadvisor.data.http.security.AuthState
-import com.olehmaliuta.clothesadvisor.navigation.Router
-import com.olehmaliuta.clothesadvisor.navigation.Screen
-import com.olehmaliuta.clothesadvisor.types.PaletteInfo
+import com.olehmaliuta.clothesadvisor.utils.navigation.Router
+import com.olehmaliuta.clothesadvisor.utils.navigation.Screen
+import com.olehmaliuta.clothesadvisor.utils.types.PaletteInfo
 import com.olehmaliuta.clothesadvisor.ui.components.AcceptCancelDialog
 import com.olehmaliuta.clothesadvisor.ui.components.CenteredScrollContainer
 import com.olehmaliuta.clothesadvisor.ui.components.ColorPicker

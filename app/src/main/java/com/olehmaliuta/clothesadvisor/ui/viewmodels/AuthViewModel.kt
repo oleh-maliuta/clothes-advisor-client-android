@@ -14,7 +14,7 @@ import com.olehmaliuta.clothesadvisor.data.http.security.AuthState
 import com.olehmaliuta.clothesadvisor.data.http.services.UserApiService
 import com.olehmaliuta.clothesadvisor.data.database.repositories.ClothingItemDaoRepository
 import com.olehmaliuta.clothesadvisor.data.database.repositories.OutfitDaoRepository
-import com.olehmaliuta.clothesadvisor.snackbar.SnackbarManager
+import com.olehmaliuta.clothesadvisor.utils.snackbar.SnackbarManager
 import com.olehmaliuta.clothesadvisor.utils.LocaleConstants
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull

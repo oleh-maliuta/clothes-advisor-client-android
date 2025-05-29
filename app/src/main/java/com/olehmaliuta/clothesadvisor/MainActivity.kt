@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.olehmaliuta.clothesadvisor.ui.components.ScreenManager
+import com.olehmaliuta.clothesadvisor.utils.localization.LocaleAwareActivity
 import com.olehmaliuta.clothesadvisor.ui.theme.ClothesAdvisorTheme
 
 class MainActivity : LocaleAwareActivity() {

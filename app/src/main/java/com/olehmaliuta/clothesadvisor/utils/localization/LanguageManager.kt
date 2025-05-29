@@ -1,4 +1,4 @@
-package com.olehmaliuta.clothesadvisor.ui
+package com.olehmaliuta.clothesadvisor.utils.localization
 
 import android.app.Activity
 import android.app.LocaleManager

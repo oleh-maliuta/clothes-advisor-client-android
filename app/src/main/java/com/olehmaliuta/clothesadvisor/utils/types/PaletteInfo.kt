@@ -1,4 +1,4 @@
-package com.olehmaliuta.clothesadvisor.types
+package com.olehmaliuta.clothesadvisor.utils.types
 
 data class PaletteInfo(
     val nameId: Int,

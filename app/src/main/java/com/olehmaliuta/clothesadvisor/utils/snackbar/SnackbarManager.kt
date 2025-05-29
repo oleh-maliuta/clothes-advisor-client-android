@@ -1,4 +1,4 @@
-package com.olehmaliuta.clothesadvisor.snackbar
+package com.olehmaliuta.clothesadvisor.utils.snackbar
 
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState

@@ -1,4 +1,4 @@
-package com.olehmaliuta.clothesadvisor.navigation
+package com.olehmaliuta.clothesadvisor.utils.navigation
 
 data class NavItem(
     val route: Screen,

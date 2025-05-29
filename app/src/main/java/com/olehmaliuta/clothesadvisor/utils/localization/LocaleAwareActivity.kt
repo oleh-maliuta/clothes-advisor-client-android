@@ -1,9 +1,9 @@
-package com.olehmaliuta.clothesadvisor
+package com.olehmaliuta.clothesadvisor.utils.localization
 
 import android.content.Context
 import android.os.Build
 import androidx.activity.ComponentActivity
-import com.olehmaliuta.clothesadvisor.ui.LanguageManager
+import com.olehmaliuta.clothesadvisor.App
 import java.util.Locale
 
 abstract class LocaleAwareActivity : ComponentActivity() {

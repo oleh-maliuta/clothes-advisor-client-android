@@ -1,4 +1,4 @@
-package com.olehmaliuta.clothesadvisor.navigation
+package com.olehmaliuta.clothesadvisor.utils.navigation
 
 enum class Screen {
     Registration,

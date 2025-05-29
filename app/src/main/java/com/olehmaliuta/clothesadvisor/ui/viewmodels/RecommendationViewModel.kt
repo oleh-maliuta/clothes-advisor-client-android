@@ -18,7 +18,7 @@ import com.olehmaliuta.clothesadvisor.data.http.responses.BaseResponse
 import com.olehmaliuta.clothesadvisor.data.http.responses.RecommendationResponse
 import com.olehmaliuta.clothesadvisor.data.http.security.ApiState
 import com.olehmaliuta.clothesadvisor.data.http.services.RecommendationApiService
-import com.olehmaliuta.clothesadvisor.navigation.StateHandler
+import com.olehmaliuta.clothesadvisor.utils.navigation.StateHandler
 import com.olehmaliuta.clothesadvisor.utils.LocaleConstants
 import kotlinx.coroutines.launch
 import org.osmdroid.util.GeoPoint

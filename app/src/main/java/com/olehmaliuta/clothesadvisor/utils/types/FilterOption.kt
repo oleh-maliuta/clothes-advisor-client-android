@@ -1,4 +1,4 @@
-package com.olehmaliuta.clothesadvisor.types
+package com.olehmaliuta.clothesadvisor.utils.types
 
 data class FilterOption(
     val value: String,

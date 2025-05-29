@@ -12,9 +12,9 @@ import androidx.core.content.edit
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.olehmaliuta.clothesadvisor.App
 import com.olehmaliuta.clothesadvisor.MainActivity
-import com.olehmaliuta.clothesadvisor.navigation.Screen
+import com.olehmaliuta.clothesadvisor.utils.navigation.Screen
 import com.olehmaliuta.clothesadvisor.testing.UiTestHelper
-import com.olehmaliuta.clothesadvisor.ui.LanguageManager
+import com.olehmaliuta.clothesadvisor.utils.localization.LanguageManager
 import com.olehmaliuta.clothesadvisor.utils.LocaleConstants
 import org.junit.After
 import org.junit.Before

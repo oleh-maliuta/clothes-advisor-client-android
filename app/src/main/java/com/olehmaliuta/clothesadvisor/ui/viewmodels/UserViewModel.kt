@@ -18,7 +18,7 @@ import com.olehmaliuta.clothesadvisor.data.http.services.UserApiService
 import com.olehmaliuta.clothesadvisor.data.database.entities.query.OutfitWithClothingItemIds
 import com.olehmaliuta.clothesadvisor.data.database.repositories.ClothingItemDaoRepository
 import com.olehmaliuta.clothesadvisor.data.database.repositories.OutfitDaoRepository
-import com.olehmaliuta.clothesadvisor.navigation.StateHandler
+import com.olehmaliuta.clothesadvisor.utils.navigation.StateHandler
 import com.olehmaliuta.clothesadvisor.utils.FileTool
 import com.olehmaliuta.clothesadvisor.utils.LocaleConstants
 import kotlinx.coroutines.launch

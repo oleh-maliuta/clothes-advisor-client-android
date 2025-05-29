@@ -2,6 +2,7 @@ package com.olehmaliuta.clothesadvisor.testing.e2e
 
 import android.Manifest
 import android.content.Context
+import android.os.Build
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.assertIsNotEnabled
@@ -20,7 +21,7 @@ import androidx.core.content.edit
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.GrantPermissionRule
 import com.olehmaliuta.clothesadvisor.MainActivity
-import com.olehmaliuta.clothesadvisor.navigation.Screen
+import com.olehmaliuta.clothesadvisor.utils.navigation.Screen
 import com.olehmaliuta.clothesadvisor.testing.UiTestHelper
 import org.junit.After
 import org.junit.Before
@@ -33,11 +34,21 @@ class ClothesManagementTesting {
     @get:Rule
     val composeTestRule = createAndroidComposeRule<MainActivity>()
     @get:Rule
-    val grantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(
-        Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission.READ_MEDIA_IMAGES,
-        Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED
-    )
+    val grantPermissionRule: GrantPermissionRule =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            GrantPermissionRule.grant(
+                Manifest.permission.READ_MEDIA_IMAGES,
+                Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED,
+            )
+    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            GrantPermissionRule.grant(
+                Manifest.permission.READ_MEDIA_IMAGES,
+            )
+    } else {
+            GrantPermissionRule.grant(
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+            )
+    }
 
     private val userEmail = "test@gmail.com"
     private val userPassword = "pass"

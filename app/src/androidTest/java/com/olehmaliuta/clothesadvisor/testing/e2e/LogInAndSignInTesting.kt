@@ -9,10 +9,9 @@ import androidx.compose.ui.test.performClick
 import androidx.core.content.edit
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.olehmaliuta.clothesadvisor.MainActivity
-import com.olehmaliuta.clothesadvisor.navigation.Screen
+import com.olehmaliuta.clothesadvisor.utils.navigation.Screen
 import com.olehmaliuta.clothesadvisor.testing.UiTestHelper
 import com.olehmaliuta.clothesadvisor.utils.LocaleConstants
-import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith

@@ -63,7 +63,7 @@ import com.olehmaliuta.clothesadvisor.ui.components.FloatingPointNumberInput
 import com.olehmaliuta.clothesadvisor.ui.components.ImagePicker
 import com.olehmaliuta.clothesadvisor.ui.components.InfoDialog
 import com.olehmaliuta.clothesadvisor.data.database.entities.ClothingItem
-import com.olehmaliuta.clothesadvisor.navigation.Router
+import com.olehmaliuta.clothesadvisor.utils.navigation.Router
 import com.olehmaliuta.clothesadvisor.utils.FileTool
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.AuthViewModel
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.ClothingItemViewModel
@@ -299,10 +299,19 @@ fun EditClothingItemScreen(
                                     clothingItemViewModel.backgroundRemovingState
                                             !is ApiState.Loading,
                         ) {
-                            Text(
-                                text = stringResource(
-                                    R.string.edit_clothing_item__image__remove_background),
-                            )
+                            if (
+                                clothingItemViewModel.backgroundRemovingState
+                                        is ApiState.Loading
+                                ) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(30.dp)
+                                )
+                            } else {
+                                Text(
+                                    text = stringResource(
+                                        R.string.edit_clothing_item__image__remove_background),
+                                )
+                            }
                         }
                     }
                 } else {
