@@ -223,7 +223,7 @@
     <string name="authorization__header">Log in</string>
     <string name="authorization__email_input">Email</string>
     <string name="authorization__password_input">Password</string>
-    <string name="authorization__sync_by_the_server_data_switch">Sync. by the server data</string>
+    <string name="authorization__load_data_from_account_switch">Load Data from Account</string>
     <string name="authorization__apply_button">Log in</string>
     <string name="authorization__success_message_title">Success</string>
     <string name="authorization__error_message_title">Error</string>
@@ -244,7 +244,7 @@
     <string name="settings__personalization__language__title">Language</string>
     <string name="settings__personalization__language__system">&#60; System Language &#62;</string>
     <string name="settings__personalization__language__en">English</string>
-    <string name="settings__personalization__language__uk">Ukraine (Українська)</string>
+    <string name="settings__personalization__language__uk">Ukrainian (Українська)</string>
     <string name="settings__change_email__title">Change email address</string>
     <string name="settings__change_email__new_email_input">New Email</string>
     <string name="settings__change_email__password_input">Password</string>
@@ -300,6 +300,7 @@
     <string name="edit_clothing_item__image__return_the_original">Return the original</string>
     <string name="edit_clothing_item__image__remove_background">Remove background</string>
     <string name="edit_clothing_item__image__remove_background_cancel">Remove background (Cancel)</string>
+    <string name="edit_clothing_item__image__auth_required">Log in to enable this feature</string>
     <string name="edit_clothing_item__color__title">Main color</string>
     <string name="edit_clothing_item__text__title">Text Info</string>
     <string name="edit_clothing_item__text__name__label">Name*</string>

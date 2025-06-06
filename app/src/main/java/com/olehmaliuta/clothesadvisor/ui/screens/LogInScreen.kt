@@ -220,7 +220,7 @@ fun LogInScreen(
                 )
                 Spacer(Modifier.width(12.dp))
                 Text(
-                    text = stringResource(R.string.authorization__sync_by_the_server_data_switch),
+                    text = stringResource(R.string.authorization__load_data_from_account_switch),
                     fontSize = 17.sp
                 )
             }

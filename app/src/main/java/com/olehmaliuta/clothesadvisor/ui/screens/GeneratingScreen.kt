@@ -97,6 +97,7 @@ import com.olehmaliuta.clothesadvisor.ui.components.DateTimePicker
 import com.olehmaliuta.clothesadvisor.ui.components.InfoDialog
 import com.olehmaliuta.clothesadvisor.ui.components.OsmLocationPickerDialog
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.AuthViewModel
+import com.olehmaliuta.clothesadvisor.ui.viewmodels.OutfitViewModel
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.RecommendationViewModel
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.StorageViewModel
 import com.olehmaliuta.clothesadvisor.utils.AppConstants
@@ -109,6 +110,7 @@ import java.util.Locale
 fun GeneratingScreen(
     router: Router,
     authViewModel: AuthViewModel,
+    outfitViewModel: OutfitViewModel,
     storageViewModel: StorageViewModel,
     recommendationViewModel: RecommendationViewModel
 ) {
@@ -116,6 +118,7 @@ fun GeneratingScreen(
         is AuthState.Authenticated -> {
             ContentForUser(
                 router = router,
+                outfitViewModel = outfitViewModel,
                 storageViewModel = storageViewModel,
                 recommendationViewModel = recommendationViewModel
             )
@@ -132,6 +135,7 @@ fun GeneratingScreen(
 @Composable
 private fun ContentForUser(
     router: Router,
+    outfitViewModel: OutfitViewModel,
     storageViewModel: StorageViewModel,
     recommendationViewModel: RecommendationViewModel
 ) {
@@ -690,6 +694,7 @@ private fun ContentForUser(
                     OutfitCard(
                         outfit = outfitInfo,
                         onSaveClick = {
+                            outfitViewModel.idOfOutfitToEdit.value = null
                             storageViewModel.initialItemIds.value = outfitInfo.items
                                 ?.filter { item -> item.id != null }
                                 ?.map { item -> item.id!! }?.toSet() ?: emptySet()

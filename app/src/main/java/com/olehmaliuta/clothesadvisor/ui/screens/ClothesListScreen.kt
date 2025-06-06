@@ -357,6 +357,7 @@ fun ClothesListScreen(
             onClick = {
                 if (itemCount != null) {
                     if (itemCount!! < AppConstants.MAX_CLOTHING_ITEMS) {
+                        clothingItemViewModel.idOfItemToEdit.value = null
                         router.navigate(Screen.EditClothingItem.name)
                     } else {
                         okDialogTitle = errorMessageTitle

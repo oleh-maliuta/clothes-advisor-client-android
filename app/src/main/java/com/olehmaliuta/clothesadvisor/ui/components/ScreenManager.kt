@@ -162,6 +162,7 @@ fun ScreenManager() {
             GeneratingScreen(
                 router = router,
                 authViewModel = authViewModel,
+                outfitViewModel = outfitViewModel,
                 storageViewModel = storageViewModel,
                 recommendationViewModel = recommendationViewModel
             )

@@ -54,6 +54,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import com.olehmaliuta.clothesadvisor.R
+import com.olehmaliuta.clothesadvisor.data.database.entities.ClothingItem
 import com.olehmaliuta.clothesadvisor.data.http.security.ApiState
 import com.olehmaliuta.clothesadvisor.data.http.security.AuthState
 import com.olehmaliuta.clothesadvisor.ui.components.AcceptCancelDialog
@@ -62,12 +63,11 @@ import com.olehmaliuta.clothesadvisor.ui.components.DatePicker
 import com.olehmaliuta.clothesadvisor.ui.components.FloatingPointNumberInput
 import com.olehmaliuta.clothesadvisor.ui.components.ImagePicker
 import com.olehmaliuta.clothesadvisor.ui.components.InfoDialog
-import com.olehmaliuta.clothesadvisor.data.database.entities.ClothingItem
-import com.olehmaliuta.clothesadvisor.utils.navigation.Router
-import com.olehmaliuta.clothesadvisor.utils.FileTool
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.AuthViewModel
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.ClothingItemViewModel
 import com.olehmaliuta.clothesadvisor.utils.AppConstants
+import com.olehmaliuta.clothesadvisor.utils.FileTool
+import com.olehmaliuta.clothesadvisor.utils.navigation.Router
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -220,7 +220,6 @@ fun EditClothingItemScreen(
                 .padding(horizontal = 8.dp)
                 .verticalScroll(rememberScrollState())
                 .testTag("main_content_container"),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Text(
                 text = if (currentItem == null)
@@ -234,7 +233,7 @@ fun EditClothingItemScreen(
                     .fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Text(
                 text = stringResource(R.string.edit_clothing_item__image__title),
@@ -313,6 +312,18 @@ fun EditClothingItemScreen(
                                 )
                             }
                         }
+
+                        if (authViewModel.authState.value is AuthState.Unauthenticated) {
+                            Text(
+                                text = stringResource(
+                                    R.string.edit_clothing_item__image__auth_required),
+                                textAlign = TextAlign.Center,
+                                fontSize = 14.sp,
+                                color = MaterialTheme.colorScheme.error,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                            )
+                        }
                     }
                 } else {
                     Button(
@@ -340,7 +351,7 @@ fun EditClothingItemScreen(
             }
 
             HorizontalDivider(
-                modifier = Modifier.padding(vertical = 16.dp),
+                modifier = Modifier.padding(vertical = 22.dp),
                 thickness = 3.dp,
                 color = Color.Gray
             )
@@ -352,6 +363,8 @@ fun EditClothingItemScreen(
                 fontWeight = FontWeight.Bold
             )
 
+            Spacer(modifier = Modifier.height(8.dp))
+
             ColorPicker(
                 color = color,
                 imageUri = imageUri,
@@ -362,7 +375,7 @@ fun EditClothingItemScreen(
             )
 
             HorizontalDivider(
-                modifier = Modifier.padding(vertical = 16.dp),
+                modifier = Modifier.padding(vertical = 22.dp),
                 thickness = 3.dp,
                 color = Color.Gray
             )
@@ -373,6 +386,8 @@ fun EditClothingItemScreen(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             OutlinedTextField(
                 value = name,

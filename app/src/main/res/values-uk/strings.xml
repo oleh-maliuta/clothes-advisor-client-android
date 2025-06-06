@@ -223,7 +223,7 @@
     <string name="authorization__header">Aвторизація</string>
     <string name="authorization__email_input">Електронна пошта</string>
     <string name="authorization__password_input">Пароль</string>
-    <string name="authorization__sync_by_the_server_data_switch">Синхрон. за даними сервера</string>
+    <string name="authorization__load_data_from_account_switch">Завантажити дані з облікового запису</string>
     <string name="authorization__apply_button">Aвторизуватися</string>
     <string name="authorization__success_message_title">Успішно</string>
     <string name="authorization__error_message_title">Помилка</string>
@@ -300,6 +300,7 @@
     <string name="edit_clothing_item__image__return_the_original">Повернути оригінал</string>
     <string name="edit_clothing_item__image__remove_background">Видалити фон</string>
     <string name="edit_clothing_item__image__remove_background_cancel">Видалити фон (Скасувати)</string>
+    <string name="edit_clothing_item__image__auth_required">Авторизуйтеся, щоб увімкнути цю функцію</string>
     <string name="edit_clothing_item__color__title">Основний колір</string>
     <string name="edit_clothing_item__text__title">Текстова інформація</string>
     <string name="edit_clothing_item__text__name__label">Назва*</string>
