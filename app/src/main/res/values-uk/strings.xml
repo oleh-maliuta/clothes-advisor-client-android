@@ -286,6 +286,7 @@
     <string name="clothes_list__filters__title">Фільтри</string>
     <string name="clothes_list__filters__seasons__title">Сезони</string>
     <string name="clothes_list__filters__categories__title">Категорії</string>
+    <string name="clothes_list__info__purpose">Тут буде відображатись ваш список одягу.</string>
     <string name="clothes_list__info__no_items">На даний момент у вас немає елементів одягу.</string>
     <string name="clothes_list__info__no_items_found">Жодної речі не було знайдено за даними параметрами.</string>
     <string name="clothes_list__error_message_title">Помилка</string>
@@ -323,6 +324,7 @@
 
     <!-- Outfit List Page -->
     <string name="outfits_list__search">Пошук</string>
+    <string name="outfits_list__info__purpose">Тут буде відображатись ваш список наборів.</string>
     <string name="outfits_list__info__no_outfits">На даний момент у вас немає наборів.</string>
     <string name="outfits_list__info__no_outfits_found">Жодного набора не було знайдено за даними параметрами.</string>
     <string name="outfits_list__outfit__item_count">Кількість речей: %d</string>

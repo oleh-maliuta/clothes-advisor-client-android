@@ -409,6 +409,8 @@ fun EditClothingItemScreen(
                 }
             )
 
+            Spacer(modifier = Modifier.height(8.dp))
+
             Box(modifier = Modifier.fillMaxWidth()) {
                 OutlinedTextField(
                     value = stringResource(AppConstants.categories.getValue(category)),
@@ -448,6 +450,8 @@ fun EditClothingItemScreen(
                     }
                 }
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             Box(modifier = Modifier.fillMaxWidth()) {
                 OutlinedTextField(
@@ -489,6 +493,8 @@ fun EditClothingItemScreen(
                 }
             }
 
+            Spacer(modifier = Modifier.height(16.dp))
+
             OutlinedTextField(
                 value = material,
                 onValueChange = {
@@ -507,6 +513,8 @@ fun EditClothingItemScreen(
                 }
             )
 
+            Spacer(modifier = Modifier.height(8.dp))
+
             OutlinedTextField(
                 value = brand,
                 onValueChange = {
@@ -519,6 +527,8 @@ fun EditClothingItemScreen(
                 modifier = Modifier.fillMaxWidth()
             )
 
+            Spacer(modifier = Modifier.height(16.dp))
+
             FloatingPointNumberInput(
                 value = price,
                 onValueChange = { price = it },
@@ -527,7 +537,7 @@ fun EditClothingItemScreen(
                     .fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             DatePicker(
                 selectedDate = purchaseDate,
@@ -558,7 +568,7 @@ fun EditClothingItemScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),

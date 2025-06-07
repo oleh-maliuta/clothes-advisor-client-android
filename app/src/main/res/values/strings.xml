@@ -286,6 +286,7 @@
     <string name="clothes_list__filters__title">Filters</string>
     <string name="clothes_list__filters__seasons__title">Seasons</string>
     <string name="clothes_list__filters__categories__title">Categories</string>
+    <string name="clothes_list__info__purpose">Your clothes list will be displayed here.</string>
     <string name="clothes_list__info__no_items">You have no clothing items at the moment.</string>
     <string name="clothes_list__info__no_items_found">No items were found according to the parameters.</string>
     <string name="clothes_list__error_message_title">Error</string>
@@ -323,6 +324,7 @@
 
     <!-- Outfit List Page -->
     <string name="outfits_list__search">Search</string>
+    <string name="outfits_list__info__purpose">Your outfits list will be displayed here.</string>
     <string name="outfits_list__info__no_outfits">You have no outfits at the moment.</string>
     <string name="outfits_list__info__no_outfits_found">No outfits were found according to the parameters.</string>
     <string name="outfits_list__outfit__item_count">Item count: %d</string>

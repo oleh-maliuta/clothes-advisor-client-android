@@ -137,16 +137,64 @@ fun OutfitListScreen(
 
         if (outfitCount == 0L) {
             item {
-                InfoMessage(
-                    stringResource(R.string.outfits_list__info__no_outfits)
-                )
+                Spacer(modifier = Modifier.height(30.dp))
+
+                Column {
+                    Text(
+                        text = stringResource(R.string.app_name),
+                        textAlign = TextAlign.Center,
+                        fontSize = 30.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp)
+                    )
+
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    Text(
+                        text = stringResource(R.string.outfits_list__info__purpose),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        style = TextStyle(
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 1.sp,
+                            lineHeight = 30.sp)
+                    )
+
+                    Spacer(modifier = Modifier.height(15.dp))
+
+                    Text(
+                        text = stringResource(R.string.outfits_list__info__no_outfits),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        style = TextStyle(
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 1.sp,
+                            lineHeight = 30.sp)
+                    )
+                }
             }
         }
 
         if (outfitCount != 0L && searchResults?.isEmpty() == true) {
             item {
-                InfoMessage(
-                    stringResource(R.string.outfits_list__info__no_outfits_found)
+                Spacer(modifier = Modifier.height(10.dp))
+                Text(
+                    text = stringResource(R.string.outfits_list__info__no_outfits_found),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    style = TextStyle(
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 1.sp,
+                        lineHeight = 30.sp)
                 )
             }
         }
@@ -222,22 +270,4 @@ fun OutfitCard(
             )
         }
     }
-}
-
-@Composable
-private fun InfoMessage(
-    text: String
-) {
-    Spacer(modifier = Modifier.height(10.dp))
-    Text(
-        text = text,
-        textAlign = TextAlign.Center,
-        modifier = Modifier
-            .fillMaxWidth(),
-        style = TextStyle(
-            fontSize = 22.sp,
-            fontWeight = FontWeight.Bold,
-            letterSpacing = 1.sp,
-            lineHeight = 30.sp)
-    )
 }
