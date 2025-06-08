@@ -351,8 +351,10 @@ private fun PersonalizationForm() {
                         text = { Text(stringResource(languageOption.value)) },
                         onClick = {
                             isLanguageMenuOpen = false
-                            languageManager.setAppLanguage(languageOption.key)
-                            context.findActivity()?.recreate()
+                            if (languageManager.getCurrentLanguage() != languageOption.key) {
+                                languageManager.setAppLanguage(languageOption.key)
+                                context.findActivity()?.recreate()
+                            }
                         },
                         modifier = Modifier
                             .fillMaxWidth()
