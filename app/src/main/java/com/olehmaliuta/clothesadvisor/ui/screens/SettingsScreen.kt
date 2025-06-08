@@ -45,6 +45,7 @@ import com.olehmaliuta.clothesadvisor.App
 import com.olehmaliuta.clothesadvisor.R
 import com.olehmaliuta.clothesadvisor.data.http.security.ApiState
 import com.olehmaliuta.clothesadvisor.data.http.security.AuthState
+import com.olehmaliuta.clothesadvisor.ui.components.HelpButton
 import com.olehmaliuta.clothesadvisor.utils.navigation.Router
 import com.olehmaliuta.clothesadvisor.utils.navigation.Screen
 import com.olehmaliuta.clothesadvisor.ui.components.InfoDialog
@@ -61,6 +62,24 @@ fun SettingsScreen(
     authViewModel: AuthViewModel,
     userViewModel: UserViewModel
 ) {
+    var okDialogMessage = remember { mutableStateOf<String?>(null) }
+
+    InfoDialog(
+        title = stringResource(R.string.settings__help_message_title),
+        content = okDialogMessage.value,
+        onConfirm = {
+            okDialogMessage.value = null
+
+            if (userViewModel.changeEmailState is ApiState.Success) {
+                authViewModel.logOut()
+                router.navigate(
+                    route = Screen.LogIn.name,
+                    apiStatesToRestore = listOf(userViewModel)
+                )
+            }
+        }
+    )
+
     when (authViewModel.authState.value) {
         is AuthState.Authenticated -> {
             ContentForUser(
@@ -77,6 +96,14 @@ fun SettingsScreen(
         }
         else -> {}
     }
+
+    val helpMessage = stringResource(R.string.settings__help_message)
+
+    HelpButton(
+        onClick = {
+            okDialogMessage.value = helpMessage
+        }
+    )
 }
 
 @Composable

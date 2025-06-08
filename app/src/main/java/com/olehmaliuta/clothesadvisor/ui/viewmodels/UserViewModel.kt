@@ -24,6 +24,7 @@ import com.olehmaliuta.clothesadvisor.utils.LocaleConstants
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
+import okio.IOException
 import java.io.File
 
 class UserViewModel(
@@ -98,6 +99,10 @@ class UserViewModel(
                             errorBody.detail.toString(),
                             context))
                 }
+            } catch (_: IOException) {
+                registrationState = ApiState.Error(
+                    context.getString(R.string.error__io_message)
+                )
             } catch (e: Exception) {
                 registrationState = ApiState.Error("Network error: ${e.message}")
             }
@@ -223,6 +228,10 @@ class UserViewModel(
                             errorBody.detail.toString(),
                             context))
                 }
+            } catch (_: IOException) {
+                logInState = ApiState.Error(
+                    context.getString(R.string.error__io_message)
+                )
             } catch (e: Exception) {
                 logInState = ApiState.Error("Network error: ${e.message}")
             } finally {
@@ -257,6 +266,10 @@ class UserViewModel(
                             errorBody.detail.toString(),
                             context))
                 }
+            } catch (_: IOException) {
+                forgotPasswordState = ApiState.Error(
+                    context.getString(R.string.error__io_message)
+                )
             } catch (e: Exception) {
                 forgotPasswordState = ApiState.Error("Network error: ${e.message}")
             }

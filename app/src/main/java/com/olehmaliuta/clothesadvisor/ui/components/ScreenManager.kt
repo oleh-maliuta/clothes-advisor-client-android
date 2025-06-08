@@ -32,9 +32,6 @@ import androidx.navigation.compose.rememberNavController
 import com.olehmaliuta.clothesadvisor.App
 import com.olehmaliuta.clothesadvisor.R
 import com.olehmaliuta.clothesadvisor.data.http.security.AuthState
-import com.olehmaliuta.clothesadvisor.utils.navigation.Router
-import com.olehmaliuta.clothesadvisor.utils.navigation.Screen
-import com.olehmaliuta.clothesadvisor.utils.snackbar.SnackbarHandler
 import com.olehmaliuta.clothesadvisor.ui.screens.ClothesListScreen
 import com.olehmaliuta.clothesadvisor.ui.screens.EditClothingItemScreen
 import com.olehmaliuta.clothesadvisor.ui.screens.EditOutfitScreen
@@ -51,6 +48,9 @@ import com.olehmaliuta.clothesadvisor.ui.viewmodels.RecommendationViewModel
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.StatisticsViewModel
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.StorageViewModel
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.UserViewModel
+import com.olehmaliuta.clothesadvisor.utils.navigation.Router
+import com.olehmaliuta.clothesadvisor.utils.navigation.Screen
+import com.olehmaliuta.clothesadvisor.utils.snackbar.SnackbarHandler
 
 @Composable
 fun ScreenManager() {

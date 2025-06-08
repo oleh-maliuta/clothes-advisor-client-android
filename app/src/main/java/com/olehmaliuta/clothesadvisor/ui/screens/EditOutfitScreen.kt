@@ -191,8 +191,7 @@ fun EditOutfitScreen(
             },
         ) {
             Text(
-                text = stringResource(R.string.edit_outfit__delete_outfit_message_description),
-                textAlign = TextAlign.Justify
+                text = stringResource(R.string.edit_outfit__delete_outfit_message_description)
             )
         }
     }

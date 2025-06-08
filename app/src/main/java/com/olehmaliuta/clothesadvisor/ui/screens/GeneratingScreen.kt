@@ -94,6 +94,7 @@ import com.olehmaliuta.clothesadvisor.ui.components.AcceptCancelDialog
 import com.olehmaliuta.clothesadvisor.ui.components.CenteredScrollContainer
 import com.olehmaliuta.clothesadvisor.ui.components.ColorPicker
 import com.olehmaliuta.clothesadvisor.ui.components.DateTimePicker
+import com.olehmaliuta.clothesadvisor.ui.components.HelpButton
 import com.olehmaliuta.clothesadvisor.ui.components.InfoDialog
 import com.olehmaliuta.clothesadvisor.ui.components.OsmLocationPickerDialog
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.AuthViewModel
@@ -708,6 +709,16 @@ private fun ContentForUser(
             }
         }
     }
+
+    val helpMessageTitle = stringResource(R.string.generating__help_message_title)
+    val helpMessage = stringResource(R.string.generating__help_message)
+
+    HelpButton(
+        onClick = {
+            okDialogTitle = helpMessageTitle
+            okDialogMessage = helpMessage
+        }
+    )
 }
 
 @Composable

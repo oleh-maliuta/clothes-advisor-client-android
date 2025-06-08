@@ -42,6 +42,7 @@ import com.olehmaliuta.clothesadvisor.data.http.security.ApiState
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.UserViewModel
 import com.olehmaliuta.clothesadvisor.ui.components.AcceptCancelDialog
 import com.olehmaliuta.clothesadvisor.ui.components.CenteredScrollContainer
+import com.olehmaliuta.clothesadvisor.ui.components.HelpButton
 import com.olehmaliuta.clothesadvisor.ui.components.InfoDialog
 import com.olehmaliuta.clothesadvisor.utils.navigation.Router
 import com.olehmaliuta.clothesadvisor.utils.navigation.Screen
@@ -256,4 +257,14 @@ fun LogInScreen(
             }
         }
     }
+
+    val helpMessageTitle = stringResource(R.string.authorization__help_message_title)
+    val helpMessage = stringResource(R.string.authorization__help_message)
+
+    HelpButton(
+        onClick = {
+            okDialogTitle = helpMessageTitle
+            okDialogMessage = helpMessage
+        }
+    )
 }

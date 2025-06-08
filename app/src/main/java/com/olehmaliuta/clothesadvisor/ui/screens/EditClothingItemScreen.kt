@@ -198,8 +198,7 @@ fun EditClothingItemScreen(
         ) {
             Text(
                 text = stringResource(
-                    R.string.edit_clothing_item__delete_item_message_description),
-                textAlign = TextAlign.Justify
+                    R.string.edit_clothing_item__delete_item_message_description)
             )
         }
     }
@@ -457,7 +456,7 @@ fun EditClothingItemScreen(
                 OutlinedTextField(
                     value = stringResource(AppConstants.seasons.getValue(season)),
                     onValueChange = {},
-                    label = { Text(stringResource(R.string.statistics__overall__season__label)) },
+                    label = { Text(stringResource(R.string.edit_clothing_item__text__season__label)) },
                     modifier = Modifier.fillMaxWidth(),
                     readOnly = true,
                     trailingIcon = {

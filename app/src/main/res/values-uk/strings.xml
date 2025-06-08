@@ -226,6 +226,7 @@
     <string name="authorization__load_data_from_account_switch">Завантажити дані з облікового запису</string>
     <string name="authorization__apply_button">Aвторизуватися</string>
     <string name="authorization__success_message_title">Успішно</string>
+    <string name="authorization__help_message_title">Довідка</string>
     <string name="authorization__error_message_title">Помилка</string>
     <string name="authorization__forgot_password_hint">Забули?</string>
     <string name="authorization__forgot_password_title">Забули пароль?</string>
@@ -235,6 +236,9 @@
     <string name="authorization__forgot_password_apply_button">Надіслати лист</string>
     <string name="authorization__forgot_password_email_is_sent_title">Лист надіслано</string>
     <string name="authorization__image_not_found_message">Зображення елемента одягу не знайдено!\nНазва одягу: %s\nШлях до файлу: %s</string>
+    <string name="authorization__help_message">БУДЬТЕ УВАЖНІ!\n\n
+        Якщо перемикач увімкнено, дані облікового запису буде завантажено на ваш пристрій.
+        Інакше, якщо його вимкнено, дані на вашому пристрої будуть завантажені в обліковий запис і замінені!</string>
 
     <!-- Settings Page -->
     <string name="settings__account__title">Обліковий запис</string>
@@ -255,9 +259,12 @@
     <string name="settings__change_password__confirm_new_password_input">Підтвердити новий пароль</string>
     <string name="settings__change_password__apply_button">Виконати</string>
     <string name="settings__success_message_title">Успішно</string>
+    <string name="settings__help_message_title">Довідка</string>
     <string name="settings__error_message_title">Помилка</string>
     <string name="settings__guest__log_in_button">Aвторизуватися</string>
     <string name="settings__guest__sign_up_button">Зареєструватися</string>
+    <string name="settings__help_message">Ви можете увійти в обліковий запис, що дозволить вам використовувати кілька додаткових функцій і автоматично зберігати дані (одяг і набори) в обліковому записі. Збережені дані можна використовувати на іншому пристрої, увійшовши в той самий обліковий запис.\n\n
+        В Android 12 і вище колірна схема інтерфейсу динамічно змінюється відповідно до налаштувань пристрою.</string>
 
     <!-- Statistics Page -->
     <string name="statistics__overall__title">Загальна статистика</string>
@@ -376,6 +383,14 @@
     <string name="generating__guest__title">Вам потрібно авторизуватися, щоб скористатися функцією генерації.</string>
     <string name="generating__guest__log_in_button">Aвторизуватися</string>
     <string name="generating__guest__sign_up_button">Зареєструватися</string>
+    <string name="generating__help_message_title">Довідка</string>
     <string name="generating__error_message_title">Помилка</string>
     <string name="generating__location_not_found_message">Не вдалося отримати місцезнаходження пристрою.</string>
+    <string name="generating__help_message">На цій сторінці ви можете отримати найбільш підходящі набори одягу, згенеровані використаним алгоритмом, відповідно до параметрів, які ви вводите, натиснувши кнопку \"Створити набори\". Параметри включають:\n\n
+        * розташування пристрою або розташування, вибране на карті;\n\n
+        * дата і час, коли ви збираєтеся використовувати рекомендований одяг;\n\n
+        * основний колір для рекомендацій щодо вбрання (краще працює при використанні з вибраними палітрами);\n\n
+        * список палітр кольорів;\n\n
+        * тип події, який більш детально описує призначення набора;\n\n
+        * параметр, який говорить, чи повинен алгоритм враховувати елементи, позначені як \"Вибране\".</string>
 </resources>
