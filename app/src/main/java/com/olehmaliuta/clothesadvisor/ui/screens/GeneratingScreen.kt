@@ -511,7 +511,7 @@ private fun ContentForUser(
         val locationNotFoundMessage = stringResource(R.string.generating__location_not_found_message)
 
         Button(
-            enabled = if (!useCurrentLocation) location != null else true &&
+            enabled = if (!useCurrentLocation) location != null else
                 recommendationViewModel.recommendationState !is ApiState.Loading,
             onClick = {
                 if (useCurrentLocation) {

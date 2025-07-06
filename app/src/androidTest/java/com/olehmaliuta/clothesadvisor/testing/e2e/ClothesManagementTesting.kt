@@ -152,7 +152,7 @@ class ClothesManagementTesting {
             useUnmergedTree = true
         )
         val isFavorite = favoriteButton.fetchSemanticsNode()
-            .config[SemanticsProperties.ContentDescription].any { it == "Favorite" } == true
+            .config[SemanticsProperties.ContentDescription].any { it == "Favorite" }
 
         card.performClick()
         helper.assertExists("screen__${Screen.EditClothingItem.name}")
@@ -190,7 +190,7 @@ class ClothesManagementTesting {
             useUnmergedTree = true
         )
         var isFavoriteAgain = favoriteButton.fetchSemanticsNode()
-            .config[SemanticsProperties.ContentDescription].any { it == "Favorite" } == true
+            .config[SemanticsProperties.ContentDescription].any { it == "Favorite" }
         assert(isFavoriteAgain != isFavorite)
 
         card.performClick()

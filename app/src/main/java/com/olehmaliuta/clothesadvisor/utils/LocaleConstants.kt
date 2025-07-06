@@ -7,7 +7,7 @@ import java.util.Locale
 object LocaleConstants {
     private const val DEFAULT_LANG = "en"
 
-    private val strings = mapOf<String, Map<String, String>>(
+    private val strings = mapOf(
         "Not authenticated" to mapOf(
             "uk" to "Не автентифіковано"
         ),
@@ -79,7 +79,7 @@ object LocaleConstants {
         ),
     )
 
-    private val langCodeKeyAlternatives = listOf<Pair<String, String>>(
+    private val langCodeKeyAlternatives = listOf(
         Pair("en", "en"),
         Pair("uk", "ua"),
     )

@@ -85,7 +85,7 @@ fun EditClothingItemScreen(
         .collectAsState(initial = null)
 
     var imageUri by remember { mutableStateOf<String?>(null) }
-    var color by remember { mutableStateOf<Color>(Color.Black) }
+    var color by remember { mutableStateOf(Color.Black) }
     var name by remember { mutableStateOf("") }
     var category by remember { mutableStateOf("tshirt") }
     var season by remember { mutableStateOf("spring") }
@@ -589,7 +589,7 @@ fun EditClothingItemScreen(
                             green = (color.green * 255).toInt(),
                             blue = (color.blue * 255).toInt(),
                             material = material,
-                            brand = if (brand.isNotBlank()) brand else null,
+                            brand = brand.ifBlank { null },
                             purchaseDate = if (purchaseDate != null)
                                 dateFormatter.format(purchaseDate ?: Date()) else null,
                             price = price,

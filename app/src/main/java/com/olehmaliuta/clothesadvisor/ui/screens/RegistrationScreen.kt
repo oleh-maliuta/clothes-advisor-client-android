@@ -52,7 +52,7 @@ fun RegistrationScreen(
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     var dialogMessage by remember { mutableStateOf<String?>(null) }
-    var success by remember { mutableStateOf<Boolean>(false) }
+    var success by remember { mutableStateOf(false) }
 
     val passwordsMatch by remember {
         derivedStateOf { password == confirmPassword }

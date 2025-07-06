@@ -30,7 +30,7 @@ fun InfoDialog(
         },
         text = {
             Text(
-                text = content.toString(),
+                text = content,
                 modifier = Modifier
                     .testTag("info_dialog__description")
             )

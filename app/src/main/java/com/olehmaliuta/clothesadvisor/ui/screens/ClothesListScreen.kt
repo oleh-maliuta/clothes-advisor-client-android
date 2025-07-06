@@ -81,7 +81,7 @@ fun ClothesListScreen(
     var searchInputValue by remember { mutableStateOf("") }
 
     var searchQuery by remember { mutableStateOf("") }
-    var sortBy by remember { mutableStateOf(Pair<String, Int>(
+    var sortBy by remember { mutableStateOf(Pair(
         "name", R.string.clothes_list__sort_option__name
     )) }
     var ascSort by remember { mutableStateOf(true) }

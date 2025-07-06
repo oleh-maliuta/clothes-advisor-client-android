@@ -10,7 +10,7 @@ object AppConstants {
     const val MAX_CLOTHING_ITEMS = 100
     const val MAX_OUTFITS = 50
 
-    val navItems = listOf<NavItem>(
+    val navItems = listOf(
         NavItem(
             route = Screen.ClothesList,
             labelId = R.string.bottom_bar__clothes__label,
@@ -37,13 +37,13 @@ object AppConstants {
             iconId = R.drawable.settings
         ),
     )
-    val seasons = mapOf<String, Int>(
+    val seasons = mapOf(
         "spring" to R.string.seasons__spring,
         "summer" to R.string.seasons__summer,
         "autumn" to R.string.seasons__autumn,
         "winter" to R.string.seasons__winter,
     )
-    val categories = mapOf<String, Int>(
+    val categories = mapOf(
         "tshirt" to R.string.categories__t_shirt,
         "pants" to R.string.categories__pants,
         "jacket" to R.string.categories__jacket,
@@ -74,7 +74,7 @@ object AppConstants {
         "overalls" to R.string.categories__overalls,
         "beanie" to R.string.categories__beanie,
     )
-    val events = mapOf<String, Int>(
+    val events = mapOf(
         "casual_walk" to R.string.events__casual_walk,
         "picnic" to R.string.events__picnic,
         "date" to R.string.events__date,
@@ -86,7 +86,7 @@ object AppConstants {
         "home_relax" to R.string.events__home_relax,
         "sport_training" to R.string.events__sport_training,
     )
-    val palettes = mapOf<String, PaletteInfo>(
+    val palettes = mapOf(
         "monochromatic" to PaletteInfo(
             nameId = R.string.palettes__monochromatic__name,
             descriptionId = R.string.palettes__monochromatic__description,
