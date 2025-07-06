@@ -348,20 +348,20 @@ class ClothingItemViewModel(
             val tokenType = sharedPref.getString("token_type", null)
 
             try {
+                val correctUrl = if (HttpServiceManager.BASE_URL.endsWith('/'))
+                    HttpServiceManager.BASE_URL else HttpServiceManager.BASE_URL+'/'
                 val file = HttpServiceManager.downloadFileByUrl(
                     context,
-                    HttpServiceManager.BASE_URL +
-                            "clothing-items/$id/preview-remove-background",
+                    correctUrl + "clothing-items/$id/preview-remove-background",
                     "${tokenType ?: "bearer"} $token"
                 )
 
-                backgroundRemovingState = if (file != null) {
+                backgroundRemovingState = if (file != null)
                     ApiState.Success(file)
-                } else {
+                else
                     ApiState.Error(
                         context.getString(
                             R.string.edit_clothing_item__failed_to_remove_bg))
-                }
             } catch (e: Exception) {
                 backgroundRemovingState = ApiState.Error("Network error: ${e.message}")
             }
