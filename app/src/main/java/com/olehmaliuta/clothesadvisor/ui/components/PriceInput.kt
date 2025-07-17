@@ -9,31 +9,41 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import com.olehmaliuta.clothesadvisor.App
+import java.text.DecimalFormatSymbols
+import java.util.Locale
 
 @Composable
-fun FloatingPointNumberInput(
+fun PriceInput(
     value: Double?,
     onValueChange: (Double?) -> Unit,
     modifier: Modifier = Modifier,
-    label: String = "Amount"
+    label: String = ""
 ) {
     var text by remember(value) {
         mutableStateOf(value?.let { "%.2f".format(it) } ?: "")
     }
 
+    val context = LocalContext.current
+    val languageManager = (context.applicationContext as App).languageManager
+    val decimalFormatSymbols = DecimalFormatSymbols.getInstance(
+        Locale(languageManager.getCurrentLanguage())
+    )
+
     OutlinedTextField(
         value = text,
         onValueChange = { newText ->
-            if (newText.isEmpty()) {
+            if (newText.isEmpty() || newText == ",00" || newText == ".00") {
                 text = ""
                 onValueChange(null)
                 return@OutlinedTextField
             }
 
-            if (newText.matches(Regex("^\\d*\\.?\\d*$"))) {
-                val parts = newText.split('.')
+            if (newText.matches(Regex("^\\d*[,.]?\\d*$"))) {
+                val parts = newText.split(decimalFormatSymbols.decimalSeparator)
 
                 if (parts.size == 2 && parts[1].length > 2) {
                     return@OutlinedTextField

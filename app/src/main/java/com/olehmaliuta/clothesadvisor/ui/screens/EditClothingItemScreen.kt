@@ -60,7 +60,7 @@ import com.olehmaliuta.clothesadvisor.data.http.security.AuthState
 import com.olehmaliuta.clothesadvisor.ui.components.AcceptCancelDialog
 import com.olehmaliuta.clothesadvisor.ui.components.ColorPicker
 import com.olehmaliuta.clothesadvisor.ui.components.DatePicker
-import com.olehmaliuta.clothesadvisor.ui.components.FloatingPointNumberInput
+import com.olehmaliuta.clothesadvisor.ui.components.PriceInput
 import com.olehmaliuta.clothesadvisor.ui.components.ImagePicker
 import com.olehmaliuta.clothesadvisor.ui.components.InfoDialog
 import com.olehmaliuta.clothesadvisor.ui.viewmodels.AuthViewModel
@@ -528,7 +528,7 @@ fun EditClothingItemScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            FloatingPointNumberInput(
+            PriceInput(
                 value = price,
                 onValueChange = { price = it },
                 label = stringResource(R.string.edit_clothing_item__text__price__label),
