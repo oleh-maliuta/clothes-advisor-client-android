@@ -8,9 +8,14 @@
   "main": "app.js",
   "scripts": {
     "start": "node ./src/app.js",
-    "dev": "nodemon ./src/app.js"
+    "dev": "nodemon ./src/app.js",
+    "lint": "eslint"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@eslint/json": "^1.2.0",
+    "eslint": "^10.1.0",
+    "globals": "^17.4.0",
     "nodemon": "^3.1.14"
   },
   "dependencies": {
