@@ -1,0 +1,28 @@
+services:
+  server:
+    build: ./applications/server
+    container_name: clothes-advisor-server
+    ports:
+      - 8080:8080
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  mysql:
+    image: mysql:9.6
+    restart: unless-stopped
+    container_name: clothes-advisor-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - clothes_advisor_mysql_data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  clothes_advisor_mysql_data:

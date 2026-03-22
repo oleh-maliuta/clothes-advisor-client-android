@@ -1,0 +1,32 @@
+{
+  "development": {
+    "username": "root",
+    "password": "password",
+    "database": "clothes_advisor",
+    "host": "mysql",
+    "dialect": "mysql",
+    "define": {
+        "timestamps": false
+    }
+  },
+  "test": {
+    "username": "root",
+    "password": "password",
+    "database": "clothes_advisor",
+    "host": "mysql",
+    "dialect": "mysql",
+    "define": {
+        "timestamps": false
+    }
+  },
+  "production": {
+    "username": "root",
+    "password": "password",
+    "database": "clothes_advisor",
+    "host": "mysql",
+    "dialect": "mysql",
+    "define": {
+        "timestamps": false
+    }
+  }
+}

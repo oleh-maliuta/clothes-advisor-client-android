@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches:
+    - main
+    - experimental
+  workflow_dispatch:
+
+jobs:
+  backend:
+    name: Backend CI
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+      
+      - name: Install dependencies
+        run: npm ci
+        working-directory: applications/server
+
+      - name: Run test cases
+        run: npm run test
+        working-directory: applications/server
+
+      - name: Build application
+        run: npm run build
+        working-directory: applications/server
