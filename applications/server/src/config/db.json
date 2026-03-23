@@ -3,7 +3,7 @@
     "username": "root",
     "password": "password",
     "database": "clothes_advisor",
-    "host": "mysql",
+    "host": "localhost",
     "dialect": "mysql",
     "define": {
         "timestamps": false
@@ -13,7 +13,7 @@
     "username": "root",
     "password": "password",
     "database": "clothes_advisor",
-    "host": "mysql",
+    "host": "localhost",
     "dialect": "mysql",
     "define": {
         "timestamps": false
@@ -23,7 +23,7 @@
     "username": "root",
     "password": "password",
     "database": "clothes_advisor",
-    "host": "mysql",
+    "host": "localhost",
     "dialect": "mysql",
     "define": {
         "timestamps": false
