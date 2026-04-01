@@ -10,6 +10,7 @@
     "start": "node ./src/app.js",
     "dev": "nodemon ./src/app.js",
     "lint": "eslint",
+    "test": "jest",
     "db:migrate": "sequelize-cli db:migrate",
     "db:migrate:undo": "sequelize-cli db:migrate:undo",
     "db:migrate:undo:all": "sequelize-cli db:migrate:undo:all",
@@ -20,7 +21,9 @@
     "@eslint/js": "^10.0.1",
     "@eslint/json": "^1.2.0",
     "eslint": "^10.1.0",
+    "eslint-plugin-jest": "^29.15.1",
     "globals": "^17.4.0",
+    "jest": "^30.3.0",
     "nodemon": "^3.1.14"
   },
   "dependencies": {

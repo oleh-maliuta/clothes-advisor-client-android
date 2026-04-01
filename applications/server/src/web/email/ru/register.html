@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="subject" content="Email verification" />
+    <title>Email verification</title>
+</head>
+
+<body>
+    <h1>Hello, {{.username}}</h1>
+    <p>Thank you for registering on Clothes Advisor service. Please click on the button below to verify your email address and
+        finish the registration.</p>
+    <small>the session will be expired in 12 hours</small>
+    <form method="post" action="{{.link}}">
+        <input type="hidden" name="email" value="{{.email}}" />
+        <input type="hidden" name="token" value="{{.token}}" />
+        <input type="hidden" name="locale" value="{{.locale}}" />
+        <button type="submit">Verify Email</button>
+    </form>
+    <p>Regards,<br />Clothes Advisor administration</p>
+</body>
+
+</html>

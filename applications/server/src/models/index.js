@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
-const { MYSQL_DATABASE_NAME, MYSQL_USERNAME, MYSQL_PASSWORD, MYSQL_HOST } = require('../config/env');
+const { MYSQL_DATABASE_NAME, MYSQL_USERNAME, MYSQL_PASSWORD, MYSQL_HOST } = require('../configs/env.config');
 const basename = path.basename(__filename);
 const db = {};
 

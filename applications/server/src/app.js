@@ -7,8 +7,8 @@ const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const process = require('process');
 const { sequelize } = require("./models");
-const pingRouter = require('./routes/ping');
-const { PORT, CORS_ORIGIN } = require('./config/env');
+const pingRouter = require('./routes/ping.route');
+const { PORT, CORS_ORIGIN } = require('./configs/env.config');
 
 const app = express();
 
