@@ -25,10 +25,6 @@ module.exports = (sequelize, DataTypes) => {
                 key: 'id',
             },
         },
-        value: {
-            type: DataTypes.STRING(256),
-            allowNull: false
-        },
         action: {
             type: DataTypes.STRING(100),
             allowNull: false

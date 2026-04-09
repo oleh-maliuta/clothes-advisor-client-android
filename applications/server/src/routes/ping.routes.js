@@ -1,9 +1,8 @@
 const express = require("express");
+const controller = require("../controllers/ping.controller");
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
-    return res.status(200).json({ message: 'pong' });
-});
+router.get('/', controller.ping);
 
 module.exports = router;

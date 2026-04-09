@@ -35,6 +35,7 @@ module.exports = (sequelize, DataTypes) => {
         synchronized_at: {
             type: DataTypes.DATE(6),
             allowNull: false,
+            defaultValue: DataTypes.NOW,
         },
         created_at: {
             type: DataTypes.DATE,

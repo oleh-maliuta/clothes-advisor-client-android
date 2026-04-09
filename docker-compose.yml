@@ -1,17 +1,19 @@
 services:
   server:
     build: ./applications/server
-    container_name: clothes-advisor-server
+    container_name: clothes-advisor_server
     ports:
-      - 8080:8080
+      - 7000:7000
     depends_on:
       mysql:
+        condition: service_healthy
+      localstack:
         condition: service_healthy
 
   mysql:
     image: mysql:9.6
     restart: unless-stopped
-    container_name: clothes-advisor-mysql
+    container_name: clothes-advisor_mysql
     environment:
       MYSQL_ROOT_PASSWORD: password
     ports:
@@ -24,5 +26,26 @@ services:
       timeout: 5s
       retries: 5
 
+  localstack:
+    image: localstack/localstack:4.8
+    container_name: clothes-advisor_localstack-aws-s3
+    ports:
+      - "4566:4566"
+      - "4510-4559:4510-4559"
+    environment:
+      - SERVICES=s3
+      - DEBUG=1
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+    volumes:
+      - clothes_advisor_localstack_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4566/_localstack/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
 volumes:
   clothes_advisor_mysql_data:
+  clothes_advisor_localstack_data:
