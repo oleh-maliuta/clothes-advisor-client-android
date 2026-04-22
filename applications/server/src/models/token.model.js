@@ -2,11 +2,20 @@
 
 const { Model } = require('sequelize');
 const { v4: uuidv4 } = require('uuid');
+const { convertToISOTimeString } = require('../utils/time.utils');
 
 module.exports = (sequelize, DataTypes) => {
     class Token extends Model {
         static associate({ User }) {
             this.belongsTo(User, { foreignKey: 'user_id', as: 'user', onDelete: 'CASCADE' });
+        }
+
+        toJSON() {
+            const attributes = { ...this.get() };
+
+            attributes.expires_at = convertToISOTimeString(attributes.expires_at);
+            
+            return attributes;
         }
     }
 
@@ -37,6 +46,7 @@ module.exports = (sequelize, DataTypes) => {
         sequelize,
         modelName: 'Token',
         tableName: 'tokens',
+        timestamps: false,
     });
 
     return Token;

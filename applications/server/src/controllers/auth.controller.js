@@ -4,9 +4,15 @@ const { User, Token, sequelize } = require('../models');
 const { serviceInstance: emailService } = require('../services/email.service');
 const { SERVER_BASE_URL } = require('../configs/env.config');
 const { createAuthJWT } = require('../utils/jwt.utils');
+const { DEFAULT_LOCALE, LOCALES } = require('../utils/constants.utils');
+const { convertToISOTimeString } = require('../utils/time.utils');
 
 module.exports = {
     register: async (req, res) => {
+        req.body.email = req.body.email.toLowerCase();
+        req.query.locale = !LOCALES.includes(req.query.locale) ?
+            DEFAULT_LOCALE : req.query.locale.toLowerCase();
+
         let user = await User
             .findOne({ where: { email: req.body.email, }, });
 
@@ -28,7 +34,10 @@ module.exports = {
                 });
 
                 if (token) {
-                    if (Temporal.Instant.from(token.expires_at).since(Temporal.Now.instant()).total('seconds') > 0) {
+                    if (
+                        Temporal.Instant.from(convertToISOTimeString(token.expires_at))
+                            .since(Temporal.Now.instant()).total('seconds') > 0
+                    ) {
                         token.expires_at = Temporal.Now.instant().add({ hours: 12 }).toString();
                         try { await token.save(); } catch (error) {
                             console.error(error);
@@ -77,14 +86,15 @@ module.exports = {
             emailFormLink.searchParams.append('email', user.email);
             emailFormLink.searchParams.append('token', token.id);
 
-            await emailService.sendTemplateAsync(
-                'registration_confirm',
-                'Confirm registration',
+            await emailService.sendHTMLTemplateEmail(
+                'register',
+                req.query.locale,
                 user.email,
                 [
                     { key: 'link', value: emailFormLink.toString() },
                     { key: 'email', value: user.email },
                     { key: 'token', value: token.id },
+                    { key: 'locale', value: req.query.locale },
                 ]
             );
 
@@ -112,10 +122,12 @@ module.exports = {
     },
 
     login: async (req, res) => {
-        const user = await User
-            .findOne({ where: { login: req.body.login } });
+        req.body.email = req.body.email.toLowerCase();
 
-        if (user === null) {
+        const user = await User
+            .findOne({ where: { email: req.body.email } });
+
+        if (!user) {
             return res.status(404).json({
                 message: "Invalid email or password.",
                 messageCode: 'api__auth__login__invalid_credentials',

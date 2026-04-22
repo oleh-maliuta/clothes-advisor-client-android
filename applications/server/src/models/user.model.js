@@ -2,6 +2,7 @@
 
 const { Model } = require('sequelize');
 const { v4: uuidv4 } = require('uuid');
+const { convertToISOTimeString } = require('../utils/time.utils');
 
 module.exports = (sequelize, DataTypes) => {
     class User extends Model {
@@ -9,6 +10,15 @@ module.exports = (sequelize, DataTypes) => {
             this.hasMany(Token, { foreignKey: 'user_id', as: 'tokens', onDelete: 'CASCADE' });
             this.hasMany(ClothingItem, { foreignKey: 'user_id', as: 'clothing_items', onDelete: 'CASCADE' });
             this.hasMany(Outfit, { foreignKey: 'user_id', as: 'outfits', onDelete: 'CASCADE' });
+        }
+
+        toJSON() {
+            const attributes = { ...this.get() };
+
+            delete attributes.password;
+            attributes.created_at = convertToISOTimeString(attributes.created_at);
+
+            return attributes;
         }
     }
 
@@ -46,6 +56,7 @@ module.exports = (sequelize, DataTypes) => {
         sequelize,
         modelName: 'User',
         tableName: 'users',
+        timestamps: false,
     });
 
     return User;

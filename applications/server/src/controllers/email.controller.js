@@ -1,37 +1,46 @@
+const path = require('path');
 const { Temporal } = require('@js-temporal/polyfill');
 const { User, Token } = require("../models");
+const { DEFAULT_LOCALE, LOCALES } = require('../utils/constants.utils');
+const { convertToISOTimeString } = require('../utils/time.utils');
 
 module.exports = {
     confirm: async (req, res) => {
+        req.body.locale = req.body.locale.toLowerCase();
+        req.body.locale = !LOCALES.includes(req.body.locale) ?
+            DEFAULT_LOCALE : req.body.locale.toLowerCase();
+
+        const failurePath = path.join(req.body.locale, 'failure_result');
+
         const user = await User
             .findOne({ where: { email: req.body.email } });
 
-        if (user === null) {
-            return res.status(404).json({
+        if (!user) {
+            return res.render(failurePath, {
                 message: 'User not found.',
-                messageCode: 'api__email__confirm__user_not_found',
             });
         }
 
         const token = await Token
             .findOne({
                 where: {
-                    userId: user.id,
-                    token: req.body.token,
+                    id: req.body.token,
+                    user_id: user.id,
                 }
             });
 
-        if (token === null) {
-            return res.status(404).json({
+        if (!token) {
+            return res.render(failurePath, {
                 message: 'Token not found or expired.',
-                messageCode: 'api__email__confirm__invalid_token',
             });
         }
 
-        if (Temporal.Instant.from(token.expires_at).since(Temporal.Now.instant()).total('seconds') < 0) {
-            return res.status(400).json({
+        if (
+            Temporal.Instant.from(convertToISOTimeString(token.expires_at))
+                .since(Temporal.Now.instant()).total('seconds') < 0
+        ) {
+            return res.render(failurePath, {
                 message: 'Token not found or expired.',
-                messageCode: 'api__email__confirm__invalid_token',
             });
         }
 
@@ -45,9 +54,8 @@ module.exports = {
                     await token.destroy();
                 } catch (error) {
                     console.error(error);
-                    return res.status(500).json({
+                    return res.render(failurePath, {
                         message: 'Something went wrong on our end. Please try again in a moment.',
-                        messageCode: 'general__server_error',
                     });
                 }
                 break;
@@ -58,9 +66,8 @@ module.exports = {
                     await token.destroy();
                 } catch (error) {
                     console.error(error);
-                    return res.status(500).json({
+                    return res.render(failurePath, {
                         message: 'Something went wrong on our end. Please try again in a moment.',
-                        messageCode: 'general__server_error',
                     });
                 }
 
@@ -70,22 +77,17 @@ module.exports = {
                     await user.destroy();
                 } catch (error) {
                     console.error(error);
-                    return res.status(500).json({
+                    return res.render(failurePath, {
                         message: 'Something went wrong on our end. Please try again in a moment.',
-                        messageCode: 'general__server_error',
                     });
                 }
                 break;
             default:
-                return res.status(400).json({
+                return res.render(failurePath, {
                     message: 'Unknown action.',
-                    messageCode: 'api__email__confirm__unknown_action',
                 });
         }
 
-        return res.status(200).send({
-            message: 'Email confirmed successfully.',
-            messageCode: 'api__email__confirm__success',
-        });
+        return res.render(path.join(req.body.locale, 'email_verified'));
     },
 };

@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const https = require("https");
 const cors = require('cors');
 const express = require("express");
@@ -8,6 +9,9 @@ const cookieParser = require("cookie-parser");
 const { CORS_ORIGIN, COOKIE_SECRET } = require('./configs/env.config');
 
 const app = express();
+
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
 
 app.use(cors({
     origin: [CORS_ORIGIN],

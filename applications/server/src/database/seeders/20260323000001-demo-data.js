@@ -1,6 +1,7 @@
 'use strict';
 
 const bcrypt = require('bcrypt');
+const { Temporal } = require('@js-temporal/polyfill');
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -10,22 +11,22 @@ module.exports = {
         email: '1@gmail.com',
         password_hash: bcrypt.hashSync('Password1', 10),
         is_email_verified: true,
-        synchronized_at: new Date(),
-        created_at: new Date()
+        synchronized_at: Temporal.Now.instant(),
+        created_at: Temporal.Now.instant()
       },
       {
         email: '2@gmail.com',
         password_hash: bcrypt.hashSync('Password1', 10),
         is_email_verified: true,
-        synchronized_at: new Date(),
-        created_at: new Date()
+        synchronized_at: Temporal.Now.instant(),
+        created_at: Temporal.Now.instant()
       },
       {
         email: '3@gmail.com',
         password_hash: bcrypt.hashSync('Password1', 10),
         is_email_verified: true,
-        synchronized_at: new Date(),
-        created_at: new Date()
+        synchronized_at: Temporal.Now.instant(),
+        created_at: Temporal.Now.instant()
       },
     ]);
   },

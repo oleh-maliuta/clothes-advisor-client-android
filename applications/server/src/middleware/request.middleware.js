@@ -7,7 +7,7 @@ function validateRequest(req, res, next) {
     }
 
     return res.status(400).json({
-        messageCode: 'api__request__' + errors.array()[0].msg,
+        messageCode: 'api__' + errors.array()[0].msg,
     });
 };
 

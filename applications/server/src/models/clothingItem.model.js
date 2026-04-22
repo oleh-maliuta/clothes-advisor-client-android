@@ -90,6 +90,7 @@ module.exports = (sequelize, DataTypes) => {
         sequelize,
         modelName: 'ClothingItem',
         tableName: 'clothing_items',
+        timestamps: false,
     });
 
     return ClothingItem;

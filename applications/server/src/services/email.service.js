@@ -2,6 +2,7 @@ const nodemailer = require('nodemailer');
 const { resolve } = require('path');
 const { readFile } = require('fs/promises');
 const { EMAIL_HOST, EMAIL_PORT, EMAIL_SENDER_ADDRESS, EMAIL_SENDER_PASSWORD, APP_NAME } = require('../configs/env.config');
+const { LOCALES, DEFAULT_LOCALE } = require('../utils/constants.utils');
 
 /**
  * Service for sending emails using nodemailer and HTML templates.
@@ -18,7 +19,7 @@ class EmailService {
             },
         });
 
-        this.templatesPath = templatesPath || resolve(__dirname, '..', 'web');
+        this.templatesPath = templatesPath || resolve(__dirname, '..', 'email_templates');
     }
 
     /**
@@ -30,6 +31,10 @@ class EmailService {
      * @returns {Promise<import('nodemailer').SentMessageInfo>} The result of the email sending operation.
      */
     async sendHTMLTemplateEmail(template, locale, to, params = []) {
+        if (!LOCALES.includes(locale)) {
+            locale = DEFAULT_LOCALE;
+        }
+
         const templatePath = resolve(this.templatesPath, locale, `${template}.html`);
         let htmlTemplate = await readFile(templatePath, 'utf-8');
 

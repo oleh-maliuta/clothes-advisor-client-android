@@ -12,6 +12,21 @@ jobs:
     name: Backend CI
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:9.6
+        env:
+          DB_USER: root
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: password
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -uroot -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -33,8 +48,4 @@ jobs:
 
       - name: Run test cases
         run: npm run test
-        working-directory: applications/server
-
-      - name: Build application
-        run: npm run build
         working-directory: applications/server
