@@ -26,12 +26,12 @@ module.exports = {
       synchronized_at: {
         type: Sequelize.DATE(6),
         allowNull: false,
-        defaultValue: Sequelize.NOW,
+        defaultValue: Sequelize.literal('(NOW(6))'),
       },
       created_at: {
         type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.NOW,
+        defaultValue: Sequelize.literal('(NOW())'),
       },
     });
   },

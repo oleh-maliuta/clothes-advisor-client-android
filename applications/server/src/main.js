@@ -1,5 +1,5 @@
-const server = require('./server');
 const process = require('process');
+const { server } = require('./server');
 const { sequelize } = require("./models");
 const { PORT } = require('./configs/env.config');
 

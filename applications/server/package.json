@@ -5,10 +5,10 @@
   "license": "ISC",
   "author": "Oleh Maliuta",
   "type": "commonjs",
-  "main": "app.js",
+  "main": "main.js",
   "scripts": {
-    "start": "node ./src/app.js",
-    "dev": "nodemon ./src/app.js",
+    "start": "node ./src/main.js",
+    "dev": "nodemon ./src/main.js",
     "lint": "eslint",
     "test": "jest --coverage",
     "db:migrate": "sequelize-cli db:migrate",
@@ -44,6 +44,13 @@
     "eslint-plugin-jest": "^29.15.1",
     "globals": "^17.4.0",
     "jest": "^30.3.0",
-    "nodemon": "^3.1.14"
+    "nodemon": "^3.1.14",
+    "supertest": "^7.2.2"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ]
   }
 }

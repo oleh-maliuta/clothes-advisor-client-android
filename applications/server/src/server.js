@@ -35,4 +35,7 @@ const server = https.createServer(
     }, app
 );
 
-module.exports = server;
+module.exports = {
+    app,
+    server,
+};
